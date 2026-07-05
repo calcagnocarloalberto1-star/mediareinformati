@@ -28,7 +28,7 @@
 
 <main>
   <h2 class="pagina">Diritto della mediazione</h2>
-  <p class="sottotitolo">Fai una domanda: la risposta &egrave; un contributo costruito su 624 atti normativi italiani, europei e stranieri</p>
+  <p class="sottotitolo">Fai una domanda: la risposta &egrave; un contributo costruito sui testi di 443 atti italiani (e sugli estremi di quelli europei e stranieri)</p>
   <div class="intro-motore"><p>Questo motore attinge alla banca dati normativa dell&rsquo;archivio &mdash; dal d.lgs. 28/2010 e i suoi decreti attuativi alla riforma Cartabia, dalle direttive europee alle leggi straniere &mdash; e compone una trattazione unitaria, scaricabile in Word. In coda, gli atti utilizzati.</p></div>
 
   <div class="strumenti">
@@ -59,10 +59,23 @@
 </footer>
 
 <script src="data/normativa.js"></script>
+<script src="data/corpus_diritto.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/consulta.js"></script>
 <script src="https://js.puter.com/v2/"></script>
 <script>
+var CORPO_DIR = {};
+(function () {
+  try {
+    if (window.DATA_CORPUS_DIRITTO_C && window.pako) {
+      var bin = atob(window.DATA_CORPUS_DIRITTO_C);
+      var buf = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+      JSON.parse(new TextDecoder("utf-8").decode(pako.inflate(buf))).forEach(function (c) { CORPO_DIR[c.k] = c.testo; });
+    }
+  } catch (e) {}
+})();
 initConsulta({
   nomeSezione: "contributo di diritto della mediazione",
   nomeFile: "diritto",
@@ -79,7 +92,8 @@ initConsulta({
   ],
   dati: function () {
     return (window.DATA_NORMATIVA || []).map(function (r) {
-      return { titolo: r.titolo, meta: r.anno + " · " + r.ambito + (r.categoria ? " · " + r.categoria : ""), estratto: "", testo: r.titolo + " " + (r.categoria || "") };
+      var testo = CORPO_DIR[r.percorso] || "";
+      return { titolo: r.titolo, meta: r.anno + " · " + r.ambito + (r.categoria ? " · " + r.categoria : ""), estratto: testo.slice(0, 200), testo: r.titolo + " " + (r.categoria || "") + " " + testo };
     });
   }
 });
