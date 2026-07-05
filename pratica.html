@@ -10,12 +10,11 @@
 <header class="sito">
   <div class="testata">
     <h1><a href="index.html">mediareinformati.it</a></h1>
-    <p class="motto">Piattaforma di consultazione e ricerca sulla mediazione</p>
   </div>
   <nav class="principale">
     <a href="index.html">Home</a>
     <a href="storia.html">Storia</a>
-    <a href="pratica.html">Pratica</a>
+    <a href="pratica.html" class="attivo">Pratica</a>
     <a href="diritto.html">Diritto</a>
     <a href="sistemi.html">Sistemi nazionali</a>
     <a href="link.html">Link mondiali</a>
@@ -29,45 +28,66 @@
 
 <main>
   <h2 class="pagina">Pratica della mediazione</h2>
-  <p class="sottotitolo">Manuali operativi, dispense dei corsi e materiali didattici</p>
-  <div class="intro-motore">
-    <p>Questo motore consente di consultare strumenti e materiali operativi per la pratica della mediazione: manuali per mediatori, dispense dei corsi di formazione (COA Genova, DPL, UNAM, Medyapro, CNMA), prontuari e slide, filtrabili per tipo, anno e contesto formativo.</p>
+  <p class="sottotitolo">Fai una domanda: la risposta &egrave; un contributo costruito sui materiali didattici e operativi dell'autore</p>
+  <div class="intro-motore"><p>Questo motore attinge alle dispense dei corsi, ai manuali operativi e ai prontuari dell&rsquo;archivio e compone una trattazione unitaria, scaricabile in Word. La banca dati testuale di questa sezione &egrave; in corso di arricchimento.</p></div>
+
+  <div class="strumenti">
+    <div class="assistente-domanda">
+      <input type="text" id="domanda" placeholder="Es. Come si conduce il primo incontro di mediazione?" autocomplete="off">
+      <button class="bottone-primario" id="chiedi">Componi</button>
+    </div>
+    <div class="suggerimenti-domande" id="suggerimenti">
+      <button>Come si conduce il primo incontro?</button>
+      <button>Le tecniche di ascolto attivo</button>
+      <button>Come si scrive il verbale di accordo?</button>
+      <button>La gestione delle sessioni separate</button>
+    </div>
   </div>
-  <div class="avviso-provvisorio">Nota della redazione: il motore pubblica <strong>schede descrittive</strong> dei materiali, non i testi integrali. La classificazione per fase del procedimento e per tecnica &egrave; in corso di redazione.</div>
-  <div id="motore"></div>
+  <p class="conteggio" id="stato"></p>
+  <div id="contenitore-risposta"></div>
+
+  <div class="avviso-provvisorio" style="margin-top:30px">
+    <strong>Nota della redazione.</strong> Il contributo &egrave; composto dall&rsquo;intelligenza artificiale esclusivamente sui materiali dell&rsquo;archivio e va verificato sulle fonti indicate in coda. Non costituisce parere legale.
+  </div>
 </main>
 
 <footer class="sito">
   <div class="interno">
-    <span>mediareinformati.it — prototipo di consultazione, luglio 2026</span>
-    <span>Fonte: archivio didattico dell&rsquo;autore</span>
+    <span>mediareinformati.it — piattaforma di consultazione sulla mediazione</span>
+    <span>Archivio: Carlo Alberto Calcagno · mediaresenzaconfini.org</span>
   </div>
 </footer>
 
 <script src="data/pratica.js"></script>
+<script src="data/articoli.js"></script>
+<script src="data/corpus.js"></script>
 <script src="assets/app.js"></script>
+<script src="assets/consulta.js"></script>
+<script src="https://js.puter.com/v2/"></script>
 <script>
-initMotore({
-  dati: window.DATA_PRATICA,
-  campiRicerca: ["titolo", "tipo", "contesto"],
-  segnapostoRicerca: "Cerca per titolo o argomento…",
-  filtri: [
-    { campo: "tipo", etichetta: "Tipo" },
-    { campo: "anno", etichetta: "Anno", decrescente: true },
-    { campo: "contesto", etichetta: "Contesto formativo" },
-    { campo: "formato", etichetta: "Formato" }
+var CORPO_PR = {};
+(window.DATA_CORPUS || []).forEach(function (c) { CORPO_PR[c.id] = c.testo; });
+initConsulta({
+  nomeSezione: "contributo di pratica della mediazione",
+  nomeFile: "pratica",
+  fonteTitolo: "Materiali utilizzati",
+  ruolo: "Componi un contributo di PRATICA E TECNICA DELLA MEDIAZIONE (conduzione, tecniche, procedura), basato sui materiali didattici dell'autore e sugli articoli pertinenti.",
+  italiaPrima: true,
+  sinonimi: [
+    [/primo incontro/, ["primo incontro", "effettivita", "programmazione"]],
+    [/ascolt|parafras|riformulaz|rispecchiament/, ["ascolto attivo", "parafrasi", "riformulazione", "rispecchiamento"]],
+    [/sessioni|caucus|riservat/, ["sessioni separate", "riservatezza", "caucus"]],
+    [/verbal|accord/, ["verbale", "accordo", "conciliazione"]],
+    [/domand|tecnic|negozia/, ["domande", "tecniche", "negoziazione", "harvard"]]
   ],
-  rendi: function (r) {
-    return '<p class="r-titolo"><a>' + esc(r.titolo) + '</a></p>' +
-      '<p class="r-meta"><span class="etichetta">' + esc(r.tipo) + '</span>' +
-      (r.anno ? esc(r.anno) + '<span class="sep">·</span>' : '') +
-      (r.contesto ? esc(r.contesto) + '<span class="sep">·</span>' : '') +
-      esc(r.formato.toUpperCase()) + '</p>';
-  },
-  dettaglio: function (r) {
-    return '<dl><dt>Tipo</dt><dd>' + esc(r.tipo) + '</dd>' +
-      '<dt>Contesto</dt><dd>' + (esc(r.contesto) || "—") + '</dd>' +
-      '<dt>Percorso in archivio</dt><dd>materiale di lavoro/' + esc(r.percorso) + '</dd></dl>';
+  dati: function () {
+    var didattici = (window.DATA_PRATICA || []).map(function (r) {
+      return { titolo: r.titolo, meta: (r.tipo || "Materiale") + (r.anno ? " · " + r.anno : "") + (r.contesto ? " · " + r.contesto : ""), estratto: "", testo: r.titolo };
+    });
+    var art = (window.DATA_ARTICOLI || []).map(function (r) {
+      return { titolo: r.titolo, meta: "Articolo · " + r.data, estratto: r.estratto, testo: CORPO_PR[r.id] || r.estratto, url: r.url };
+    });
+    return didattici.concat(art);
   }
 });
 </script>

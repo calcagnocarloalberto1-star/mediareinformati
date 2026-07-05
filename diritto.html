@@ -10,13 +10,12 @@
 <header class="sito">
   <div class="testata">
     <h1><a href="index.html">mediareinformati.it</a></h1>
-    <p class="motto">Piattaforma di consultazione e ricerca sulla mediazione</p>
   </div>
   <nav class="principale">
     <a href="index.html">Home</a>
     <a href="storia.html">Storia</a>
     <a href="pratica.html">Pratica</a>
-    <a href="diritto.html">Diritto</a>
+    <a href="diritto.html" class="attivo">Diritto</a>
     <a href="sistemi.html">Sistemi nazionali</a>
     <a href="link.html">Link mondiali</a>
     <a href="statistiche.html">Dati e statistiche</a>
@@ -29,44 +28,59 @@
 
 <main>
   <h2 class="pagina">Diritto della mediazione</h2>
-  <p class="sottotitolo">624 atti normativi pertinenti alla mediazione — Italia, UE e ordinamenti stranieri</p>
-  <div class="intro-motore">
-    <p>Questo motore consente di consultare e ordinare il diritto della mediazione nei diversi ordinamenti: leggi, decreti legislativi, decreti-legge, regolamenti, direttive UE e normativa straniera (Irlanda, Germania, Spagna, Portogallo, Argentina e altri). Per le schede sistematiche dei singoli ordinamenti si veda il motore <a href="sistemi.html">Sistemi nazionali</a>.</p>
+  <p class="sottotitolo">Fai una domanda: la risposta &egrave; un contributo costruito su 624 atti normativi italiani, europei e stranieri</p>
+  <div class="intro-motore"><p>Questo motore attinge alla banca dati normativa dell&rsquo;archivio &mdash; dal d.lgs. 28/2010 e i suoi decreti attuativi alla riforma Cartabia, dalle direttive europee alle leggi straniere &mdash; e compone una trattazione unitaria, scaricabile in Word. In coda, gli atti utilizzati.</p></div>
+
+  <div class="strumenti">
+    <div class="assistente-domanda">
+      <input type="text" id="domanda" placeholder="Es. Quando la mediazione è condizione di procedibilità dopo la riforma Cartabia?" autocomplete="off">
+      <button class="bottone-primario" id="chiedi">Componi</button>
+    </div>
+    <div class="suggerimenti-domande" id="suggerimenti">
+      <button>Quando la mediazione è obbligatoria?</button>
+      <button>Cosa prevede la riforma Cartabia sulla mediazione?</button>
+      <button>Come funziona il credito d'imposta?</button>
+      <button>Quali sono le regole della mediazione telematica?</button>
+    </div>
   </div>
-  <div class="avviso-provvisorio">Nota della redazione: gli atti sono selezionati dall&rsquo;archivio generale con un vaglio automatico di pertinenza alla mediazione (nome e contenuto dei documenti). L&rsquo;esito &egrave; rivedibile riga per riga in <code>strumenti/pertinenza.csv</code>.
+  <p class="conteggio" id="stato"></p>
+  <div id="contenitore-risposta"></div>
+
+  <div class="avviso-provvisorio" style="margin-top:30px">
+    <strong>Nota della redazione.</strong> Il contributo &egrave; composto dall&rsquo;intelligenza artificiale esclusivamente sui materiali dell&rsquo;archivio e va verificato sulle fonti indicate in coda. Non costituisce parere legale.
   </div>
-  <div id="motore"></div>
 </main>
 
 <footer class="sito">
   <div class="interno">
-    <span>mediareinformati.it — prototipo di consultazione, luglio 2026</span>
-    <span>Fonte: archivio documentale dell&rsquo;autore (indice generato il 05/07/2026)</span>
+    <span>mediareinformati.it — piattaforma di consultazione sulla mediazione</span>
+    <span>Archivio: Carlo Alberto Calcagno · mediaresenzaconfini.org</span>
   </div>
 </footer>
 
 <script src="data/normativa.js"></script>
 <script src="assets/app.js"></script>
+<script src="assets/consulta.js"></script>
+<script src="https://js.puter.com/v2/"></script>
 <script>
-initMotore({
-  dati: window.DATA_NORMATIVA,
-  campiRicerca: ["titolo", "categoria", "ambito", "anno"],
-  segnapostoRicerca: "Cerca per parola chiave (es. 28/2010, direttiva, Ley 5/2012)…",
-  filtri: [
-    { campo: "anno", etichetta: "Anno", decrescente: true },
-    { campo: "ambito", etichetta: "Ambito" },
-    { campo: "categoria", etichetta: "Categoria d'archivio" }
+initConsulta({
+  nomeSezione: "contributo di diritto della mediazione",
+  nomeFile: "diritto",
+  fonteTitolo: "Atti normativi utilizzati",
+  ruolo: "Componi un contributo di DIRITTO DELLA MEDIAZIONE (riferimento: ITALIA, d.lgs. 28/2010 e riforma Cartabia, salvo che la domanda riguardi altri paesi).",
+  italiaPrima: true,
+  sinonimi: [
+    [/obbligator|procedibilit/, ["condizione di procedibilita", "procedibilita", "28/2010", "obbligatoria"]],
+    [/cartabia|riform/, ["cartabia", "149/2022", "riforma", "28/2010"]],
+    [/cost[oi]|spes[ae]|indennit|tariff|credito/, ["indennita", "spese", "credito d'imposta", "150/2023"]],
+    [/telematic|online|distanz/, ["telematica", "videoconferenza", "firma digitale"]],
+    [/demandat|delegat/, ["demandata", "delegata", "5 quater"]],
+    [/organism|formaz|mediator/, ["organismi", "formazione", "registro", "150/2023"]]
   ],
-  rendi: function (r) {
-    return '<p class="r-titolo"><a>' + esc(r.titolo) + '</a></p>' +
-      '<p class="r-meta">' + esc(r.anno) + '<span class="sep">·</span><span class="etichetta">' + esc(r.ambito) + '</span></p>';
-  },
-  dettaglio: function (r) {
-    return '<dl><dt>Anno</dt><dd>' + esc(r.anno) + '</dd>' +
-      '<dt>Ambito (classificazione euristica)</dt><dd>' + esc(r.ambito) + '</dd>' +
-      '<dt>Categoria d\'archivio</dt><dd>' + esc(r.categoria) + '</dd>' +
-      '<dt>Documento</dt><dd>' + esc(r.file) + '</dd>' +
-      '<dt>Percorso in archivio</dt><dd>materiale di lavoro/' + esc(r.percorso) + '</dd></dl>';
+  dati: function () {
+    return (window.DATA_NORMATIVA || []).map(function (r) {
+      return { titolo: r.titolo, meta: r.anno + " · " + r.ambito + (r.categoria ? " · " + r.categoria : ""), estratto: "", testo: r.titolo + " " + (r.categoria || "") };
+    });
   }
 });
 </script>

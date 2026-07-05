@@ -10,7 +10,6 @@
 <header class="sito">
   <div class="testata">
     <h1><a href="index.html">mediareinformati.it</a></h1>
-    <p class="motto">Piattaforma di consultazione e ricerca sulla mediazione</p>
   </div>
   <nav class="principale">
     <a href="index.html">Home</a>
@@ -18,7 +17,7 @@
     <a href="pratica.html">Pratica</a>
     <a href="diritto.html">Diritto</a>
     <a href="sistemi.html">Sistemi nazionali</a>
-    <a href="link.html">Link mondiali</a>
+    <a href="link.html" class="attivo">Link mondiali</a>
     <a href="statistiche.html">Dati e statistiche</a>
     <a href="articoli.html">Articoli</a>
     <a href="giurisprudenza.html">Giurisprudenza</a>
@@ -29,46 +28,55 @@
 
 <main>
   <h2 class="pagina">Link informativi mondiali</h2>
-  <p class="sottotitolo">Risorse ufficiali e qualificate sulla mediazione e sulla giustizia nel mondo</p>
-  <div class="intro-motore">
-    <p>Questo motore consente di accedere rapidamente a risorse ufficiali e informative sulla mediazione nel mondo: ministeri della giustizia, corti supreme, governi, associazioni professionali e risorse tematiche, classificati per paese, tipologia di ente e lingua.</p>
+  <p class="sottotitolo">Fai una domanda: la risposta &egrave; una guida ragionata alle 80 risorse ufficiali dell'archivio</p>
+  <div class="intro-motore"><p>Questo motore attinge alle risorse ufficiali classificate per paese, ente e lingua &mdash; ministeri, corti, organismi, associazioni &mdash; e compone una guida ragionata con i collegamenti, scaricabile in Word.</p></div>
+
+  <div class="strumenti">
+    <div class="assistente-domanda">
+      <input type="text" id="domanda" placeholder="Es. Dove trovo le fonti ufficiali sulla mediazione negli Stati Uniti?" autocomplete="off">
+      <button class="bottone-primario" id="chiedi">Componi</button>
+    </div>
+    <div class="suggerimenti-domande" id="suggerimenti">
+      <button>Le risorse ufficiali europee sulla mediazione</button>
+      <button>Dove informarsi sulla mediazione negli Stati Uniti?</button>
+      <button>Gli organismi internazionali di ADR</button>
+    </div>
   </div>
-  <div id="motore"></div>
+  <p class="conteggio" id="stato"></p>
+  <div id="contenitore-risposta"></div>
+
+  <div class="avviso-provvisorio" style="margin-top:30px">
+    <strong>Nota della redazione.</strong> Il contributo &egrave; composto dall&rsquo;intelligenza artificiale esclusivamente sui materiali dell&rsquo;archivio e va verificato sulle fonti indicate in coda. Non costituisce parere legale.
+  </div>
 </main>
 
 <footer class="sito">
   <div class="interno">
-    <span>mediareinformati.it — prototipo di consultazione, luglio 2026</span>
-    <span>Fonte: blogroll di mediaresenzaconfini.org · classificazione redazionale</span>
+    <span>mediareinformati.it — piattaforma di consultazione sulla mediazione</span>
+    <span>Archivio: Carlo Alberto Calcagno · mediaresenzaconfini.org</span>
   </div>
 </footer>
 
 <script src="data/link.js"></script>
 <script src="assets/app.js"></script>
+<script src="assets/consulta.js"></script>
+<script src="https://js.puter.com/v2/"></script>
 <script>
-initMotore({
-  dati: window.DATA_LINK,
-  campiRicerca: ["nome", "url", "categorie", "paese", "tipologia"],
-  segnapostoRicerca: "Cerca per nome, paese o indirizzo…",
-  filtri: [
-    { campo: "paese", etichetta: "Paese" },
-    { campo: "tipologia", etichetta: "Tipologia di ente" },
-    { campo: "lingua", etichetta: "Lingua" }
+initConsulta({
+  nomeSezione: "guida alle risorse",
+  nomeFile: "link",
+  fonteTitolo: "Risorse utilizzate",
+  ruolo: "Componi una GUIDA RAGIONATA alle risorse informative fornite: per ciascuna risorsa pertinente spiega che cosa offre e quando consultarla.",
+  massimo: 10,
+  sinonimi: [
+    [/uniti|americ|usa/, ["stati uniti", "american"]],
+    [/europ|\bue\b/, ["europea", "commissione", "e-justice"]],
+    [/international|internazional|mondial/, ["international", "uncitral", "mediation"]]
   ],
-  rendi: function (r) {
-    return '<p class="r-titolo"><a href="' + esc(r.url) + '" target="_blank" rel="noopener">' + esc(r.nome) + '</a></p>' +
-      '<p class="r-meta">' +
-      (r.paese ? '<span class="etichetta">' + esc(r.paese) + '</span>' : '') +
-      (r.tipologia ? esc(r.tipologia) + '<span class="sep">·</span>' : '') +
-      (r.lingua ? esc(r.lingua) + '<span class="sep">·</span>' : '') +
-      esc(r.url) + '</p>';
-  },
-  dettaglio: function (r) {
-    return '<dl><dt>Paese</dt><dd>' + (esc(r.paese) || "—") + '</dd>' +
-      '<dt>Tipologia</dt><dd>' + (esc(r.tipologia) || "—") + '</dd>' +
-      '<dt>Lingua del sito</dt><dd>' + (esc(r.lingua) || "—") + '</dd>' +
-      '<dt>Categorie della raccolta originaria</dt><dd>' + (esc(r.categorie.join(", ")) || "—") + '</dd>' +
-      '<dt>Indirizzo</dt><dd><a href="' + esc(r.url) + '" target="_blank" rel="noopener">' + esc(r.url) + '</a></dd></dl>';
+  dati: function () {
+    return (window.DATA_LINK || []).map(function (r) {
+      return { titolo: r.nome, meta: (r.paese || "") + (r.tipologia ? " · " + r.tipologia : "") + (r.lingua ? " · " + r.lingua : ""), estratto: "", testo: r.nome + " " + (r.paese || "") + " " + (r.tipologia || "") + " " + (r.categorie || []).join(" "), url: r.url };
+    });
   }
 });
 </script>

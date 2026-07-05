@@ -10,7 +10,6 @@
 <header class="sito">
   <div class="testata">
     <h1><a href="index.html">mediareinformati.it</a></h1>
-    <p class="motto">Piattaforma di consultazione e ricerca sulla mediazione</p>
   </div>
   <nav class="principale">
     <a href="index.html">Home</a>
@@ -21,7 +20,7 @@
     <a href="link.html">Link mondiali</a>
     <a href="statistiche.html">Dati e statistiche</a>
     <a href="articoli.html">Articoli</a>
-    <a href="giurisprudenza.html">Giurisprudenza</a>
+    <a href="giurisprudenza.html" class="attivo">Giurisprudenza</a>
     <a href="assistente.html">Assistente</a>
     <a href="progetto.html">Progetto / Autore</a>
   </nav>
@@ -29,51 +28,58 @@
 
 <main>
   <h2 class="pagina">Giurisprudenza</h2>
-  <p class="sottotitolo">174 provvedimenti pertinenti alla mediazione e alla conciliazione, dal 1996 a oggi</p>
-  <div class="intro-motore">
-    <p>Questo motore consente di consultare e filtrare la giurisprudenza sulla mediazione in modo sistematico: ricerca per parola chiave, anno e organo. Ogni voce indica il documento d&rsquo;archivio corrispondente.</p>
+  <p class="sottotitolo">Fai una domanda: la risposta &egrave; un contributo costruito su 174 provvedimenti dal 1996 a oggi</p>
+  <div class="intro-motore"><p>Questo motore attinge alla giurisprudenza dell&rsquo;archivio &mdash; Corte costituzionale, Cassazione, corti europee, TAR e merito &mdash; e compone una trattazione unitaria con gli estremi delle pronunce, scaricabile in Word.</p></div>
+
+  <div class="strumenti">
+    <div class="assistente-domanda">
+      <input type="text" id="domanda" placeholder="Es. Cosa dice la giurisprudenza sulla partecipazione personale delle parti?" autocomplete="off">
+      <button class="bottone-primario" id="chiedi">Componi</button>
+    </div>
+    <div class="suggerimenti-domande" id="suggerimenti">
+      <button>La condizione di procedibilità nella giurisprudenza</button>
+      <button>Cosa accade se una parte non partecipa alla mediazione?</button>
+      <button>La mediazione demandata secondo i giudici</button>
+      <button>Corte costituzionale e mediazione obbligatoria</button>
+    </div>
   </div>
-  <div class="avviso-provvisorio">Nota della redazione: massime, sintesi ed esito sono in corso di redazione tramite il massimario di lavoro (<code>strumenti/massimario.xlsx</code>); man mano che vengono compilate compaiono automaticamente in questa pagina. L&rsquo;organo &egrave; dedotto con criteri euristici dall&rsquo;indice e dai nomi dei documenti. Le pronunce sono state selezionate con un vaglio automatico di pertinenza (nome e contenuto dei documenti); l&rsquo;esito del vaglio &egrave; rivedibile riga per riga in <code>strumenti/pertinenza.csv</code>.</div>
-  <div id="motore"></div>
+  <p class="conteggio" id="stato"></p>
+  <div id="contenitore-risposta"></div>
+
+  <div class="avviso-provvisorio" style="margin-top:30px">
+    <strong>Nota della redazione.</strong> Il contributo &egrave; composto dall&rsquo;intelligenza artificiale esclusivamente sui materiali dell&rsquo;archivio e va verificato sulle fonti indicate in coda. Non costituisce parere legale.
+  </div>
 </main>
 
 <footer class="sito">
   <div class="interno">
-    <span>mediareinformati.it — prototipo di consultazione, luglio 2026</span>
-    <span>Fonte: archivio documentale dell&rsquo;autore (indice generato il 05/07/2026)</span>
+    <span>mediareinformati.it — piattaforma di consultazione sulla mediazione</span>
+    <span>Archivio: Carlo Alberto Calcagno · mediaresenzaconfini.org</span>
   </div>
 </footer>
 
 <script src="data/giurisprudenza.js"></script>
 <script src="assets/app.js"></script>
+<script src="assets/consulta.js"></script>
+<script src="https://js.puter.com/v2/"></script>
 <script>
-initMotore({
-  dati: window.DATA_GIURISPRUDENZA,
-  campiRicerca: ["titolo", "organo", "sede", "categoria", "anno", "massima", "materia"],
-  segnapostoRicerca: "Cerca per parola chiave, organo, anno…",
-  filtri: [
-    { campo: "anno", etichetta: "Anno", decrescente: true },
-    { campo: "organo", etichetta: "Organo" },
-    { campo: "categoria", etichetta: "Categoria d'archivio" }
+initConsulta({
+  nomeSezione: "contributo di giurisprudenza",
+  nomeFile: "giurisprudenza",
+  fonteTitolo: "Provvedimenti utilizzati",
+  ruolo: "Componi un contributo GIURISPRUDENZIALE sulla mediazione (ordinamento italiano), fondato sulle pronunce fornite, con gli estremi esatti.",
+  italiaPrima: true,
+  sinonimi: [
+    [/procedibilit|obbligator/, ["procedibilita", "improcedibilita", "condizione"]],
+    [/partecipaz|comparizion|assenza|mancata/, ["partecipazione", "comparizione", "mancata partecipazione", "sanzione"]],
+    [/demandat|delegat/, ["demandata", "delegata"]],
+    [/costituzional/, ["costituzionale", "272"]],
+    [/effettiv|primo incontro/, ["effettivita", "primo incontro"]]
   ],
-  rendi: function (r) {
-    return '<p class="r-titolo"><a>' + esc(r.titolo) + '</a></p>' +
-      '<p class="r-meta">' + esc(r.anno) + '<span class="sep">·</span><span class="etichetta">' + esc(r.organo) + '</span>' +
-      (r.sede ? esc(r.sede) : '') +
-      (r.materia ? '<span class="sep">·</span>' + esc(r.materia) : '') + '</p>' +
-      (r.massima ? '<p class="r-testo"><em>' + esc(r.massima) + '</em></p>' : '');
-  },
-  dettaglio: function (r) {
-    return '<dl><dt>Anno</dt><dd>' + esc(r.anno) + '</dd>' +
-      '<dt>Organo (classificazione euristica)</dt><dd>' + esc(r.organo) + (r.sede ? ' — ' + esc(r.sede) : '') + '</dd>' +
-      (r.estremi ? '<dt>Estremi ufficiali</dt><dd>' + esc(r.estremi) + '</dd>' : '') +
-      (r.materia ? '<dt>Materia</dt><dd>' + esc(r.materia) + '</dd>' : '') +
-      (r.esito ? '<dt>Esito</dt><dd>' + esc(r.esito) + '</dd>' : '') +
-      (r.massima ? '<dt>Massima</dt><dd>' + esc(r.massima) + '</dd>' : '') +
-      (r.sintesi ? '<dt>Sintesi</dt><dd>' + esc(r.sintesi) + '</dd>' : '') +
-      '<dt>Categoria d\'archivio</dt><dd>' + esc(r.categoria) + '</dd>' +
-      '<dt>Documento</dt><dd>' + esc(r.file) + '</dd>' +
-      '<dt>Percorso in archivio</dt><dd>materiale di lavoro/' + esc(r.percorso) + '</dd></dl>';
+  dati: function () {
+    return (window.DATA_GIURISPRUDENZA || []).map(function (r) {
+      return { titolo: r.titolo, meta: r.anno + " · " + r.organo + (r.sede ? " " + r.sede : ""), estratto: r.massima || "", testo: r.titolo + " " + (r.massima || "") + " " + (r.sintesi || "") + " " + (r.materia || "") };
+    });
   }
 });
 </script>
