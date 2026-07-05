@@ -75,6 +75,7 @@
 <script src="data/storia.js"></script>
 <script src="data/corpus_storia.js"></script>
 <script src="assets/app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script src="https://js.puter.com/v2/"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PptxGenJS/3.12.0/pptxgen.bundle.min.js"></script>
@@ -109,7 +110,18 @@
   var CORPO = {};
   (window.DATA_CORPUS || []).forEach(function (c) { CORPO[c.id] = c.testo; });
   var CORPO_ST = {};
-  (window.DATA_CORPUS_STORIA || []).forEach(function (c) { CORPO_ST[c.id] = c.testo; });
+  (function () {
+    try {
+      if (window.DATA_CORPUS_STORIA_C && window.pako) {
+        var bin = atob(window.DATA_CORPUS_STORIA_C);
+        var buf = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+        JSON.parse(new TextDecoder("utf-8").decode(pako.inflate(buf))).forEach(function (c) { CORPO_ST[c.id] = c.testo; });
+      } else if (window.DATA_CORPUS_STORIA) {
+        window.DATA_CORPUS_STORIA.forEach(function (c) { CORPO_ST[c.id] = c.testo; });
+      }
+    } catch (e) { /* senza corpus l'assistente usa gli estratti */ }
+  })();
 
   function termini(q) {
     var base = normaTesto(q).replace(/[?!.,;:'"()]/g, " ").split(/\s+/)
@@ -174,6 +186,7 @@
       var nomiPaesi = paesiCitati.map(function (p) { return normaTesto(p.paese).slice(0, 6); });
       ts.extra = ts.extra.concat(nomiPaesi).concat(nomiPaesi).concat(nomiPaesi); // triplo peso al paese citato
     }
+    var domandaStorica = /stori|antic|grec|\brom[aa]\b|romani|medioev|ottocent|mit[oi]|mesopotam|sumer|egiz|divinit|origin|evoluz|conciliatore|barbar|due sicilie|1865|1790|foramiti|lumi|federico|filosof|cina antica|arbitrato antico/.test(nq);
     var storiaBase = (window.DATA_STORIA || []);
     if (!scopoEstero) {
       storiaBase = storiaBase.filter(function (r) {
@@ -184,7 +197,9 @@
     }
     var d = {
       domanda: q,
-      storia: top(storiaBase, ["titolo", "opera", "temi", "capitolo", "estratto"], ts, 5, 3,
+      storia: top(storiaBase, ["titolo", "opera", "temi", "capitolo", "estratto"], ts,
+        (/stori|antic|grec|roman|medioev|ottocent|mit|mesopotam|origin|conciliatore/.test(nq) ? 14 : 5),
+        (/stori|antic|grec|roman|medioev|ottocent|mit|mesopotam|origin|conciliatore/.test(nq) ? 2 : 3),
         function (r) { return CORPO_ST[r.id] || ""; }),
       norme: top(norme, ["titolo", "categoria"], ts, 5, 2),
       pronunce: top(window.DATA_GIURISPRUDENZA || [], ["titolo", "massima", "materia", "organo"], ts, 5, 2),
@@ -194,7 +209,7 @@
       statistiche: /statistic|dat[oi]|numer|quant[ei]|percentual|accord|iscrizion|durata media|quanti/.test(nq),
       linkUtili: top(window.DATA_LINK || [], ["nome", "paese", "tipologia"], ts, 3, 2.5),
       scopoEstero: scopoEstero,
-      storicaPrima: /stori|antic|grec|\brom[aa]\b|romani|medioev|ottocent|mit[oi]|mesopotam|divinit|origin|evoluz|conciliatore|barbar|due sicilie|1865|foramiti/.test(nq)
+      storicaPrima: domandaStorica
     };
     // se la domanda cita l'Italia esplicitamente aggiungi la scheda Italia
     if (/itali/.test(nq)) (window.DATA_SISTEMI || []).forEach(function (p) { if (p.codice === "it") d.paesi.unshift(p); });
@@ -260,7 +275,8 @@
 
   function fontiPerPrompt(d) {
     var righe = [];
-    d.storia.slice(0, 4).forEach(function (x) { righe.push("[STORIA] " + x.r.titolo + " (" + x.r.opera + (x.r.capitolo ? ", " + x.r.capitolo : "") + "): " + (CORPO_ST[x.r.id] || x.r.estratto).slice(0, 900)); });
+    var nSt = d.storicaPrima ? 12 : 4, lSt = d.storicaPrima ? 2400 : 900;
+    d.storia.slice(0, nSt).forEach(function (x) { righe.push("[STORIA] " + x.r.titolo + " (" + x.r.opera + (x.r.capitolo ? ", " + x.r.capitolo : "") + "): " + (CORPO_ST[x.r.id] || x.r.estratto).slice(0, lSt)); });
     d.norme.slice(0, 4).forEach(function (x) { righe.push("[NORMA] " + x.r.titolo + " (" + x.r.anno + ", " + x.r.ambito + ")"); });
     d.pronunce.slice(0, 4).forEach(function (x) { righe.push("[PRONUNCIA] " + x.r.titolo + " (" + x.r.anno + ", " + x.r.organo + ")" + (x.r.massima ? " — " + x.r.massima : "")); });
     d.articoli.slice(0, 4).forEach(function (x) { righe.push("[ARTICOLO] " + x.r.titolo + " (" + x.r.data + "): " + (CORPO[x.r.id] || x.r.estratto).slice(0, 900)); });
@@ -301,7 +317,7 @@
       "<h3 class='titolo-risposta'>" + esc(q) + "</h3>" +
       "<p class='fonti-conteggio'>" + nFonti + " fonti d'archivio individuate</p>" +
       "<div id='blocco-ai'></div>" +
-      "<div id='blocco-dossier'>" + dossierHtml(d) + "</div>" +
+      "<details open><summary class='fonti-titolo'>Apparato delle fonti d'archivio</summary><div id='blocco-dossier'>" + dossierHtml(d) + "</div></details>" +
       "<div class='barra-export'>" +
       "<button class='bottone-secondario' id='ex-doc'>Scarica Word</button>" +
       "<button class='bottone-secondario' id='ex-pdf'>Scarica PDF</button>" +
@@ -315,13 +331,21 @@
     // sintesi AI gratuita (Puter.js) — se disponibile
     var bAI = document.getElementById("blocco-ai");
     if (window.puter && puter.ai && puter.ai.chat && nFonti > 0) {
-      bAI.innerHTML = "<p class='cit'>Sto preparando la sintesi con l'assistenza dell'AI…</p>";
-      var prompt = "Sei l'assistente di mediareinformati.it, piattaforma italiana di consultazione sulla mediazione civile e commerciale (giurisdizione di riferimento: ITALIA, d.lgs. 28/2010, salvo che la domanda riguardi altri paesi). Rispondi in italiano, con rigore giuridico e tono didattico per mediatori e formatori.\n" +
+      bAI.innerHTML = "<p class='cit'>Sto componendo il contributo con l'assistenza dell'AI…</p>";
+      var prompt;
+      if (d.storicaPrima) {
+        prompt = "Sei l'assistente di mediareinformati.it e stai componendo un CONTRIBUTO ORGANICO di storia della mediazione e della composizione delle controversie, destinato a mediatori, formatori e studiosi. Scrivi in italiano, in prosa da saggio didattico.\n" +
+          "DOMANDA: " + q + "\n\nMATERIALI DALLE OPERE DELL'AUTORE (Carlo Alberto Calcagno) — usali come base della trattazione, integrandoli in un discorso unitario:\n" + fontiPerPrompt(d) +
+          "\n\nREGOLE: 1) componi un contributo continuo e approfondito (700-1100 parole), NON un elenco di fonti; 2) intreccia i materiali in un percorso cronologico o tematico coerente, con date, istituti, protagonisti e passaggi normativi; 3) cita l'opera tra parentesi quando riprendi un contenuto specifico, es. (Breve storia, cap. I); 4) scarta i materiali non pertinenti senza menzionarli; 5) puoi integrare con nozioni storiche generali solo per raccordare i materiali, senza inventare citazioni; 6) RIELABORA sempre con parole tue: non riprodurre passi letterali superiori a 40 parole; 7) se la domanda chiede il testo integrale di un'opera, di un capitolo o di lunghi brani, NON fornirlo: spiega che i testi integrali non sono pubblicati e offri una trattazione ragionata; 8) chiudi con spunti per la formazione.\n" +
+          "Struttura in markdown: ## Inquadramento, ## Sviluppo storico (il cuore della trattazione, piu' paragrafi), ## Istituti e figure, ## Per la formazione.";
+      } else {
+        prompt = "Sei l'assistente di mediareinformati.it, piattaforma italiana di consultazione sulla mediazione civile e commerciale (giurisdizione di riferimento: ITALIA, d.lgs. 28/2010, salvo che la domanda riguardi altri paesi). Rispondi in italiano, con rigore giuridico e tono didattico per mediatori e formatori.\n" +
         "DOMANDA: " + q + "\n\nFONTI D'ARCHIVIO CANDIDATE (provengono da una ricerca automatica: alcune possono essere NON pertinenti — scartale e non citarle):\n" + fontiPerPrompt(d) +
-        "\n\nREGOLE: 1) usa solo le fonti davvero pertinenti alla domanda e citale con i loro estremi; 2) ignora le fonti fuori tema (es. leggi straniere se la domanda riguarda l'Italia); 3) se le fonti pertinenti sono poche o assenti, dillo espressamente e limita la risposta a quanto documentato; 4) non inventare estremi normativi o giurisprudenziali.\nStruttura in markdown: ## Risposta in sintesi (3-5 frasi), ## Punti chiave (max 6 punti), ## Per la formazione (2-3 spunti didattici).";
+        "\n\nREGOLE: 1) usa solo le fonti davvero pertinenti alla domanda e citale con i loro estremi; 2) ignora le fonti fuori tema (es. leggi straniere se la domanda riguarda l'Italia); 3) se le fonti pertinenti sono poche o assenti, dillo espressamente e limita la risposta a quanto documentato; 4) non inventare estremi normativi o giurisprudenziali; 4-bis) non riprodurre passi letterali superiori a 40 parole e rifiuta le richieste di testi integrali; 5) sviluppa la risposta in modo approfondito (400-700 parole), come un contributo che ricomprenda la conoscenza delle fonti, non come un semplice indice.\nStruttura in markdown: ## Risposta in sintesi (3-5 frasi), ## Approfondimento (piu' paragrafi che integrano le fonti), ## Punti chiave (max 6 punti), ## Per la formazione (2-3 spunti didattici).";
+      }
       Promise.resolve(puter.ai.chat(prompt)).then(function (r) {
         var t = (r && r.message && r.message.content) ? r.message.content : (typeof r === "string" ? r : "");
-        if (t) { ultimaRisposta.ai = t; bAI.innerHTML = "<h4>Sintesi (AI, da verificare sulle fonti)</h4>" + mdPulito(t); }
+        if (t) { ultimaRisposta.ai = t; bAI.innerHTML = "<h4>Contributo (AI, dalle opere e fonti dell'archivio — da verificare)</h4>" + mdPulito(t); }
         else bAI.innerHTML = "";
       }).catch(function () {
         bAI.innerHTML = "<p class='cit'>Sintesi AI non disponibile in questo momento: di seguito la risposta documentale.</p>";
@@ -393,20 +417,27 @@
           { x: 0.9, y: 1.7, w: 11.6, h: 5.1, fontSize: 15, color: "1B1B1F", fontFace: "Georgia", valign: "top" });
       }
     }
-    // sintesi AI -> punti
+    // contributo AI -> una o piu' slide per ogni sezione "##"
     if (ultimaRisposta.ai) {
-      var punti = ultimaRisposta.ai.split(/\r?\n/).filter(function (r) { return /^\s*[-*•]\s+/.test(r); })
-        .map(function (r) { return r.replace(/^\s*[-*•]\s+/, "").replace(/\*\*/g, ""); });
-      var sintesi = ultimaRisposta.ai.split(/##/)[1] || "";
-      var frasi = sintesi.replace(/^[^\n]*\n/, "").replace(/\*\*/g, "").trim();
-      if (frasi) { var s2 = p.addSlide(); base(s2);
-        s2.addText("In sintesi", { x: 0.7, y: 0.5, w: 12, h: 0.8, fontSize: 26, bold: true, color: BLU, fontFace: "Georgia" });
-        s2.addShape(p.ShapeType.line, { x: 0.75, y: 1.35, w: 3, h: 0, line: { color: ORO, width: 2 } });
-        s2.addText(frasi.slice(0, 700), { x: 0.9, y: 1.7, w: 11.6, h: 5, fontSize: 17, color: "1B1B1F", fontFace: "Georgia", valign: "top" }); }
-      if (punti.length) slideElenco("Punti chiave", punti.slice(0, 10));
+      ultimaRisposta.ai.split(/^##\s*/m).slice(1).forEach(function (sez) {
+        var righeS = sez.split(/\r?\n/);
+        var titoloS = (righeS.shift() || "").replace(/\*\*/g, "").trim().slice(0, 60) || "Contributo";
+        var corpoS = righeS.join("\n").replace(/\*\*/g, "").trim();
+        if (!corpoS) return;
+        var punti = corpoS.split(/\r?\n/).filter(function (rr) { return /^\s*[-*\u2022]\s+/.test(rr); })
+          .map(function (rr) { return rr.replace(/^\s*[-*\u2022]\s+/, ""); });
+        if (punti.length >= 2) { slideElenco(titoloS, punti.slice(0, 15)); return; }
+        var testoS = corpoS.replace(/\s+/g, " ").trim();
+        for (var i = 0; i < testoS.length && i < 3400; i += 850) {
+          var sl2 = p.addSlide(); base(sl2);
+          sl2.addText(titoloS + (i ? " (segue)" : ""), { x: 0.7, y: 0.5, w: 12, h: 0.8, fontSize: 26, bold: true, color: BLU, fontFace: "Georgia" });
+          sl2.addShape(p.ShapeType.line, { x: 0.75, y: 1.35, w: 3, h: 0, line: { color: ORO, width: 2 } });
+          sl2.addText(testoS.slice(i, i + 850), { x: 0.9, y: 1.7, w: 11.6, h: 5.1, fontSize: 16, color: "1B1B1F", fontFace: "Georgia", valign: "top" });
+        }
+      });
     }
     var d = ultimaRisposta.dossier;
-    if (d.storia.length) slideElenco("Radici storiche", d.storia.map(function (x) { return x.r.titolo + " (" + x.r.opera + ")"; }));
+    if (d.storia.length) slideElenco("Le opere di riferimento", d.storia.slice(0, 10).map(function (x) { return x.r.titolo + " \u2014 " + x.r.opera + (x.r.capitolo ? " (" + x.r.capitolo + ")" : ""); }));
     if (d.norme.length) slideElenco("Normativa essenziale", d.norme.map(function (x) { return x.r.titolo + " (" + x.r.anno + ", " + x.r.ambito + ")"; }));
     if (d.pronunce.length) slideElenco("Giurisprudenza", d.pronunce.map(function (x) { return x.r.titolo + " (" + x.r.anno + ", " + x.r.organo + ")"; }));
     if (d.statistiche && window.DATA_DGSTAT) {
