@@ -31,6 +31,7 @@ OPERE = [
   "Miti, Enneagramma, metodo di Harvard e mediazione interiore", "Manuale", "Testo d'archivio"),
  ("dei e mediazione.txt", "Le divinità: funzioni archetipiche", "Studio", "Testo d'archivio"),
  ("dei mesopotamici.txt", "Divinità mesopotamiche e principi di Harvard", "Studio", "Testo d'archivio"),
+ ("Manuale_CNMA-CMNA.txt", "Manuale CNMA-CMNA (corso per mediatori, d.m. 150/2023)", "Manuale", "Testo d'archivio"),
 ]
 
 TEMI = [
@@ -87,6 +88,37 @@ def segmenta_vol5(testo):
         out.append(["Raccolta per paese: " + paese, paese + " — " + tit, pulisci(blocco)])
     return out
 
+
+def segmenta_indice(testo, solo_storia=True):
+    """Segmenta un documento con indice iniziale (titolo<TAB>pagina)."""
+    righe = testo.split("\n")
+    toc = []; ultimo = 0
+    for i, r in enumerate(righe[:900]):
+        m = re.match(r"^([^\t]{4,120})\t\d{1,4}\s*$", r.strip())
+        if m: toc.append(m.group(1).strip()); ultimo = i
+    if len(toc) < 5: return []
+    corpo = "\n".join(righe[ultimo+1:])
+    pos = []
+    cursore = 0
+    for tit in toc:
+        idx = corpo.find("\n" + tit, cursore)
+        if idx == -1: idx = corpo.find(tit, cursore)
+        if idx != -1:
+            pos.append((idx, tit)); cursore = idx + len(tit)
+    out = []
+    for k, (idx, tit) in enumerate(pos):
+        fine = pos[k+1][0] if k+1 < len(pos) else len(corpo)
+        blocco = pulisci(corpo[idx+len(tit):fine])
+        if len(blocco) >= 200: out.append(["", tit, blocco])
+    if solo_storia:
+        # parte storica: sezioni prima di "SOCIOLOGIA DEL CONFLITTO" + sezioni a tema storico
+        RX_ST = re.compile(r"stori|origin|antic|sumer|egiz|grec|roman|barbar|federico|lumi|costituzion|conciliat|prussia|danese|lombardo|sicilie|portoghese|1865|1790|filosof|matrilineare|divinit|giustizia in|giustizia presso|giustizia nel|giustizia dalle|nascita della mediazione", re.I)
+        taglio = len(out)
+        for k, s in enumerate(out):
+            if "SOCIOLOGIA DEL CONFLITTO" in s[1].upper(): taglio = k; break
+        out = [s for k, s in enumerate(out) if k < taglio or RX_ST.search(s[1])]
+    return out
+
 def segmenta(testo):
     """Restituisce lista (capitolo, titolo_sezione, testo). Un candidato-titolo è
     confermato solo se raccoglie almeno 600 caratteri prima del successivo."""
@@ -136,9 +168,12 @@ def spezza(blocco, maxlen=6500):
 voci = []; corpus = []; nid = 0
 for fname, opera, tipo, stato in OPERE:
     path = os.path.join(TXT, fname)
-    testo = pulisci(open(path, encoding="utf-8", errors="replace").read())
+    grezzo = open(path, encoding="utf-8", errors="replace").read()
+    testo = pulisci(grezzo)
     if "volume 5" in fname:
         sezioni = segmenta_vol5(testo)
+    elif "CNMA" in fname:
+        sezioni = segmenta_indice(grezzo)
     else:
         sezioni = segmenta(testo)
         sezioni = [s for s in sezioni if italiano(s[2])]
