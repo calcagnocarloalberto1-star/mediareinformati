@@ -184,3 +184,6 @@ footer.sito .interno{max-width:1100px;margin:0 auto;padding:26px 24px;font-size:
   header.sito nav,.strumenti,.carica-altri,.barra-export,footer.sito{display:none}
   body{background:#fff}
 }
+
+.fonti-titolo{font-family:Georgia,serif;color:var(--blu);font-size:1.05rem;font-weight:bold;cursor:pointer;margin:18px 0 6px;border-top:1px solid var(--filo);padding-top:14px}
+details>.fonti-titolo::marker{color:var(--oro)}
