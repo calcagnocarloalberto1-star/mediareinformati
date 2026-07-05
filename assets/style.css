@@ -1,0 +1,118 @@
+/* mediareinformati.it — stile editoriale-giuridico */
+:root{
+  --carta:#faf9f6;
+  --inchiostro:#1c1c1c;
+  --grigio:#5a564e;
+  --blu:#23406b;
+  --blu-scuro:#182c49;
+  --filo:#d8d3c8;
+  --fondo-chiaro:#f1efe9;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--carta);color:var(--inchiostro);font-family:var(--sans);font-size:16px;line-height:1.6}
+
+/* ---------- intestazione ---------- */
+header.sito{border-bottom:3px double var(--filo);background:var(--carta)}
+.testata{max-width:1080px;margin:0 auto;padding:26px 20px 10px}
+.testata h1{font-family:var(--serif);font-size:1.9em;margin:0;letter-spacing:.01em}
+.testata h1 a{color:var(--inchiostro);text-decoration:none}
+.testata .motto{color:var(--grigio);margin:4px 0 0;font-size:.95em;font-style:italic;font-family:var(--serif)}
+nav.principale{max-width:1080px;margin:0 auto;padding:8px 20px 0;display:flex;flex-wrap:wrap;gap:2px 18px;font-size:.92em}
+nav.principale a{color:var(--blu);text-decoration:none;padding:6px 0;border-bottom:3px solid transparent;white-space:nowrap}
+nav.principale a:hover{border-bottom-color:var(--filo)}
+nav.principale a.attivo{border-bottom-color:var(--blu);font-weight:600;color:var(--blu-scuro)}
+
+/* ---------- struttura ---------- */
+main{max-width:1080px;margin:0 auto;padding:30px 20px 60px}
+h2.pagina{font-family:var(--serif);font-size:1.75em;margin:0 0 4px;color:var(--blu-scuro)}
+p.sottotitolo{margin:0 0 14px;color:var(--grigio);font-size:1.02em}
+.intro-motore{border-left:4px solid var(--blu);background:var(--fondo-chiaro);padding:12px 18px;margin:0 0 26px;font-size:.97em}
+.intro-motore p{margin:0}
+a{color:var(--blu)}
+
+/* ---------- ricerca e filtri ---------- */
+.strumenti{border:1px solid var(--filo);background:#fff;padding:16px 18px;margin-bottom:8px}
+.strumenti .riga{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.campo{display:flex;flex-direction:column;gap:4px;min-width:150px;flex:1}
+.campo.largo{flex:3;min-width:240px}
+.campo label{font-size:.78em;text-transform:uppercase;letter-spacing:.06em;color:var(--grigio)}
+.campo input[type=search],.campo select{padding:8px 10px;border:1px solid var(--filo);background:var(--carta);font:inherit;color:var(--inchiostro);width:100%}
+.campo input:focus,.campo select:focus{outline:2px solid var(--blu);outline-offset:-1px}
+button.azzeramento{background:none;border:1px solid var(--filo);padding:8px 14px;font:inherit;font-size:.88em;color:var(--grigio);cursor:pointer}
+button.azzeramento:hover{border-color:var(--blu);color:var(--blu)}
+.conteggio{font-size:.88em;color:var(--grigio);margin:10px 2px 18px}
+
+/* ---------- risultati ---------- */
+ul.risultati{list-style:none;margin:0;padding:0}
+ul.risultati>li{border-bottom:1px solid var(--filo);padding:14px 4px}
+ul.risultati>li:first-child{border-top:2px solid var(--inchiostro)}
+.r-titolo{font-family:var(--serif);font-size:1.08em;margin:0 0 3px}
+.r-titolo a{color:var(--blu-scuro);text-decoration:none}
+.r-titolo a:hover{text-decoration:underline}
+.r-meta{font-size:.82em;color:var(--grigio);margin:0 0 4px}
+.r-meta .sep{margin:0 6px;color:var(--filo)}
+.etichetta{display:inline-block;border:1px solid var(--filo);background:var(--fondo-chiaro);padding:0 7px;font-size:.92em;border-radius:2px;margin-right:4px}
+.r-testo{margin:4px 0 0;font-size:.93em;color:#333}
+.r-dettaglio{display:none;margin-top:10px;border-left:3px solid var(--filo);padding:8px 14px;font-size:.9em;background:var(--fondo-chiaro)}
+li.aperto .r-dettaglio{display:block}
+.r-dettaglio dt{font-weight:600;color:var(--grigio);font-size:.85em;text-transform:uppercase;letter-spacing:.04em;margin-top:6px}
+.r-dettaglio dd{margin:0 0 2px}
+.apri-dettaglio{background:none;border:none;color:var(--blu);cursor:pointer;font-size:.85em;padding:0;text-decoration:underline}
+.carica-altri{display:block;margin:26px auto 0;background:var(--blu);color:#fff;border:none;padding:10px 26px;font:inherit;font-size:.92em;cursor:pointer}
+.carica-altri:hover{background:var(--blu-scuro)}
+.nessun-risultato{padding:30px 4px;color:var(--grigio);font-style:italic}
+
+/* ---------- home ---------- */
+.manifesto{max-width:760px;font-family:var(--serif);font-size:1.12em;line-height:1.75}
+.manifesto p:first-child{margin-top:6px}
+.numeri-archivio{display:flex;flex-wrap:wrap;gap:0;border-top:2px solid var(--inchiostro);border-bottom:1px solid var(--filo);margin:30px 0;padding:14px 0}
+.numeri-archivio div{flex:1;min-width:130px;padding:6px 18px 6px 0}
+.numeri-archivio b{display:block;font-family:var(--serif);font-size:1.7em;color:var(--blu-scuro)}
+.numeri-archivio span{font-size:.82em;color:var(--grigio);text-transform:uppercase;letter-spacing:.05em}
+.motori-elenco{margin:34px 0 0;border-top:2px solid var(--inchiostro)}
+.motore-voce{display:block;border-bottom:1px solid var(--filo);padding:16px 4px;color:inherit;text-decoration:none}
+.motore-voce:hover{background:var(--fondo-chiaro)}
+.motore-voce h3{font-family:var(--serif);margin:0 0 4px;font-size:1.15em;color:var(--blu-scuro)}
+.motore-voce p{margin:0;font-size:.92em;color:var(--grigio)}
+.motore-voce .dot{color:var(--blu);margin-right:8px}
+h2.sezione-home{font-family:var(--serif);font-size:1.3em;margin:40px 0 0;color:var(--blu-scuro)}
+
+/* ---------- sistemi: schede paese ---------- */
+.griglia-paesi{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 24px}
+.griglia-paesi button{border:1px solid var(--filo);background:#fff;padding:7px 13px;font:inherit;font-size:.9em;cursor:pointer;color:var(--blu-scuro)}
+.griglia-paesi button:hover{border-color:var(--blu)}
+.griglia-paesi button.selezionato{background:var(--blu);color:#fff;border-color:var(--blu)}
+.scheda-paese{border:1px solid var(--filo);background:#fff;padding:26px 30px;margin-top:8px}
+.scheda-paese h3.nome-paese{font-family:var(--serif);font-size:1.5em;margin:0;color:var(--blu-scuro);border-bottom:2px solid var(--filo);padding-bottom:8px}
+.scheda-paese .agg{color:var(--grigio);font-size:.85em;font-style:italic;margin:6px 0 0}
+.scheda-paese h3:not(.nome-paese){font-family:var(--serif);font-size:1.05em;color:var(--blu-scuro);margin-top:22px}
+.scheda-paese .lnk{background:var(--fondo-chiaro);border-left:3px solid var(--blu);padding:8px 16px;margin:12px 0;font-size:.9em}
+.scheda-paese .src{font-size:.8em;color:var(--grigio);margin-top:16px}
+.avviso-provvisorio{border:1px dashed var(--filo);background:var(--fondo-chiaro);padding:14px 18px;font-size:.92em;color:var(--grigio);margin:14px 0}
+
+/* ---------- statistiche ---------- */
+table.dati{border-collapse:collapse;width:100%;font-size:.9em;background:#fff}
+table.dati th,table.dati td{border:1px solid var(--filo);padding:6px 10px;text-align:right}
+table.dati th{background:var(--fondo-chiaro);font-weight:600;color:var(--blu-scuro)}
+table.dati td:first-child,table.dati th:first-child{text-align:left}
+.barra{display:inline-block;height:9px;background:var(--blu);vertical-align:middle;margin-right:6px}
+.nota-fonte{font-size:.83em;color:var(--grigio);margin-top:10px}
+
+/* ---------- progetto ---------- */
+.prosa{max-width:760px;font-size:1.02em}
+.prosa h3{font-family:var(--serif);color:var(--blu-scuro);margin-top:30px}
+
+/* ---------- piè di pagina ---------- */
+footer.sito{border-top:3px double var(--filo);margin-top:40px}
+footer.sito .interno{max-width:1080px;margin:0 auto;padding:20px;font-size:.83em;color:var(--grigio);display:flex;flex-wrap:wrap;gap:8px 30px;justify-content:space-between}
+
+@media (max-width:640px){
+  .testata h1{font-size:1.5em}
+  nav.principale{gap:0 14px;font-size:.88em}
+  .strumenti .riga{flex-direction:column;align-items:stretch}
+  .campo{min-width:0}
+  .scheda-paese{padding:18px 16px}
+}
