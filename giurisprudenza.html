@@ -28,7 +28,7 @@
 
 <main>
   <h2 class="pagina">Giurisprudenza</h2>
-  <p class="sottotitolo">Fai una domanda: la risposta &egrave; un contributo costruito su 174 provvedimenti dal 1996 a oggi</p>
+  <p class="sottotitolo">Fai una domanda: la risposta &egrave; un contributo costruito sui testi di 171 provvedimenti dal 1996 a oggi</p>
   <div class="intro-motore"><p>Questo motore attinge alla giurisprudenza dell&rsquo;archivio &mdash; Corte costituzionale, Cassazione, corti europee, TAR e merito &mdash; e compone una trattazione unitaria con gli estremi delle pronunce, scaricabile in Word.</p></div>
 
   <div class="strumenti">
@@ -59,10 +59,23 @@
 </footer>
 
 <script src="data/giurisprudenza.js"></script>
+<script src="data/corpus_giur.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/consulta.js"></script>
 <script src="https://js.puter.com/v2/"></script>
 <script>
+var CORPO_G = {};
+(function () {
+  try {
+    if (window.DATA_CORPUS_GIUR_C && window.pako) {
+      var bin = atob(window.DATA_CORPUS_GIUR_C);
+      var buf = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+      JSON.parse(new TextDecoder("utf-8").decode(pako.inflate(buf))).forEach(function (c) { CORPO_G[c.k] = c.testo; });
+    }
+  } catch (e) {}
+})();
 initConsulta({
   nomeSezione: "contributo di giurisprudenza",
   nomeFile: "giurisprudenza",
@@ -78,7 +91,8 @@ initConsulta({
   ],
   dati: function () {
     return (window.DATA_GIURISPRUDENZA || []).map(function (r) {
-      return { titolo: r.titolo, meta: r.anno + " · " + r.organo + (r.sede ? " " + r.sede : ""), estratto: r.massima || "", testo: r.titolo + " " + (r.massima || "") + " " + (r.sintesi || "") + " " + (r.materia || "") };
+      var testo = CORPO_G[r.percorso] || "";
+      return { titolo: r.titolo, meta: r.anno + " · " + r.organo + (r.sede ? " " + r.sede : ""), estratto: r.massima || testo.slice(0, 200), testo: r.titolo + " " + (r.massima || "") + " " + (r.sintesi || "") + " " + (r.materia || "") + " " + testo };
     });
   }
 });
