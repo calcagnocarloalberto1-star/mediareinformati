@@ -51,11 +51,14 @@ initMotore({
   dati: window.DATA_STORIA,
   campiRicerca: ["titolo", "opera", "capitolo", "temi", "estratto"],
   segnapostoRicerca: "Cerca per epoca, istituto, paese, parola chiave\u2026",
-  filtri: [
-    { campo: "opera", etichetta: "Opera" },
-    { campo: "temi", etichetta: "Tema" },
-    { campo: "stato", etichetta: "Stato editoriale" }
-  ],
+  filtri: [],
+  esportaWord: true,
+  titoloDoc: "Storia della mediazione \u2014 risultati della ricerca",
+  rendiDoc: function (r) {
+    return '<h2>' + esc(r.titolo) + '</h2>' +
+      '<p class="m">' + esc(r.opera) + (r.capitolo ? ' \u00b7 ' + esc(r.capitolo) : '') + ' \u00b7 ' + esc(r.temi.join(", ")) + '</p>' +
+      '<p>' + esc(r.estratto) + '\u2026</p>';
+  },
   rendi: function (r) {
     return '<p class="r-titolo"><a>' + esc(r.titolo) + '</a></p>' +
       '<p class="r-meta"><span class="etichetta">' + esc(r.opera) + '</span>' +
