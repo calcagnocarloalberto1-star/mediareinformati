@@ -103,12 +103,12 @@
       }).join("\n\n");
       var prompt = "Sei l'assistente di mediareinformati.it, piattaforma italiana di consultazione sulla mediazione. " + (cfg.ruolo || "") +
         " Scrivi in italiano, in prosa da saggio didattico per mediatori, avvocati e formatori.\n" +
-        "DOMANDA: " + q + "\n\nMATERIALI D'ARCHIVIO:\n" + materiali +
-        "\n\nREGOLE: 1) componi una trattazione CONTINUA e ARMONICA (600-1000 parole) che risponda esattamente alla domanda, NON un elenco di frammenti; 2) collega i materiali con transizioni esplicite, citandoli tra parentesi con i loro estremi; 3) scarta in silenzio i materiali non pertinenti; se quelli pertinenti sono pochi, dillo e limita la trattazione a quanto documentato; 4) non inventare estremi normativi o giurisprudenziali; 5) rielabora sempre: nessun passo letterale oltre 40 parole; niente testi integrali; 6) chiudi con 2-3 spunti operativi o formativi.\n" +
+        "DOMANDA: " + q + "\n\nMATERIALI DELL'ARCHIVIO DEL SITO (base documentale riservata):\n" + materiali +
+        "\n\nREGOLE: 1) componi una RICOSTRUZIONE AUTONOMA, continua e armonica (600-1000 parole), che risponda esattamente alla domanda, NON un elenco di frammenti; 2) NON menzionare mai il curatore dell'archivio ne' le sue opere: scrivi come trattazione scientifica autonoma; 3) VALORIZZA e cita tra parentesi le fonti primarie ed esterne richiamate nei materiali (leggi con estremi, codici storici, pronunce, documenti istituzionali, autori storici); 4) scarta in silenzio i materiali non pertinenti; se quelli pertinenti sono pochi, dillo e limita la trattazione a quanto documentato; 5) non inventare estremi normativi o giurisprudenziali; 6) rielabora sempre: nessun passo letterale oltre 40 parole; niente testi integrali; 7) chiudi con 2-3 spunti operativi o formativi.\n" +
         "Struttura in markdown: ## Inquadramento, ## Sviluppo (più paragrafi collegati), ## Punti essenziali, ## Per la pratica e la formazione.";
       Promise.resolve(puter.ai.chat(prompt)).then(function (r) {
         var t = (r && r.message && r.message.content) ? r.message.content : (typeof r === "string" ? r : "");
-        if (t) { ultima.ai = t; bAI.innerHTML = "<h4>Contributo (composto sull'archivio — da verificare sulle fonti)</h4>" + mdPulito(t); }
+        if (t) { ultima.ai = t; bAI.innerHTML = "<h4>Contributo (da verificare sulle fonti)</h4>" + mdPulito(t); }
         else bAI.innerHTML = "<p class='cit'>Composizione AI non riuscita: di seguito i materiali pertinenti.</p>";
       }).catch(function () {
         bAI.innerHTML = "<p class='cit'>Composizione AI non disponibile in questo momento: di seguito i materiali pertinenti.</p>";
