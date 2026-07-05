@@ -2,7 +2,7 @@
 """Genera data/storia.js e data/corpus_storia.js dalla cartella 'Storia della mediazione'.
 Regola editoriale: le opere edite NON sono pubblicate in versione integrale;
 ogni sezione espone solo un estratto limitato."""
-import re, json, os, sys
+import re, json, os, sys, zlib, base64
 
 TXT = "/tmp/storia/txt"
 OUT = sys.argv[1] if len(sys.argv) > 1 else "/tmp/storia/out"
@@ -192,7 +192,7 @@ for fname, opera, tipo, stato in OPERE:
                 "temi": temi_di(parte) or ["Storia generale"],
                 "estratto": estr,
             })
-            corpus.append({"id": vid, "testo": re.sub(r"\s+", " ", parte)[:1700]})
+            corpus.append({"id": vid, "testo": re.sub(r"\s+", " ", parte)})
 
 def dump(nome, var, dati):
     with open(os.path.join(OUT, nome), "w", encoding="utf-8") as f:
@@ -201,7 +201,12 @@ def dump(nome, var, dati):
         f.write(";\n")
 
 dump("storia.js", "DATA_STORIA", voci)
-dump("corpus_storia.js", "DATA_CORPUS_STORIA", corpus)
+# corpus protetto: testo integrale usato SOLO per comporre i contributi dell'assistente,
+# serializzato compresso e codificato per non essere leggibile ne' indicizzabile
+blob = base64.b64encode(zlib.compress(json.dumps(corpus, ensure_ascii=False).encode("utf-8"), 9)).decode("ascii")
+with open(os.path.join(OUT, "corpus_storia.js"), "w", encoding="utf-8") as f:
+    f.write("/* Archivio di lavoro dell'assistente: contenuto compresso, non destinato alla lettura diretta. */\n")
+    f.write("window.DATA_CORPUS_STORIA_C = \"" + blob + "\";\n")
 print("voci:", len(voci), "| opere:", len(OPERE))
 from collections import Counter
 print(Counter(v["opera"].split(" — ")[0] for v in voci))
