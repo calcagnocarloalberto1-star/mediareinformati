@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Banche dati e statistiche — mediareinformati.it</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="sito">
+  <div class="testata">
+    <h1><a href="index.html">mediareinformati.it</a></h1>
+    <p class="motto">Piattaforma di consultazione e ricerca sulla mediazione</p>
+  </div>
+  <nav class="principale">
+    <a href="index.html">Home</a>
+    <a href="storia.html">Storia</a>
+    <a href="pratica.html">Pratica</a>
+    <a href="diritto.html">Diritto</a>
+    <a href="sistemi.html">Sistemi nazionali</a>
+    <a href="link.html">Link mondiali</a>
+    <a href="statistiche.html">Dati e statistiche</a>
+    <a href="articoli.html">Articoli</a>
+    <a href="giurisprudenza.html">Giurisprudenza</a>
+    <a href="progetto.html">Progetto / Autore</a>
+  </nav>
+</header>
+
+<main>
+  <h2 class="pagina">Banche dati e statistiche</h2>
+  <p class="sottotitolo">La mediazione in cifre: serie ministeriali italiane 2011&ndash;2025, Scoreboard UE 2026 e indice WJP 2015&ndash;2025</p>
+  <div class="intro-motore">
+    <p>Questo motore consente di consultare dati, indicatori e fonti statistiche sulla mediazione nel tempo: le elaborazioni comparative sull&rsquo;<em>EU Justice Scoreboard 2026</em> (mediatori accreditati, capacit&agrave; deflattiva, arretrato mediabile), le serie del <em>WJP Rule of Law Index</em> 2015&ndash;2025 con tutti i sotto-indicatori della giustizia civile, le <strong>statistiche ufficiali del Ministero della Giustizia (DGSTAT)</strong> sulla mediazione civile italiana dal 2011 a oggi, e l&rsquo;archivio delle fonti documentali.</p>
+  </div>
+
+  <h2 class="pagina" style="font-size:1.3em">Italia — La mediazione civile nei dati del Ministero della Giustizia</h2>
+  <p class="sottotitolo" style="font-size:.92em">Rilevazione DGSTAT sugli organismi di mediazione (d.lgs. 28/2010), 2011&ndash;2025</p>
+  <div class="strumenti">
+    <div class="riga">
+      <div class="campo largo">
+        <label for="vista-dgstat">Vista</label>
+        <select id="vista-dgstat">
+          <option value="iscrizioni" selected>Iscrizioni annuali 2011&ndash;2025</option>
+          <option value="esiti">Comparizione, accordi e durata 2015&ndash;2025</option>
+          <option value="materie">Flussi per materia (2011&ndash;2023)</option>
+        </select>
+      </div>
+      <div class="campo" id="campo-anno-mat" style="display:none">
+        <label for="anno-materie">Anno</label>
+        <select id="anno-materie"></select>
+      </div>
+    </div>
+  </div>
+  <p class="conteggio" id="sintesi-dgstat"></p>
+  <div style="overflow-x:auto"><table class="dati" id="tab-dgstat"></table></div>
+  <p class="nota-fonte" id="fonte-dgstat"></p>
+
+  <h2 class="pagina" style="font-size:1.3em">EU Justice Scoreboard 2026 — elaborazioni sulla mediazione</h2>
+  <p class="sottotitolo" style="font-size:.92em">Dal Rapporto integrato dell&rsquo;autore su dati della Commissione europea, COM(2026) 273</p>
+  <div class="strumenti">
+    <div class="riga">
+      <div class="campo largo">
+        <label for="scegli-tabella">Tabella</label>
+        <select id="scegli-tabella"></select>
+      </div>
+      <div class="campo largo">
+        <label for="filtro-sb">Filtra le righe (es. Italia)</label>
+        <input type="search" id="filtro-sb" placeholder="Cerca un paese o una voce…">
+      </div>
+    </div>
+  </div>
+  <p class="conteggio" id="nota-sb"></p>
+  <div style="overflow-x:auto"><table class="dati" id="tab-sb"></table></div>
+  <p class="nota-fonte" id="fonte-sb"></p>
+
+  <h2 class="pagina" style="font-size:1.3em;margin-top:44px">Scoreboard 2026 &mdash; Schede dei 27 sistemi giudiziari</h2>
+  <p class="sottotitolo" style="font-size:.92em">Per ciascun Paese: pilastri, flussi delle cause, commento e tutti i 69 indicatori con posizione UE</p>
+  <div class="strumenti">
+    <div class="riga">
+      <div class="campo">
+        <label for="sb-paese">Paese</label>
+        <select id="sb-paese"></select>
+      </div>
+      <div class="campo largo">
+        <label for="sb-cerca-ind">Filtra gli indicatori</label>
+        <input type="search" id="sb-cerca-ind" placeholder="Es. durata, giudici, digitale, appalti…">
+      </div>
+    </div>
+  </div>
+  <div id="sb-scheda"></div>
+
+  <h2 class="pagina" style="font-size:1.3em;margin-top:44px">WJP Rule of Law Index 2015&ndash;2025</h2>
+  <div class="strumenti">
+    <div class="riga">
+      <div class="campo largo">
+        <label for="indicatore">Indicatore</label>
+        <select id="indicatore">
+          <option value="adr" selected>7.7 — Meccanismi ADR accessibili, imparziali, efficaci</option>
+          <option value="civile">Fattore 7 — Giustizia civile (complessivo)</option>
+          <option value="s71">7.1 — Accessibilità ed economicità della giustizia civile</option>
+          <option value="s72">7.2 — Assenza di discriminazione</option>
+          <option value="s73">7.3 — Assenza di corruzione</option>
+          <option value="s74">7.4 — Assenza di indebite influenze del governo</option>
+          <option value="s75">7.5 — Assenza di ritardi irragionevoli</option>
+          <option value="s76">7.6 — Effettività dell'esecuzione</option>
+          <option value="overall">Indice complessivo Rule of Law</option>
+        </select>
+      </div>
+      <div class="campo largo">
+        <label for="filtro-paesi">Paesi (ricerca libera, separati da virgola)</label>
+        <input type="search" id="filtro-paesi" value="Italy, France, Germany, Spain, Netherlands, United Kingdom, United States" placeholder="Es. Italy, France, Germany…">
+      </div>
+    </div>
+  </div>
+  <p class="conteggio" id="conta"></p>
+  <div style="overflow-x:auto"><table class="dati" id="tabella"></table></div>
+  <p class="nota-fonte">Valori su scala 0&ndash;1 (1 = massima aderenza allo stato di diritto). Fonte: World Justice Project, Rule of Law Index, edizioni 2015&ndash;2025, come raccolte nell&rsquo;archivio. L&rsquo;edizione 2017&ndash;2018 &egrave; unica. Celle vuote: paese non rilevato in quell&rsquo;edizione.</p>
+
+  <h2 class="pagina" style="font-size:1.3em;margin-top:44px">Archivio delle fonti statistiche</h2>
+  <div id="motore"></div>
+</main>
+
+<footer class="sito">
+  <div class="interno">
+    <span>mediareinformati.it — prototipo di consultazione, luglio 2026</span>
+    <span>Fonti: Commissione europea (EU Justice Scoreboard) · World Justice Project</span>
+  </div>
+</footer>
+
+<script src="data/statistiche.js"></script>
+<script src="data/dgstat.js"></script>
+<script src="data/statistiche_fonti.js"></script>
+<script src="data/scoreboard.js"></script>
+<script src="data/scoreboard_paesi.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  if (!window.DATA_DGSTAT || !window.DATA_STATISTICHE || !window.DATA_SCOREBOARD || !window.DATA_SB_PAESI) {
+    document.querySelector("main").insertAdjacentHTML("afterbegin",
+      '<div class="avviso-provvisorio"><strong>Archivio non caricato:</strong> uno o pi\u00f9 file della cartella <code>data/</code> non sono raggiungibili sul server. Diagnosi: <a href="verifica.html">verifica.html</a>.</div>');
+    if (!window.DATA_DGSTAT) return;
+  }
+  /* --- DGSTAT Italia --- */
+  var dg = window.DATA_DGSTAT;
+  var selDg = document.getElementById("vista-dgstat");
+  var tabDg = document.getElementById("tab-dgstat");
+  var sin = document.getElementById("sintesi-dgstat");
+  var fonteDg = document.getElementById("fonte-dgstat");
+  var selAnnoMat = document.getElementById("anno-materie");
+  var campoAnnoMat = document.getElementById("campo-anno-mat");
+  Object.keys(dg.materie).sort().reverse().forEach(function (a) { selAnnoMat.appendChild(new Option(a, a)); });
+  function fmt(n) { return n === null || n === undefined ? "&mdash;" : n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+  function disegnaDg() {
+    var v = selDg.value, html = "";
+    if (v === "iscrizioni") {
+      var max = Math.max.apply(null, dg.iscrizioni.map(function (r) { return r.valore; }));
+      html = "<tr><th>Anno</th><th>Mediazioni iscritte</th><th style='text-align:left'>Nota</th></tr>";
+      dg.iscrizioni.forEach(function (r) {
+        html += "<tr><td style='text-align:left'>" + r.anno + "</td><td><span class='barra' style='width:" +
+          Math.round(r.valore / max * 180) + "px'></span>" + fmt(r.valore) + "</td><td style='text-align:left'>" + esc(r.nota) + "</td></tr>";
+      });
+      sin.textContent = "Nel 2025: " + fmt(dg.sintesi2025.iscrizioni) + " iscrizioni (78% obbligatorie, 13% demandate dal giudice, 8% volontarie); " +
+        dg.sintesi2025.organismi_attivi + " organismi attivi; mediazione telematica nel " + dg.sintesi2025.telematica_pct + "% dei procedimenti definiti.";
+    } else if (v === "esiti") {
+      html = "<tr><th>Anno</th><th>Aderente comparso</th><th>Accordo (aderente comparso)</th><th>Accordo se si prosegue oltre il 1&ordm; incontro</th><th>Durata media (gg)</th></tr>";
+      dg.esiti.forEach(function (r) {
+        html += "<tr><td style='text-align:left'>" + r.anno + "</td><td>" + r.comparizione.toFixed(1) + "%</td><td>" +
+          r.accordo.toFixed(1) + "%</td><td>" + r.accordo_tavolo.toFixed(1) + "%</td><td>" + (r.durata_gg ? r.durata_gg : "&mdash;") + "</td></tr>";
+      });
+      sin.textContent = "Quando le parti proseguono oltre il primo incontro, oltre la met\u00e0 delle mediazioni si chiude con un accordo (53,1% nel 2025).";
+    } else {
+      var annoM = selAnnoMat.value || "2023";
+      var blocco = dg.materie[annoM];
+      html = "<tr><th style='text-align:left'>Materia</th><th>Pendenti iniziali</th><th>Iscritti</th><th>Definiti</th><th>Pendenti finali</th></tr>";
+      blocco.righe.forEach(function (r) {
+        var tot = r[0] === "Totale";
+        html += "<tr" + (tot ? " style='font-weight:600;border-top:2px solid var(--inchiostro)'" : "") +
+          "><td style='text-align:left'>" + esc(r[0]) + "</td><td>" + fmt(r[1]) + "</td><td>" + fmt(r[2]) + "</td><td>" + fmt(r[3]) + "</td><td>" + fmt(r[4]) + "</td></tr>";
+      });
+      sin.textContent = "Anno " + annoM + (blocco.nota ? " — " + blocco.nota : "") + ". " + dg.nota_materie;
+    }
+    campoAnnoMat.style.display = v === "materie" ? "" : "none";
+    tabDg.innerHTML = html;
+  }
+  fonteDg.innerHTML = "Fonte: " + esc(dg.fonte) + ". Documenti: " +
+    dg.documenti.map(function (d) { return '<a href="' + esc(d.url) + '" target="_blank" rel="noopener">' + esc(d.titolo) + "</a>"; }).join(" · ") +
+    ". I dati 2024&ndash;2025 sono stime con proiezione nazionale; per il 2012&ndash;2013 si tenga conto della sospensione dell&rsquo;obbligatoriet&agrave; e della materia RC auto poi esclusa.";
+  selDg.addEventListener("change", disegnaDg);
+  selAnnoMat.addEventListener("change", disegnaDg);
+  disegnaDg();
+
+  /* --- Scoreboard --- */
+  var sb = window.DATA_SCOREBOARD;
+  var selT = document.getElementById("scegli-tabella");
+  var inpS = document.getElementById("filtro-sb");
+  var tabS = document.getElementById("tab-sb");
+  sb.tabelle.forEach(function (t, i) { selT.appendChild(new Option(t.titolo, i)); });
+  document.getElementById("fonte-sb").textContent = "Fonte: " + sb.fonte + ". Documento d'archivio: " + sb.documento + ".";
+  function disegnaSb() {
+    var t = sb.tabelle[+selT.value];
+    var q = normaTesto(inpS.value.trim());
+    var righe = t.righe.filter(function (r) {
+      return !q || normaTesto(r.join(" ")).indexOf(q) !== -1;
+    });
+    var html = "<tr>" + t.intestazione.map(function (h) { return "<th>" + esc(h) + "</th>"; }).join("") + "</tr>";
+    righe.forEach(function (r) {
+      html += "<tr>" + r.map(function (c, i) {
+        return "<td" + (i === 0 || isNaN(parseFloat(c.replace(/\./g, ""))) ? ' style="text-align:left"' : "") + ">" + esc(c) + "</td>";
+      }).join("") + "</tr>";
+    });
+    tabS.innerHTML = html;
+    document.getElementById("nota-sb").textContent =
+      righe.length + " righe" + (t.nota ? " — " + t.nota : "");
+  }
+  selT.addEventListener("change", disegnaSb);
+  var at1; inpS.addEventListener("input", function () { clearTimeout(at1); at1 = setTimeout(disegnaSb, 200); });
+  disegnaSb();
+
+  /* --- Scoreboard: schede paese --- */
+  var sbp = window.DATA_SB_PAESI;
+  var selP = document.getElementById("sb-paese");
+  var cercaInd = document.getElementById("sb-cerca-ind");
+  var schedaP = document.getElementById("sb-scheda");
+  sbp.paesi.slice().sort(function (a, b) { return a.paese.localeCompare(b.paese, "it"); })
+    .forEach(function (p) { selP.appendChild(new Option(p.paese + " (" + p.posto + "\u00b0)", p.paese)); });
+  selP.value = "Italia";
+  function tabellaHtml(rows, filtro) {
+    if (!rows.length) return "";
+    var h = "<tr>" + rows[0].map(function (c) { return "<th>" + esc(c) + "</th>"; }).join("") + "</tr>";
+    rows.slice(1).forEach(function (r) {
+      if (filtro && normaTesto(r.join(" ")).indexOf(filtro) === -1) return;
+      h += "<tr>" + r.map(function (c, i) {
+        return "<td" + (i === 0 ? " style='text-align:left'" : "") + ">" + esc(c) + "</td>";
+      }).join("") + "</tr>";
+    });
+    return "<div style='overflow-x:auto'><table class='dati'>" + h + "</table></div>";
+  }
+  function disegnaScheda() {
+    var p = null;
+    sbp.paesi.forEach(function (x) { if (x.paese === selP.value) p = x; });
+    if (!p) { schedaP.innerHTML = ""; return; }
+    var filtro = normaTesto(cercaInd.value.trim());
+    var h = '<div class="scheda-paese">' +
+      '<h3 class="nome-paese">' + esc(p.paese) + ' <span style="color:#888;font-size:.6em">' + p.posto + '\u00b0 su 27 \u00b7 punteggio ' + esc(p.punteggio) + '/10</span></h3>' +
+      '<p class="agg">' + p.note_intro.map(esc).join(" \u00b7 ") + '</p>' +
+      '<h3>Punteggio per pilastro</h3>' + tabellaHtml(p.pilastri, "") +
+      (p.commento.length ? '<h3>Commento</h3>' + p.commento.map(function (c) { return "<p>" + esc(c) + "</p>"; }).join("") : "") +
+      '<h3>Flusso delle cause in un anno (valori assoluti)</h3>' + tabellaHtml(p.flussi, "") +
+      '<h3>Tutti gli indicatori (valore e posizione UE)' + (filtro ? ' — filtro: \u00ab' + esc(cercaInd.value.trim()) + '\u00bb' : '') + '</h3>' +
+      tabellaHtml(p.indicatori, filtro) +
+      '<p class="src">Fonte: ' + esc(sbp.fonte) + '. Cause in entrata e pendenti: dati CEPEJ 2024 in valori assoluti su popolazione Eurostat.</p>' +
+      '</div>';
+    schedaP.innerHTML = h;
+  }
+  selP.addEventListener("change", disegnaScheda);
+  var atP; cercaInd.addEventListener("input", function () { clearTimeout(atP); atP = setTimeout(disegnaScheda, 200); });
+  disegnaScheda();
+
+  /* --- WJP --- */
+  var dati = window.DATA_STATISTICHE;
+  var ANNI = ["2015","2016","2017-2018","2019","2020","2021","2022","2023","2024","2025"];
+  var tab = document.getElementById("tabella");
+  var selInd = document.getElementById("indicatore");
+  var inp = document.getElementById("filtro-paesi");
+  var conta = document.getElementById("conta");
+  function disegna() {
+    var ind = selInd.value;
+    var termini = inp.value.split(",").map(function (s) { return normaTesto(s.trim()); }).filter(Boolean);
+    var scelti = dati.filter(function (p) {
+      if (!termini.length) return true;
+      var n = normaTesto(p.paese + " " + p.codice);
+      return termini.some(function (t) { return n.indexOf(t) !== -1; });
+    });
+    var html = "<tr><th>Paese</th>" + ANNI.map(function (a) { return "<th>" + a + "</th>"; }).join("") + "</tr>";
+    scelti.forEach(function (p) {
+      html += "<tr><td>" + esc(p.paese) + "</td>" + ANNI.map(function (a) {
+        var s = p.serie[a];
+        var v = s ? s[ind] : null;
+        return "<td>" + (v === null || v === undefined ? "" :
+          '<span class="barra" style="width:' + Math.round(v * 34) + 'px"></span>' + v.toFixed(2)) + "</td>";
+      }).join("") + "</tr>";
+    });
+    tab.innerHTML = html;
+    conta.textContent = scelti.length + " paesi selezionati su " + dati.length + " presenti nelle serie";
+  }
+  selInd.addEventListener("change", disegna);
+  var at2; inp.addEventListener("input", function () { clearTimeout(at2); at2 = setTimeout(disegna, 220); });
+  disegna();
+
+  /* --- fonti --- */
+  initMotore({
+    dati: window.DATA_STAT_FONTI,
+    campiRicerca: ["documento", "fonte"],
+    segnapostoRicerca: "Cerca un documento (es. Scoreboard 2024)…",
+    filtri: [{ campo: "fonte", etichetta: "Fonte" }],
+    rendi: function (r) {
+      return '<p class="r-titolo"><a>' + esc(r.documento) + '</a></p>' +
+        '<p class="r-meta"><span class="etichetta">' + esc(r.fonte) + '</span></p>';
+    },
+    dettaglio: function (r) {
+      return '<dl><dt>Percorso in archivio</dt><dd>materiale di lavoro/' + esc(r.percorso) + '</dd></dl>';
+    }
+  });
+})();
+</script>
+</body>
+</html>

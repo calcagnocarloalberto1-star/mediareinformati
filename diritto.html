@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diritto della mediazione — mediareinformati.it</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="sito">
+  <div class="testata">
+    <h1><a href="index.html">mediareinformati.it</a></h1>
+    <p class="motto">Piattaforma di consultazione e ricerca sulla mediazione</p>
+  </div>
+  <nav class="principale">
+    <a href="index.html">Home</a>
+    <a href="storia.html">Storia</a>
+    <a href="pratica.html">Pratica</a>
+    <a href="diritto.html">Diritto</a>
+    <a href="sistemi.html">Sistemi nazionali</a>
+    <a href="link.html">Link mondiali</a>
+    <a href="statistiche.html">Dati e statistiche</a>
+    <a href="articoli.html">Articoli</a>
+    <a href="giurisprudenza.html">Giurisprudenza</a>
+    <a href="progetto.html">Progetto / Autore</a>
+  </nav>
+</header>
+
+<main>
+  <h2 class="pagina">Diritto della mediazione</h2>
+  <p class="sottotitolo">624 atti normativi pertinenti alla mediazione — Italia, UE e ordinamenti stranieri</p>
+  <div class="intro-motore">
+    <p>Questo motore consente di consultare e ordinare il diritto della mediazione nei diversi ordinamenti: leggi, decreti legislativi, decreti-legge, regolamenti, direttive UE e normativa straniera (Irlanda, Germania, Spagna, Portogallo, Argentina e altri). Per le schede sistematiche dei singoli ordinamenti si veda il motore <a href="sistemi.html">Sistemi nazionali</a>.</p>
+  </div>
+  <div class="avviso-provvisorio">Nota della redazione: gli atti sono selezionati dall&rsquo;archivio generale con un vaglio automatico di pertinenza alla mediazione (nome e contenuto dei documenti). L&rsquo;esito &egrave; rivedibile riga per riga in <code>strumenti/pertinenza.csv</code>.
+  </div>
+  <div id="motore"></div>
+</main>
+
+<footer class="sito">
+  <div class="interno">
+    <span>mediareinformati.it — prototipo di consultazione, luglio 2026</span>
+    <span>Fonte: archivio documentale dell&rsquo;autore (indice generato il 05/07/2026)</span>
+  </div>
+</footer>
+
+<script src="data/normativa.js"></script>
+<script src="assets/app.js"></script>
+<script>
+initMotore({
+  dati: window.DATA_NORMATIVA,
+  campiRicerca: ["titolo", "categoria", "ambito", "anno"],
+  segnapostoRicerca: "Cerca per parola chiave (es. 28/2010, direttiva, Ley 5/2012)…",
+  filtri: [
+    { campo: "anno", etichetta: "Anno", decrescente: true },
+    { campo: "ambito", etichetta: "Ambito" },
+    { campo: "categoria", etichetta: "Categoria d'archivio" }
+  ],
+  rendi: function (r) {
+    return '<p class="r-titolo"><a>' + esc(r.titolo) + '</a></p>' +
+      '<p class="r-meta">' + esc(r.anno) + '<span class="sep">·</span><span class="etichetta">' + esc(r.ambito) + '</span></p>';
+  },
+  dettaglio: function (r) {
+    return '<dl><dt>Anno</dt><dd>' + esc(r.anno) + '</dd>' +
+      '<dt>Ambito (classificazione euristica)</dt><dd>' + esc(r.ambito) + '</dd>' +
+      '<dt>Categoria d\'archivio</dt><dd>' + esc(r.categoria) + '</dd>' +
+      '<dt>Documento</dt><dd>' + esc(r.file) + '</dd>' +
+      '<dt>Percorso in archivio</dt><dd>materiale di lavoro/' + esc(r.percorso) + '</dd></dl>';
+  }
+});
+</script>
+</body>
+</html>

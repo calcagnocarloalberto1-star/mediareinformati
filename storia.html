@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Storia della mediazione — mediareinformati.it</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="sito">
+  <div class="testata">
+    <h1><a href="index.html">mediareinformati.it</a></h1>
+    <p class="motto">Piattaforma di consultazione e ricerca sulla mediazione</p>
+  </div>
+  <nav class="principale">
+    <a href="index.html">Home</a>
+    <a href="storia.html">Storia</a>
+    <a href="pratica.html">Pratica</a>
+    <a href="diritto.html">Diritto</a>
+    <a href="sistemi.html">Sistemi nazionali</a>
+    <a href="link.html">Link mondiali</a>
+    <a href="statistiche.html">Dati e statistiche</a>
+    <a href="articoli.html">Articoli</a>
+    <a href="giurisprudenza.html">Giurisprudenza</a>
+    <a href="progetto.html">Progetto / Autore</a>
+  </nav>
+</header>
+
+<main>
+  <h2 class="pagina">Storia della mediazione</h2>
+  <p class="sottotitolo">Opere, volumi e studi sull&rsquo;evoluzione storica della composizione delle controversie</p>
+  <div class="intro-motore">
+    <p>Questo motore consente di esplorare l&rsquo;evoluzione storica della mediazione attraverso periodi, modelli, autori, fonti e passaggi essenziali: dai miti e dalle divinit&agrave; mesopotamiche ai sistemi di composizione delle controversie dell&rsquo;et&agrave; moderna, fino alla storia della conciliazione italiana.</p>
+  </div>
+  <div class="avviso-provvisorio">Nota della redazione: questo motore pubblica <strong>solo schede bibliografiche</strong>. I testi integrali — alcuni dei quali editi — non sono disponibili sul sito. La cronologia navigabile per periodo storico &egrave; in corso di costruzione.</div>
+  <div id="motore"></div>
+</main>
+
+<footer class="sito">
+  <div class="interno">
+    <span>mediareinformati.it — prototipo di consultazione, luglio 2026</span>
+    <span>Fonte: opere e studi dell&rsquo;autore</span>
+  </div>
+</footer>
+
+<script src="data/storia.js"></script>
+<script src="assets/app.js"></script>
+<script>
+initMotore({
+  dati: window.DATA_STORIA,
+  campiRicerca: ["titolo", "tema", "tipo"],
+  segnapostoRicerca: "Cerca per titolo o tema…",
+  filtri: [
+    { campo: "tema", etichetta: "Tema" },
+    { campo: "tipo", etichetta: "Tipo" },
+    { campo: "formato", etichetta: "Formato" }
+  ],
+  rendi: function (r) {
+    return '<p class="r-titolo"><a>' + esc(r.titolo) + '</a></p>' +
+      '<p class="r-meta"><span class="etichetta">' + esc(r.tipo) + '</span>' + esc(r.tema) +
+      '<span class="sep">·</span>' + esc(r.stato) + '</p>';
+  },
+  dettaglio: function (r) {
+    return '<dl><dt>Tema</dt><dd>' + esc(r.tema) + '</dd>' +
+      '<dt>Stato</dt><dd>' + esc(r.stato) + ' — scheda bibliografica; il testo integrale non \u00e8 pubblicato sul sito</dd></dl>';
+  }
+});
+</script>
+</body>
+</html>

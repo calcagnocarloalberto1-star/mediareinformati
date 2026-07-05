@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Link informativi mondiali — mediareinformati.it</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="sito">
+  <div class="testata">
+    <h1><a href="index.html">mediareinformati.it</a></h1>
+    <p class="motto">Piattaforma di consultazione e ricerca sulla mediazione</p>
+  </div>
+  <nav class="principale">
+    <a href="index.html">Home</a>
+    <a href="storia.html">Storia</a>
+    <a href="pratica.html">Pratica</a>
+    <a href="diritto.html">Diritto</a>
+    <a href="sistemi.html">Sistemi nazionali</a>
+    <a href="link.html">Link mondiali</a>
+    <a href="statistiche.html">Dati e statistiche</a>
+    <a href="articoli.html">Articoli</a>
+    <a href="giurisprudenza.html">Giurisprudenza</a>
+    <a href="progetto.html">Progetto / Autore</a>
+  </nav>
+</header>
+
+<main>
+  <h2 class="pagina">Link informativi mondiali</h2>
+  <p class="sottotitolo">Risorse ufficiali e qualificate sulla mediazione e sulla giustizia nel mondo</p>
+  <div class="intro-motore">
+    <p>Questo motore consente di accedere rapidamente a risorse ufficiali e informative sulla mediazione nel mondo: ministeri della giustizia, corti supreme, governi, associazioni professionali e risorse tematiche, classificati per paese, tipologia di ente e lingua.</p>
+  </div>
+  <div id="motore"></div>
+</main>
+
+<footer class="sito">
+  <div class="interno">
+    <span>mediareinformati.it — prototipo di consultazione, luglio 2026</span>
+    <span>Fonte: blogroll di mediaresenzaconfini.org · classificazione redazionale</span>
+  </div>
+</footer>
+
+<script src="data/link.js"></script>
+<script src="assets/app.js"></script>
+<script>
+initMotore({
+  dati: window.DATA_LINK,
+  campiRicerca: ["nome", "url", "categorie", "paese", "tipologia"],
+  segnapostoRicerca: "Cerca per nome, paese o indirizzo…",
+  filtri: [
+    { campo: "paese", etichetta: "Paese" },
+    { campo: "tipologia", etichetta: "Tipologia di ente" },
+    { campo: "lingua", etichetta: "Lingua" }
+  ],
+  rendi: function (r) {
+    return '<p class="r-titolo"><a href="' + esc(r.url) + '" target="_blank" rel="noopener">' + esc(r.nome) + '</a></p>' +
+      '<p class="r-meta">' +
+      (r.paese ? '<span class="etichetta">' + esc(r.paese) + '</span>' : '') +
+      (r.tipologia ? esc(r.tipologia) + '<span class="sep">·</span>' : '') +
+      (r.lingua ? esc(r.lingua) + '<span class="sep">·</span>' : '') +
+      esc(r.url) + '</p>';
+  },
+  dettaglio: function (r) {
+    return '<dl><dt>Paese</dt><dd>' + (esc(r.paese) || "—") + '</dd>' +
+      '<dt>Tipologia</dt><dd>' + (esc(r.tipologia) || "—") + '</dd>' +
+      '<dt>Lingua del sito</dt><dd>' + (esc(r.lingua) || "—") + '</dd>' +
+      '<dt>Categorie della raccolta originaria</dt><dd>' + (esc(r.categorie.join(", ")) || "—") + '</dd>' +
+      '<dt>Indirizzo</dt><dd><a href="' + esc(r.url) + '" target="_blank" rel="noopener">' + esc(r.url) + '</a></dd></dl>';
+  }
+});
+</script>
+</body>
+</html>

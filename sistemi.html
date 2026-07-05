@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sistemi nazionali — mediareinformati.it</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="sito">
+  <div class="testata">
+    <h1><a href="index.html">mediareinformati.it</a></h1>
+    <p class="motto">Piattaforma di consultazione e ricerca sulla mediazione</p>
+  </div>
+  <nav class="principale">
+    <a href="index.html">Home</a>
+    <a href="storia.html">Storia</a>
+    <a href="pratica.html">Pratica</a>
+    <a href="diritto.html">Diritto</a>
+    <a href="sistemi.html">Sistemi nazionali</a>
+    <a href="link.html">Link mondiali</a>
+    <a href="statistiche.html">Dati e statistiche</a>
+    <a href="articoli.html">Articoli</a>
+    <a href="giurisprudenza.html">Giurisprudenza</a>
+    <a href="progetto.html">Progetto / Autore</a>
+  </nav>
+</header>
+
+<main>
+  <h2 class="pagina">Sistemi nazionali</h2>
+  <p class="sottotitolo">Schede-paese uniformi sulla mediazione civile e commerciale</p>
+  <div class="intro-motore">
+    <p>Questo motore consente di confrontare i sistemi nazionali di mediazione tramite schede-paese uniformi: chi contattare, settori di applicazione, norme da rispettare, informazione e formazione, costi ed efficacia degli accordi. Le schede dei 27 Stati membri dell&rsquo;UE derivano dal Portale europeo della giustizia elettronica. Per i testi normativi si veda il motore <a href="diritto.html">Diritto della mediazione</a>; per i dati comparativi, <a href="statistiche.html">Dati e statistiche</a>.</p>
+  </div>
+
+  <div class="strumenti">
+    <div class="riga">
+      <div class="campo largo">
+        <label for="cerca-paese">Cerca nelle schede</label>
+        <input type="search" id="cerca-paese" placeholder="Es. accordo, avvocato, obbligatoria, registro…">
+      </div>
+      <div class="campo">
+        <label for="scegli-paese">Paese</label>
+        <select id="scegli-paese"></select>
+      </div>
+    </div>
+  </div>
+  <p class="conteggio" id="conta-paesi"></p>
+  <div class="griglia-paesi" id="griglia"></div>
+
+  <div class="avviso-provvisorio">Sezione Paesi extra UE: in corso di costruzione. L&rsquo;archivio contiene gi&agrave; normativa straniera extra-europea (es. Argentina) consultabile nel motore <a href="diritto.html">Diritto della mediazione</a>; le schede-paese uniformi extra UE saranno aggiunte in una fase successiva.</div>
+
+  <div id="scheda"></div>
+</main>
+
+<footer class="sito">
+  <div class="interno">
+    <span>mediareinformati.it — prototipo di consultazione, luglio 2026</span>
+    <span>Fonte: Portale europeo della giustizia elettronica (e-justice.europa.eu)</span>
+  </div>
+</footer>
+
+<script src="data/sistemi.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  if (!window.DATA_SISTEMI) {
+    document.getElementById("griglia").innerHTML = '<div class="avviso-provvisorio"><strong>Archivio non caricato:</strong> la cartella <code>data/</code> non \u00e8 raggiungibile sul server. Diagnosi: <a href="verifica.html">verifica.html</a>.</div>';
+    return;
+  }
+  var dati = window.DATA_SISTEMI;
+  var griglia = document.getElementById("griglia");
+  var scheda = document.getElementById("scheda");
+  var sel = document.getElementById("scegli-paese");
+  var cerca = document.getElementById("cerca-paese");
+  var conta = document.getElementById("conta-paesi");
+  var selezionato = "it";
+
+  sel.appendChild(new Option("— scegli —", ""));
+  dati.forEach(function (p) { sel.appendChild(new Option(p.paese, p.codice)); });
+
+  function testoPuro(html) {
+    var d = document.createElement("div"); d.innerHTML = html;
+    return d.textContent || "";
+  }
+
+  function disegnaGriglia() {
+    var q = normaTesto(cerca.value.trim());
+    griglia.innerHTML = "";
+    var visibili = 0;
+    dati.forEach(function (p) {
+      if (q && normaTesto(p.paese + " " + testoPuro(p.html)).indexOf(q) === -1) return;
+      visibili++;
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = p.paese;
+      if (p.codice === selezionato) b.className = "selezionato";
+      b.addEventListener("click", function () { selezionato = p.codice; sel.value = p.codice; mostra(); disegnaGriglia(); });
+      griglia.appendChild(b);
+    });
+    conta.textContent = q
+      ? visibili + " schede su " + dati.length + " contengono «" + cerca.value.trim() + "»"
+      : dati.length + " schede paese (Unione europea) — Italia evidenziata di seguito";
+  }
+
+  function mostra() {
+    var p = null;
+    for (var i = 0; i < dati.length; i++) if (dati[i].codice === selezionato) p = dati[i];
+    if (!p) { scheda.innerHTML = ""; return; }
+    scheda.innerHTML = '<div class="scheda-paese">' +
+      '<h3 class="nome-paese">' + esc(p.paese) + ' <span style="color:#888;font-size:.6em">(' + p.codice.toUpperCase() + ')</span></h3>' +
+      (p.aggiornamento ? '<p class="agg">Scheda del Portale e-justice — ultimo aggiornamento: ' + esc(p.aggiornamento) + '</p>' : '') +
+      p.html + '</div>';
+    scheda.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  sel.addEventListener("change", function () {
+    selezionato = sel.value; mostra(); disegnaGriglia();
+  });
+  var attesa;
+  cerca.addEventListener("input", function () {
+    clearTimeout(attesa); attesa = setTimeout(disegnaGriglia, 180);
+  });
+
+  sel.value = selezionato;
+  disegnaGriglia();
+  var p = null;
+  scheda.innerHTML = "";
+  for (var i = 0; i < dati.length; i++) if (dati[i].codice === selezionato) p = dati[i];
+  if (p) scheda.innerHTML = '<div class="scheda-paese">' +
+    '<h3 class="nome-paese">' + esc(p.paese) + ' <span style="color:#888;font-size:.6em">(IT)</span></h3>' +
+    (p.aggiornamento ? '<p class="agg">Scheda del Portale e-justice — ultimo aggiornamento: ' + esc(p.aggiornamento) + '</p>' : '') +
+    p.html + '</div>';
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pratica della mediazione — mediareinformati.it</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="sito">
+  <div class="testata">
+    <h1><a href="index.html">mediareinformati.it</a></h1>
+    <p class="motto">Piattaforma di consultazione e ricerca sulla mediazione</p>
+  </div>
+  <nav class="principale">
+    <a href="index.html">Home</a>
+    <a href="storia.html">Storia</a>
+    <a href="pratica.html">Pratica</a>
+    <a href="diritto.html">Diritto</a>
+    <a href="sistemi.html">Sistemi nazionali</a>
+    <a href="link.html">Link mondiali</a>
+    <a href="statistiche.html">Dati e statistiche</a>
+    <a href="articoli.html">Articoli</a>
+    <a href="giurisprudenza.html">Giurisprudenza</a>
+    <a href="progetto.html">Progetto / Autore</a>
+  </nav>
+</header>
+
+<main>
+  <h2 class="pagina">Pratica della mediazione</h2>
+  <p class="sottotitolo">Manuali operativi, dispense dei corsi e materiali didattici</p>
+  <div class="intro-motore">
+    <p>Questo motore consente di consultare strumenti e materiali operativi per la pratica della mediazione: manuali per mediatori, dispense dei corsi di formazione (COA Genova, DPL, UNAM, Medyapro, CNMA), prontuari e slide, filtrabili per tipo, anno e contesto formativo.</p>
+  </div>
+  <div class="avviso-provvisorio">Nota della redazione: il motore pubblica <strong>schede descrittive</strong> dei materiali, non i testi integrali. La classificazione per fase del procedimento e per tecnica &egrave; in corso di redazione.</div>
+  <div id="motore"></div>
+</main>
+
+<footer class="sito">
+  <div class="interno">
+    <span>mediareinformati.it — prototipo di consultazione, luglio 2026</span>
+    <span>Fonte: archivio didattico dell&rsquo;autore</span>
+  </div>
+</footer>
+
+<script src="data/pratica.js"></script>
+<script src="assets/app.js"></script>
+<script>
+initMotore({
+  dati: window.DATA_PRATICA,
+  campiRicerca: ["titolo", "tipo", "contesto"],
+  segnapostoRicerca: "Cerca per titolo o argomento…",
+  filtri: [
+    { campo: "tipo", etichetta: "Tipo" },
+    { campo: "anno", etichetta: "Anno", decrescente: true },
+    { campo: "contesto", etichetta: "Contesto formativo" },
+    { campo: "formato", etichetta: "Formato" }
+  ],
+  rendi: function (r) {
+    return '<p class="r-titolo"><a>' + esc(r.titolo) + '</a></p>' +
+      '<p class="r-meta"><span class="etichetta">' + esc(r.tipo) + '</span>' +
+      (r.anno ? esc(r.anno) + '<span class="sep">·</span>' : '') +
+      (r.contesto ? esc(r.contesto) + '<span class="sep">·</span>' : '') +
+      esc(r.formato.toUpperCase()) + '</p>';
+  },
+  dettaglio: function (r) {
+    return '<dl><dt>Tipo</dt><dd>' + esc(r.tipo) + '</dd>' +
+      '<dt>Contesto</dt><dd>' + (esc(r.contesto) || "—") + '</dd>' +
+      '<dt>Percorso in archivio</dt><dd>materiale di lavoro/' + esc(r.percorso) + '</dd></dl>';
+  }
+});
+</script>
+</body>
+</html>

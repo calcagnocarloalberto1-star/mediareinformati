@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Giurisprudenza — mediareinformati.it</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="sito">
+  <div class="testata">
+    <h1><a href="index.html">mediareinformati.it</a></h1>
+    <p class="motto">Piattaforma di consultazione e ricerca sulla mediazione</p>
+  </div>
+  <nav class="principale">
+    <a href="index.html">Home</a>
+    <a href="storia.html">Storia</a>
+    <a href="pratica.html">Pratica</a>
+    <a href="diritto.html">Diritto</a>
+    <a href="sistemi.html">Sistemi nazionali</a>
+    <a href="link.html">Link mondiali</a>
+    <a href="statistiche.html">Dati e statistiche</a>
+    <a href="articoli.html">Articoli</a>
+    <a href="giurisprudenza.html">Giurisprudenza</a>
+    <a href="progetto.html">Progetto / Autore</a>
+  </nav>
+</header>
+
+<main>
+  <h2 class="pagina">Giurisprudenza</h2>
+  <p class="sottotitolo">174 provvedimenti pertinenti alla mediazione e alla conciliazione, dal 1996 a oggi</p>
+  <div class="intro-motore">
+    <p>Questo motore consente di consultare e filtrare la giurisprudenza sulla mediazione in modo sistematico: ricerca per parola chiave, anno e organo. Ogni voce indica il documento d&rsquo;archivio corrispondente.</p>
+  </div>
+  <div class="avviso-provvisorio">Nota della redazione: massime, sintesi ed esito sono in corso di redazione tramite il massimario di lavoro (<code>strumenti/massimario.xlsx</code>); man mano che vengono compilate compaiono automaticamente in questa pagina. L&rsquo;organo &egrave; dedotto con criteri euristici dall&rsquo;indice e dai nomi dei documenti. Le pronunce sono state selezionate con un vaglio automatico di pertinenza (nome e contenuto dei documenti); l&rsquo;esito del vaglio &egrave; rivedibile riga per riga in <code>strumenti/pertinenza.csv</code>.</div>
+  <div id="motore"></div>
+</main>
+
+<footer class="sito">
+  <div class="interno">
+    <span>mediareinformati.it — prototipo di consultazione, luglio 2026</span>
+    <span>Fonte: archivio documentale dell&rsquo;autore (indice generato il 05/07/2026)</span>
+  </div>
+</footer>
+
+<script src="data/giurisprudenza.js"></script>
+<script src="assets/app.js"></script>
+<script>
+initMotore({
+  dati: window.DATA_GIURISPRUDENZA,
+  campiRicerca: ["titolo", "organo", "sede", "categoria", "anno", "massima", "materia"],
+  segnapostoRicerca: "Cerca per parola chiave, organo, anno…",
+  filtri: [
+    { campo: "anno", etichetta: "Anno", decrescente: true },
+    { campo: "organo", etichetta: "Organo" },
+    { campo: "categoria", etichetta: "Categoria d'archivio" }
+  ],
+  rendi: function (r) {
+    return '<p class="r-titolo"><a>' + esc(r.titolo) + '</a></p>' +
+      '<p class="r-meta">' + esc(r.anno) + '<span class="sep">·</span><span class="etichetta">' + esc(r.organo) + '</span>' +
+      (r.sede ? esc(r.sede) : '') +
+      (r.materia ? '<span class="sep">·</span>' + esc(r.materia) : '') + '</p>' +
+      (r.massima ? '<p class="r-testo"><em>' + esc(r.massima) + '</em></p>' : '');
+  },
+  dettaglio: function (r) {
+    return '<dl><dt>Anno</dt><dd>' + esc(r.anno) + '</dd>' +
+      '<dt>Organo (classificazione euristica)</dt><dd>' + esc(r.organo) + (r.sede ? ' — ' + esc(r.sede) : '') + '</dd>' +
+      (r.estremi ? '<dt>Estremi ufficiali</dt><dd>' + esc(r.estremi) + '</dd>' : '') +
+      (r.materia ? '<dt>Materia</dt><dd>' + esc(r.materia) + '</dd>' : '') +
+      (r.esito ? '<dt>Esito</dt><dd>' + esc(r.esito) + '</dd>' : '') +
+      (r.massima ? '<dt>Massima</dt><dd>' + esc(r.massima) + '</dd>' : '') +
+      (r.sintesi ? '<dt>Sintesi</dt><dd>' + esc(r.sintesi) + '</dd>' : '') +
+      '<dt>Categoria d\'archivio</dt><dd>' + esc(r.categoria) + '</dd>' +
+      '<dt>Documento</dt><dd>' + esc(r.file) + '</dd>' +
+      '<dt>Percorso in archivio</dt><dd>materiale di lavoro/' + esc(r.percorso) + '</dd></dl>';
+  }
+});
+</script>
+</body>
+</html>

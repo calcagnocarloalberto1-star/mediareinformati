@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verifica installazione — mediareinformati.it</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.esito{list-style:none;padding:0;margin:20px 0;max-width:640px}
+.esito li{padding:8px 12px;border-bottom:1px solid var(--filo,#d8d3c8);font-family:monospace;font-size:.95em}
+.ok::before{content:"✔ ";color:#2e6b2e;font-weight:bold}
+.ko::before{content:"✘ ";color:#a03030;font-weight:bold}
+</style>
+</head>
+<body>
+<header class="sito">
+  <div class="testata">
+    <h1><a href="index.html">mediareinformati.it</a></h1>
+    <p class="motto">Verifica dell'installazione sul server</p>
+  </div>
+</header>
+<main>
+  <h2 class="pagina">Verifica dei file del sito</h2>
+  <p class="sottotitolo">Questa pagina controlla che tutti i file necessari siano raggiungibili sul server, nella posizione attesa.</p>
+  <p id="riassunto" class="conteggio">Controllo in corso…</p>
+  <ul class="esito" id="lista"></ul>
+  <div class="intro-motore"><p><strong>Come leggere l'esito.</strong> Se una o pi&ugrave; righe sono contrassegnate con ✘, quel file non &egrave; stato caricato oppure &egrave; finito nella cartella sbagliata. La struttura corretta sul server &egrave;: le pagine <code>.html</code> nella radice del sito, il foglio di stile e il motore di ricerca dentro la cartella <code>assets/</code>, tutti i file dei dati dentro la cartella <code>data/</code>. I nomi delle cartelle e dei file vanno rispettati esattamente, minuscole comprese: molti server distinguono <code>Data</code> da <code>data</code>.</p></div>
+</main>
+<script>
+(function () {
+  var file = [
+    "index.html", "storia.html", "pratica.html", "diritto.html", "sistemi.html",
+    "link.html", "statistiche.html", "articoli.html", "giurisprudenza.html", "progetto.html",
+    "assets/style.css", "assets/app.js",
+    "data/articoli.js", "data/giurisprudenza.js", "data/normativa.js", "data/sistemi.js",
+    "data/link.js", "data/statistiche.js", "data/statistiche_fonti.js", "data/scoreboard.js",
+    "data/scoreboard_paesi.js", "data/dgstat.js", "data/pratica.js", "data/storia.js"
+  ];
+  var lista = document.getElementById("lista");
+  var mancanti = 0, fatti = 0;
+  file.forEach(function (f) {
+    var li = document.createElement("li");
+    li.textContent = f;
+    lista.appendChild(li);
+    fetch(f, { method: "HEAD", cache: "no-store" }).then(function (r) {
+      li.className = r.ok ? "ok" : "ko";
+      if (!r.ok) { mancanti++; li.textContent = f + "  (HTTP " + r.status + ")"; }
+    }).catch(function () { li.className = "ko"; mancanti++; })
+      .finally(function () {
+        fatti++;
+        if (fatti === file.length) {
+          document.getElementById("riassunto").textContent = mancanti === 0
+            ? "Tutti i " + file.length + " file sono al loro posto: il sito è installato correttamente."
+            : mancanti + " file su " + file.length + " NON sono raggiungibili: vanno ricaricati nella posizione indicata.";
+        }
+      });
+  });
+})();
+</script>
+</body>
+</html>
