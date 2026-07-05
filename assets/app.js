@@ -77,6 +77,31 @@
 
     var azz = el("button", { "class": "azzeramento", type: "button" }, "Azzera");
     riga.appendChild(azz);
+    if (cfg.esportaWord) {
+      var expw = el("button", { "class": "azzeramento", type: "button" }, "Scarica risultati in Word");
+      riga.appendChild(expw);
+      expw.addEventListener("click", function () {
+        var testa = "<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'>" +
+          "<style>body{font-family:Georgia,serif;font-size:11pt;line-height:1.45;color:#1b1b1f}" +
+          "h1{color:#152a46;font-size:17pt}h2{color:#152a46;font-size:12pt;border-bottom:1px solid #ccc;padding-bottom:2px}" +
+          "p{margin:4px 0}.m{color:#777;font-size:9pt}</style></head><body>";
+        var q = input.value.trim();
+        var corpo = "<h1>" + esc(cfg.titoloDoc || document.title) + "</h1>" +
+          "<p class='m'>mediareinformati.it \u2014 " + correnti.length + " risultati" +
+          (q ? " per \u00ab" + esc(q) + "\u00bb" : "") + " \u00b7 " + new Date().toLocaleDateString("it") + "</p><hr>";
+        correnti.slice(0, 400).forEach(function (r) {
+          var blocco = cfg.rendiDoc ? cfg.rendiDoc(r) : cfg.rendi(r);
+          corpo += "<div>" + blocco + "</div>";
+        });
+        if (correnti.length > 400) corpo += "<p class='m'>\u2026 e altri " + (correnti.length - 400) + " risultati: affinare la ricerca per includerli.</p>";
+        corpo += "<hr><p class='m'>Documento generato da mediareinformati.it \u00b7 estratti a fini di consultazione; i testi integrali delle opere non sono pubblicati.</p></body></html>";
+        var blob = new Blob(["\ufeff" + testa + corpo], { type: "application/msword" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "mediareinformati_" + (q ? norma(q).replace(/[^a-z0-9]+/g, "_").slice(0, 30) : "risultati") + ".doc";
+        a.click();
+      });
+    }
     strumenti.appendChild(riga);
     radice.appendChild(strumenti);
 
