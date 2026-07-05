@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Assistente — mediareinformati.it</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="sito">
+  <div class="testata">
+    <h1><a href="index.html">mediareinformati.it</a></h1>
+    <p class="motto">Piattaforma di consultazione e ricerca sulla mediazione</p>
+  </div>
+  <nav class="principale">
+    <a href="index.html">Home</a>
+    <a href="storia.html">Storia</a>
+    <a href="pratica.html">Pratica</a>
+    <a href="diritto.html">Diritto</a>
+    <a href="sistemi.html">Sistemi nazionali</a>
+    <a href="link.html">Link mondiali</a>
+    <a href="statistiche.html">Dati e statistiche</a>
+    <a href="articoli.html">Articoli</a>
+    <a href="giurisprudenza.html">Giurisprudenza</a>
+    <a href="assistente.html">Assistente</a>
+    <a href="progetto.html">Progetto / Autore</a>
+  </nav>
+</header>
+
+<main>
+  <h2 class="pagina">Assistente</h2>
+  <p class="sottotitolo">Domande e risposte sulla mediazione, con le fonti dell&rsquo;archivio</p>
+  <div class="intro-motore">
+    <p>Questo assistente risponde alle domande sulla mediazione attingendo all&rsquo;intero archivio del sito &mdash; normativa, giurisprudenza, articoli, schede paese e statistiche &mdash; e cita sempre le fonti. La risposta pu&ograve; essere scaricata in <strong>Word</strong> e <strong>PDF</strong>, oppure trasformata in <strong>slide PowerPoint per formatori</strong>.</p>
+  </div>
+
+  <div class="strumenti">
+    <div class="assistente-domanda">
+      <input type="text" id="domanda" placeholder="Es. Quando la mediazione è condizione di procedibilità?" autocomplete="off">
+      <button class="bottone-primario" id="chiedi">Chiedi</button>
+    </div>
+    <div class="suggerimenti-domande" id="suggerimenti">
+      <button>Quando la mediazione è obbligatoria?</button>
+      <button>Che cos'è la mediazione demandata dal giudice?</button>
+      <button>Quanto dura una mediazione e quanto costa?</button>
+      <button>Come funziona la mediazione in Francia?</button>
+      <button>Quali sono i numeri della mediazione in Italia?</button>
+      <button>Cosa prevede la riforma Cartabia sulla mediazione?</button>
+    </div>
+  </div>
+  <p class="conteggio" id="stato"></p>
+  <div id="contenitore-risposta"></div>
+
+  <div class="avviso-provvisorio" style="margin-top:30px">
+    <strong>Avvertenza.</strong> L&rsquo;assistente &egrave; uno strumento sperimentale di consultazione: la sezione documentale elenca materiali reali dell&rsquo;archivio; l&rsquo;eventuale sintesi generata dall&rsquo;intelligenza artificiale va sempre verificata sulle fonti citate e non costituisce parere legale.
+  </div>
+</main>
+
+<footer class="sito">
+  <div class="interno">
+    <span>mediareinformati.it — piattaforma di consultazione</span>
+    <span>Archivio: Carlo Alberto Calcagno · mediaresenzaconfini.org</span>
+  </div>
+</footer>
+
+<script src="data/normativa.js"></script>
+<script src="data/giurisprudenza.js"></script>
+<script src="data/articoli.js"></script>
+<script src="data/sistemi.js"></script>
+<script src="data/dgstat.js"></script>
+<script src="data/link.js"></script>
+<script src="assets/app.js"></script>
+<script src="https://js.puter.com/v2/"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PptxGenJS/3.12.0/pptxgen.bundle.min.js"></script>
+<script>
+(function () {
+  "use strict";
+  var STOP = "il lo la i gli le un una uno di a da in con su per tra fra e o ma che chi cui non come dove quando quanto quale quali cosa cos è e' della delle dei degli del al alla alle ai agli sul sulla sulle nei nelle nel si mi ti ci vi ne se più meno molto poco tutto tutti ogni questo questa questi queste quello quella essere avere fare può puo sono viene vengono stato stata quali qual mediante circa anche ancora poi già gia verso presso senza sotto sopra".split(" ");
+  var ultimaRisposta = null;
+
+  function termini(q) {
+    return normaTesto(q).replace(/[?!.,;:'"()]/g, " ").split(/\s+/)
+      .filter(function (t) { return t.length > 2 && STOP.indexOf(t) === -1; });
+  }
+  function punteggio(testo, ts) {
+    var n = normaTesto(testo), s = 0;
+    ts.forEach(function (t) {
+      var i = -1, c = 0;
+      while ((i = n.indexOf(t, i + 1)) !== -1 && c < 5) { s++; c++; }
+      // radice (primi 5 caratteri) per flessioni
+      if (c === 0 && t.length > 5 && n.indexOf(t.slice(0, 5)) !== -1) s += 0.4;
+    });
+    return s;
+  }
+  function top(arr, campi, ts, n, pesoTitolo) {
+    return arr.map(function (r) {
+      var s = 0;
+      campi.forEach(function (c, i) {
+        var v = r[c]; if (Array.isArray(v)) v = v.join(" ");
+        if (v) s += punteggio(String(v), ts) * (i === 0 ? (pesoTitolo || 2.5) : 1);
+      });
+      return { r: r, s: s };
+    }).filter(function (x) { return x.s > 0; })
+      .sort(function (a, b) { return b.s - a.s; }).slice(0, n);
+  }
+
+  function cerca(q) {
+    var ts = termini(q);
+    if (!ts.length) return null;
+    var d = {
+      domanda: q,
+      norme: top(window.DATA_NORMATIVA || [], ["titolo", "categoria"], ts, 6),
+      pronunce: top(window.DATA_GIURISPRUDENZA || [], ["titolo", "organo", "massima", "materia"], ts, 6),
+      articoli: top(window.DATA_ARTICOLI || [], ["titolo", "estratto", "categorie"], ts, 6),
+      paesi: [],
+      statistiche: /statistic|dati|numer|quant[ei]|percentual|accord|iscrizion|durata media/.test(normaTesto(q)),
+      linkUtili: top(window.DATA_LINK || [], ["nome", "paese", "tipologia"], ts, 4)
+    };
+    (window.DATA_SISTEMI || []).forEach(function (p) {
+      if (normaTesto(q).indexOf(normaTesto(p.paese)) !== -1) d.paesi.push(p);
+    });
+    return d;
+  }
+
+  function testoPuro(html) { var x = document.createElement("div"); x.innerHTML = html; return (x.textContent || "").replace(/\s+/g, " ").trim(); }
+
+  function dossierHtml(d) {
+    var h = "";
+    if (d.paesi.length) {
+      h += "<h4>Schede paese (Portale e-justice)</h4><ul>";
+      d.paesi.forEach(function (p) {
+        h += "<li><strong>" + esc(p.paese) + "</strong> — " + esc(testoPuro(p.html).slice(0, 320)) + "… <span class='cit'>(scheda completa nel motore Sistemi nazionali)</span></li>";
+      });
+      h += "</ul>";
+    }
+    if (d.norme.length) {
+      h += "<h4>Normativa pertinente</h4><ul>";
+      d.norme.forEach(function (x) { h += "<li>" + esc(x.r.titolo) + " <span class='cit'>(" + esc(x.r.anno) + " · " + esc(x.r.ambito) + ")</span></li>"; });
+      h += "</ul>";
+    }
+    if (d.pronunce.length) {
+      h += "<h4>Giurisprudenza</h4><ul>";
+      d.pronunce.forEach(function (x) {
+        h += "<li>" + esc(x.r.titolo) + " <span class='cit'>(" + esc(x.r.anno) + " · " + esc(x.r.organo) + ")</span>" +
+          (x.r.massima ? "<br><em>" + esc(x.r.massima) + "</em>" : "") + "</li>";
+      });
+      h += "</ul>";
+    }
+    if (d.articoli.length) {
+      h += "<h4>Approfondimenti dell'autore</h4><ul>";
+      d.articoli.forEach(function (x) {
+        h += "<li><a href='" + esc(x.r.url) + "' target='_blank' rel='noopener'>" + esc(x.r.titolo) + "</a> <span class='cit'>(" + esc(x.r.data) + ")</span><br>" + esc(x.r.estratto.slice(0, 220)) + "…</li>";
+      });
+      h += "</ul>";
+    }
+    if (d.statistiche && window.DATA_DGSTAT) {
+      var s = window.DATA_DGSTAT.sintesi2025, e = window.DATA_DGSTAT.esiti;
+      var u = e[e.length - 1];
+      h += "<h4>I numeri (DGSTAT, Ministero della Giustizia)</h4><ul>" +
+        "<li>Iscrizioni 2025: <strong>" + s.iscrizioni.toLocaleString("it") + "</strong> (" + s.quota_obbligatorie + "% obbligatorie, " + s.quota_demandate + "% demandate dal giudice, " + s.quota_volontarie + "% volontarie)</li>" +
+        "<li>Aderente comparso: <strong>" + u.comparizione + "%</strong> · Accordo con aderente comparso: <strong>" + u.accordo + "%</strong> · Accordo se si prosegue oltre il primo incontro: <strong>" + u.accordo_tavolo + "%</strong> (" + u.anno + ")</li>" +
+        "<li>Organismi attivi: " + s.organismi_attivi + " · Mediazione telematica: " + s.telematica_pct + "% dei definiti</li></ul>";
+    }
+    if (d.linkUtili.length) {
+      h += "<h4>Risorse ufficiali</h4><ul>";
+      d.linkUtili.forEach(function (x) { h += "<li><a href='" + esc(x.r.url) + "' target='_blank' rel='noopener'>" + esc(x.r.nome) + "</a>" + (x.r.paese ? " <span class='cit'>(" + esc(x.r.paese) + ")</span>" : "") + "</li>"; });
+      h += "</ul>";
+    }
+    return h || "<p class='nessun-risultato'>Nessun materiale d'archivio corrisponde alla domanda: prova con altre parole.</p>";
+  }
+
+  function fontiPerPrompt(d) {
+    var righe = [];
+    d.norme.slice(0, 4).forEach(function (x) { righe.push("[NORMA] " + x.r.titolo + " (" + x.r.anno + ", " + x.r.ambito + ")"); });
+    d.pronunce.slice(0, 4).forEach(function (x) { righe.push("[PRONUNCIA] " + x.r.titolo + " (" + x.r.anno + ", " + x.r.organo + ")" + (x.r.massima ? " — " + x.r.massima : "")); });
+    d.articoli.slice(0, 4).forEach(function (x) { righe.push("[ARTICOLO] " + x.r.titolo + " (" + x.r.data + "): " + x.r.estratto.slice(0, 260)); });
+    d.paesi.forEach(function (p) { righe.push("[SCHEDA " + p.paese.toUpperCase() + "] " + testoPuro(p.html).slice(0, 900)); });
+    if (d.statistiche && window.DATA_DGSTAT) {
+      var s = window.DATA_DGSTAT.sintesi2025, e = window.DATA_DGSTAT.esiti, u = e[e.length - 1];
+      righe.push("[DATI DGSTAT] Iscrizioni 2025: " + s.iscrizioni + " (78% obbligatorie, 13% demandate, 8% volontarie). Aderente comparso " + u.comparizione + "%, accordo " + u.accordo + "%, accordo oltre primo incontro " + u.accordo_tavolo + "%. Organismi attivi " + s.organismi_attivi + ". Telematica " + s.telematica_pct + "%.");
+    }
+    return righe.join("\n");
+  }
+
+  function mdPulito(t) {
+    // markdown minimale -> html sicuro
+    var righe = esc(t).split(/\r?\n/), h = "", inUl = false;
+    righe.forEach(function (r) {
+      r = r.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+      if (/^\s*[-*•]\s+/.test(r)) {
+        if (!inUl) { h += "<ul>"; inUl = true; }
+        h += "<li>" + r.replace(/^\s*[-*•]\s+/, "") + "</li>";
+      } else {
+        if (inUl) { h += "</ul>"; inUl = false; }
+        if (/^\s*#{2,4}\s+/.test(r)) h += "<h4>" + r.replace(/^\s*#{2,4}\s+/, "") + "</h4>";
+        else if (r.trim()) h += "<p>" + r + "</p>";
+      }
+    });
+    if (inUl) h += "</ul>";
+    return h;
+  }
+
+  function rispondi(q) {
+    var stato = document.getElementById("stato");
+    var cont = document.getElementById("contenitore-risposta");
+    var d = cerca(q);
+    if (!d) { stato.textContent = "Scrivi una domanda più precisa."; return; }
+    var nFonti = d.norme.length + d.pronunce.length + d.articoli.length + d.paesi.length + d.linkUtili.length;
+    ultimaRisposta = { domanda: q, dossier: d, ai: "" };
+    cont.innerHTML = "<div class='risposta'>" +
+      "<h3 class='titolo-risposta'>" + esc(q) + "</h3>" +
+      "<p class='fonti-conteggio'>" + nFonti + " fonti d'archivio individuate</p>" +
+      "<div id='blocco-ai'></div>" +
+      "<div id='blocco-dossier'>" + dossierHtml(d) + "</div>" +
+      "<div class='barra-export'>" +
+      "<button class='bottone-secondario' id='ex-doc'>Scarica Word</button>" +
+      "<button class='bottone-secondario' id='ex-pdf'>Scarica PDF</button>" +
+      "<button class='bottone-secondario' id='ex-pptx'>Slide per formatori (PPTX)</button>" +
+      "</div></div>";
+    document.getElementById("ex-doc").addEventListener("click", esportaDoc);
+    document.getElementById("ex-pdf").addEventListener("click", esportaPdf);
+    document.getElementById("ex-pptx").addEventListener("click", esportaPptx);
+    stato.textContent = "";
+
+    // sintesi AI gratuita (Puter.js) — se disponibile
+    var bAI = document.getElementById("blocco-ai");
+    if (window.puter && puter.ai && puter.ai.chat && nFonti > 0) {
+      bAI.innerHTML = "<p class='cit'>Sto preparando la sintesi con l'assistenza dell'AI…</p>";
+      var prompt = "Sei l'assistente di mediareinformati.it, piattaforma italiana di consultazione sulla mediazione civile e commerciale. Rispondi in italiano, con rigore giuridico e tono didattico per mediatori e formatori.\n" +
+        "DOMANDA: " + q + "\n\nFONTI D'ARCHIVIO (usa SOLO queste, citandole):\n" + fontiPerPrompt(d) +
+        "\n\nStruttura la risposta in markdown con queste sezioni: ## Risposta in sintesi (3-5 frasi), ## Punti chiave (elenco puntato, max 6), ## Per la formazione (2-3 spunti didattici). Non inventare estremi normativi non presenti nelle fonti.";
+      Promise.resolve(puter.ai.chat(prompt)).then(function (r) {
+        var t = (r && r.message && r.message.content) ? r.message.content : (typeof r === "string" ? r : "");
+        if (t) { ultimaRisposta.ai = t; bAI.innerHTML = "<h4>Sintesi (AI, da verificare sulle fonti)</h4>" + mdPulito(t); }
+        else bAI.innerHTML = "";
+      }).catch(function () {
+        bAI.innerHTML = "<p class='cit'>Sintesi AI non disponibile in questo momento: di seguito la risposta documentale.</p>";
+      });
+    } else {
+      bAI.innerHTML = "";
+    }
+  }
+
+  /* ---------- esportazioni ---------- */
+  function nomeFile(est) {
+    return "mediareinformati_" + normaTesto(ultimaRisposta.domanda).replace(/[^a-z0-9]+/g, "_").slice(0, 40) + "." + est;
+  }
+  function esportaDoc() {
+    if (!ultimaRisposta) return;
+    var corpo = document.getElementById("blocco-ai").innerHTML + document.getElementById("blocco-dossier").innerHTML;
+    var html = "<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'>" +
+      "<style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.5}h1{color:#152a46;font-size:18pt}h4{color:#152a46;border-bottom:1px solid #ccc}em{color:#555}.cit{color:#777;font-size:10pt}</style></head><body>" +
+      "<h1>" + esc(ultimaRisposta.domanda) + "</h1><p><em>mediareinformati.it — risposta dell'assistente, " + new Date().toLocaleDateString("it") + "</em></p>" +
+      corpo + "<hr><p style='font-size:9pt;color:#777'>Documento generato da mediareinformati.it: verificare sempre le fonti citate. Non costituisce parere legale.</p></body></html>";
+    var blob = new Blob(["﻿" + html], { type: "application/msword" });
+    var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = nomeFile("doc"); a.click();
+  }
+  function esportaPdf() {
+    if (!ultimaRisposta || !window.jspdf) return;
+    var doc = new jspdf.jsPDF({ unit: "mm", format: "a4" });
+    var W = 170, y = 22, x = 20;
+    function riga(t, size, style, colore) {
+      doc.setFont("times", style || "normal"); doc.setFontSize(size);
+      doc.setTextColor(colore ? colore[0] : 27, colore ? colore[1] : 27, colore ? colore[2] : 31);
+      doc.splitTextToSize(t, W).forEach(function (l) {
+        if (y > 275) { doc.addPage(); y = 22; }
+        doc.text(l, x, y); y += size * 0.5;
+      });
+      y += 2;
+    }
+    riga("mediareinformati.it — Assistente", 10, "italic", [93, 89, 79]);
+    riga(ultimaRisposta.domanda, 17, "bold", [21, 42, 70]); y += 2;
+    var cont = document.createElement("div");
+    cont.innerHTML = document.getElementById("blocco-ai").innerHTML + document.getElementById("blocco-dossier").innerHTML;
+    Array.prototype.forEach.call(cont.children, function (el) {
+      if (el.tagName === "H4") { y += 3; riga(el.textContent, 13, "bold", [21, 42, 70]); }
+      else if (el.tagName === "UL") Array.prototype.forEach.call(el.children, function (li) { riga("•  " + li.textContent, 10.5); });
+      else if (el.textContent.trim()) riga(el.textContent, 10.5);
+    });
+    y += 4; riga("Generato da mediareinformati.it il " + new Date().toLocaleDateString("it") + ". Verificare sempre le fonti citate; non costituisce parere legale.", 8, "italic", [120, 120, 120]);
+    doc.save(nomeFile("pdf"));
+  }
+  function esportaPptx() {
+    if (!ultimaRisposta || !window.PptxGenJS) return;
+    var p = new PptxGenJS(), BLU = "152A46", ORO = "B08D3E", GRI = "5D594F";
+    p.defineLayout({ name: "W", width: 13.33, height: 7.5 }); p.layout = "W";
+    function base(s) {
+      s.background = { color: "FBFAF7" };
+      s.addShape(p.ShapeType.rect, { x: 0, y: 7.1, w: 13.33, h: 0.4, fill: { color: BLU } });
+      s.addText("mediareinformati.it", { x: 0.4, y: 7.12, w: 5, h: 0.35, fontSize: 10, color: "FFFFFF", fontFace: "Georgia" });
+    }
+    // copertina
+    var s = p.addSlide(); base(s);
+    s.addShape(p.ShapeType.rect, { x: 0, y: 0, w: 13.33, h: 0.25, fill: { color: ORO } });
+    s.addText(ultimaRisposta.domanda, { x: 0.9, y: 2.2, w: 11.5, h: 2, fontSize: 34, bold: true, color: BLU, fontFace: "Georgia" });
+    s.addText("Materiale per la formazione — generato dall'assistente di mediareinformati.it, " + new Date().toLocaleDateString("it"), { x: 0.9, y: 4.4, w: 11.5, h: 0.6, fontSize: 15, italic: true, color: GRI, fontFace: "Georgia" });
+    function slideElenco(titolo, voci) {
+      for (var i = 0; i < voci.length; i += 5) {
+        var sl = p.addSlide(); base(sl);
+        sl.addText(titolo + (voci.length > 5 ? " (" + (Math.floor(i / 5) + 1) + ")" : ""), { x: 0.7, y: 0.5, w: 12, h: 0.8, fontSize: 26, bold: true, color: BLU, fontFace: "Georgia" });
+        sl.addShape(p.ShapeType.line, { x: 0.75, y: 1.35, w: 3, h: 0, line: { color: ORO, width: 2 } });
+        sl.addText(voci.slice(i, i + 5).map(function (v) { return { text: v, options: { bullet: { code: "2022" }, paraSpaceAfter: 10 } }; }),
+          { x: 0.9, y: 1.7, w: 11.6, h: 5.1, fontSize: 15, color: "1B1B1F", fontFace: "Georgia", valign: "top" });
+      }
+    }
+    // sintesi AI -> punti
+    if (ultimaRisposta.ai) {
+      var punti = ultimaRisposta.ai.split(/\r?\n/).filter(function (r) { return /^\s*[-*•]\s+/.test(r); })
+        .map(function (r) { return r.replace(/^\s*[-*•]\s+/, "").replace(/\*\*/g, ""); });
+      var sintesi = ultimaRisposta.ai.split(/##/)[1] || "";
+      var frasi = sintesi.replace(/^[^\n]*\n/, "").replace(/\*\*/g, "").trim();
+      if (frasi) { var s2 = p.addSlide(); base(s2);
+        s2.addText("In sintesi", { x: 0.7, y: 0.5, w: 12, h: 0.8, fontSize: 26, bold: true, color: BLU, fontFace: "Georgia" });
+        s2.addShape(p.ShapeType.line, { x: 0.75, y: 1.35, w: 3, h: 0, line: { color: ORO, width: 2 } });
+        s2.addText(frasi.slice(0, 700), { x: 0.9, y: 1.7, w: 11.6, h: 5, fontSize: 17, color: "1B1B1F", fontFace: "Georgia", valign: "top" }); }
+      if (punti.length) slideElenco("Punti chiave", punti.slice(0, 10));
+    }
+    var d = ultimaRisposta.dossier;
+    if (d.norme.length) slideElenco("Normativa essenziale", d.norme.map(function (x) { return x.r.titolo + " (" + x.r.anno + ", " + x.r.ambito + ")"; }));
+    if (d.pronunce.length) slideElenco("Giurisprudenza", d.pronunce.map(function (x) { return x.r.titolo + " (" + x.r.anno + ", " + x.r.organo + ")"; }));
+    if (d.statistiche && window.DATA_DGSTAT) {
+      var st = window.DATA_DGSTAT.sintesi2025, ee = window.DATA_DGSTAT.esiti, uu = ee[ee.length - 1];
+      slideElenco("I numeri della mediazione (DGSTAT)", [
+        "Iscrizioni 2025: " + st.iscrizioni.toLocaleString("it") + " procedimenti",
+        st.quota_obbligatorie + "% obbligatorie · " + st.quota_demandate + "% demandate dal giudice · " + st.quota_volontarie + "% volontarie",
+        "Aderente comparso al primo incontro: " + uu.comparizione + "%",
+        "Accordo con aderente comparso: " + uu.accordo + "% — oltre il primo incontro: " + uu.accordo_tavolo + "%",
+        "Organismi attivi: " + st.organismi_attivi + " · Mediazione telematica: " + st.telematica_pct + "%"]);
+    }
+    if (d.articoli.length) slideElenco("Per approfondire (mediaresenzaconfini.org)", d.articoli.map(function (x) { return x.r.titolo + " (" + x.r.data + ")"; }));
+    var sf = p.addSlide(); base(sf);
+    sf.addText("Fonti e avvertenze", { x: 0.7, y: 0.5, w: 12, h: 0.8, fontSize: 26, bold: true, color: BLU, fontFace: "Georgia" });
+    sf.addShape(p.ShapeType.line, { x: 0.75, y: 1.35, w: 3, h: 0, line: { color: ORO, width: 2 } });
+    sf.addText([{ text: "Materiali tratti dall'archivio di mediareinformati.it: normativa, giurisprudenza, articoli d'autore, dati DGSTAT (Ministero della Giustizia), EU Justice Scoreboard e World Justice Project.", options: { paraSpaceAfter: 14 } },
+      { text: "Le slide sono un supporto didattico generato automaticamente: verificare sempre gli estremi delle fonti prima dell'uso in aula.", options: { italic: true, color: GRI } }],
+      { x: 0.9, y: 1.7, w: 11.6, h: 4, fontSize: 15, color: "1B1B1F", fontFace: "Georgia", valign: "top" });
+    p.writeFile({ fileName: nomeFile("pptx") });
+  }
+
+  /* ---------- eventi ---------- */
+  document.getElementById("chiedi").addEventListener("click", function () {
+    var q = document.getElementById("domanda").value.trim();
+    if (q) rispondi(q);
+  });
+  document.getElementById("domanda").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { var q = this.value.trim(); if (q) rispondi(q); }
+  });
+  document.getElementById("suggerimenti").addEventListener("click", function (e) {
+    if (e.target.tagName === "BUTTON") { document.getElementById("domanda").value = e.target.textContent; rispondi(e.target.textContent); }
+  });
+})();
+</script>
+</body>
+</html>
