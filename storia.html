@@ -29,11 +29,11 @@
 
 <main>
   <h2 class="pagina">Storia della mediazione</h2>
-  <p class="sottotitolo">Opere, volumi e studi sull&rsquo;evoluzione storica della composizione delle controversie</p>
+  <p class="sottotitolo">895 voci consultabili: capitoli, sezioni e leggi storiche dalle opere dell&rsquo;autore</p>
   <div class="intro-motore">
-    <p>Questo motore consente di esplorare l&rsquo;evoluzione storica della mediazione attraverso periodi, modelli, autori, fonti e passaggi essenziali: dai miti e dalle divinit&agrave; mesopotamiche ai sistemi di composizione delle controversie dell&rsquo;et&agrave; moderna, fino alla storia della conciliazione italiana.</p>
+    <p>Questo motore esplora l&rsquo;evoluzione storica della composizione delle controversie attraverso i contenuti reali delle opere dell&rsquo;autore: i cinque volumi dei <em>Sistemi di composizione delle controversie</em> (compresa la raccolta delle leggi italiane e straniere dal XVIII secolo), la <em>Breve storia della risoluzione del conflitto</em>, gli studi sul mondo orientale, sui miti mesopotamici e sull&rsquo;avvocatura. Ogni voce &egrave; una sezione consultabile con estratto e riferimento all&rsquo;opera.</p>
   </div>
-  <div class="avviso-provvisorio">Nota della redazione: questo motore pubblica <strong>solo schede bibliografiche</strong>. I testi integrali — alcuni dei quali editi — non sono disponibili sul sito. La cronologia navigabile per periodo storico &egrave; in corso di costruzione.</div>
+  <div class="avviso-provvisorio">Nota della redazione: per le opere edite il sito pubblica <strong>solo estratti limitati</strong> di ciascuna sezione, mai il testo integrale. L&rsquo;indicazione di capitolo e opera consente il riscontro sull&rsquo;edizione a stampa.</div>
   <div id="motore"></div>
 </main>
 
@@ -49,21 +49,26 @@
 <script>
 initMotore({
   dati: window.DATA_STORIA,
-  campiRicerca: ["titolo", "tema", "tipo"],
-  segnapostoRicerca: "Cerca per titolo o tema…",
+  campiRicerca: ["titolo", "opera", "capitolo", "temi", "estratto"],
+  segnapostoRicerca: "Cerca per epoca, istituto, paese, parola chiave\u2026",
   filtri: [
-    { campo: "tema", etichetta: "Tema" },
-    { campo: "tipo", etichetta: "Tipo" },
-    { campo: "formato", etichetta: "Formato" }
+    { campo: "opera", etichetta: "Opera" },
+    { campo: "temi", etichetta: "Tema" },
+    { campo: "stato", etichetta: "Stato editoriale" }
   ],
   rendi: function (r) {
     return '<p class="r-titolo"><a>' + esc(r.titolo) + '</a></p>' +
-      '<p class="r-meta"><span class="etichetta">' + esc(r.tipo) + '</span>' + esc(r.tema) +
-      '<span class="sep">·</span>' + esc(r.stato) + '</p>';
+      '<p class="r-meta"><span class="etichetta">' + esc(r.opera) + '</span>' +
+      (r.capitolo ? esc(r.capitolo) + '<span class="sep">\u00b7</span>' : '') +
+      esc(r.temi.join(", ")) + '</p>' +
+      '<p class="r-testo">' + esc(r.estratto.slice(0, 260)) + '\u2026</p>';
   },
   dettaglio: function (r) {
-    return '<dl><dt>Tema</dt><dd>' + esc(r.tema) + '</dd>' +
-      '<dt>Stato</dt><dd>' + esc(r.stato) + ' — scheda bibliografica; il testo integrale non \u00e8 pubblicato sul sito</dd></dl>';
+    return '<dl><dt>Opera</dt><dd>' + esc(r.opera) + ' (' + esc(r.stato) + ')</dd>' +
+      (r.capitolo ? '<dt>Capitolo / collocazione</dt><dd>' + esc(r.capitolo) + '</dd>' : '') +
+      '<dt>Temi</dt><dd>' + esc(r.temi.join(", ")) + '</dd>' +
+      '<dt>Estratto</dt><dd>' + esc(r.estratto) + '\u2026</dd>' +
+      '<dt>Avvertenza</dt><dd>Estratto limitato a fini di consultazione; il testo integrale non \u00e8 pubblicato sul sito.</dd></dl>';
   }
 });
 </script>

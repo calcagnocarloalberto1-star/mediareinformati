@@ -31,7 +31,7 @@
   <h2 class="pagina">Assistente</h2>
   <p class="sottotitolo">Domande e risposte sulla mediazione, con le fonti dell&rsquo;archivio</p>
   <div class="intro-motore">
-    <p>Questo assistente risponde alle domande sulla mediazione attingendo all&rsquo;intero archivio del sito &mdash; normativa, giurisprudenza, articoli, schede paese e statistiche &mdash; e cita sempre le fonti. La risposta pu&ograve; essere scaricata in <strong>Word</strong> e <strong>PDF</strong>, oppure trasformata in <strong>slide PowerPoint per formatori</strong>.</p>
+    <p>Questo assistente risponde alle domande sulla mediazione attingendo all&rsquo;intero archivio del sito &mdash; storia della composizione delle controversie, normativa, giurisprudenza, articoli, schede paese e statistiche &mdash; e cita sempre le fonti. La risposta pu&ograve; essere scaricata in <strong>Word</strong> e <strong>PDF</strong>, oppure trasformata in <strong>slide PowerPoint per formatori</strong>.</p>
   </div>
 
   <div class="strumenti">
@@ -42,6 +42,8 @@
     <div class="suggerimenti-domande" id="suggerimenti">
       <button>Quando la mediazione è obbligatoria?</button>
       <button>Che cos'è la mediazione demandata dal giudice?</button>
+      <button>Come si conciliava presso i Greci e i Romani?</button>
+      <button>Chi era il conciliatore nell'Ottocento italiano?</button>
       <button>Quanto dura una mediazione e quanto costa?</button>
       <button>Come funziona la mediazione in Francia?</button>
       <button>Quali sono i numeri della mediazione in Italia?</button>
@@ -70,6 +72,8 @@
 <script src="data/dgstat.js"></script>
 <script src="data/link.js"></script>
 <script src="data/corpus.js"></script>
+<script src="data/storia.js"></script>
+<script src="data/corpus_storia.js"></script>
 <script src="assets/app.js"></script>
 <script src="https://js.puter.com/v2/"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -91,11 +95,21 @@
     [/statistic|numer|dat[oi]/, ["dgstat", "iscrizioni", "statistiche"]],
     [/condominio|condominial/, ["condominio"]],
     [/famili|famigli|divorz|separazion/, ["familiare", "famiglia"]],
-    [/storia|origin|evoluz|antic/, ["storia", "origini", "conciliazione"]]
+    [/storia|origin|evoluz|antic/, ["storia", "origini", "conciliazione", "arbitrato"]],
+    [/grec|omero|aten/, ["grecia", "greci", "omero", "arbitrato"]],
+    [/\brom[aa]\b|romani|digesto|pretor/, ["roma", "romani", "transactio", "arbitrato"]],
+    [/mesopotam|mit[oi]|inanna|divinit|archetip/, ["mesopotamia", "inanna", "divinita", "archetip", "harvard"]],
+    [/medioev|barbar|longobard|comunal/, ["medioevo", "barbariche", "statuti"]],
+    [/ottocent|conciliatore|1865|napoleon|due sicilie|sardegna/, ["conciliatore", "1865", "regno", "codice"]],
+    [/enneagramma/, ["enneagramma", "harvard", "archetip"]],
+    [/geometra/, ["geometra", "tecnico"]],
+    [/deontolog|legale e la mediazione/, ["deontologia", "avvocato", "doveri"]]
   ];
   var ultimaRisposta = null;
   var CORPO = {};
   (window.DATA_CORPUS || []).forEach(function (c) { CORPO[c.id] = c.testo; });
+  var CORPO_ST = {};
+  (window.DATA_CORPUS_STORIA || []).forEach(function (c) { CORPO_ST[c.id] = c.testo; });
 
   function termini(q) {
     var base = normaTesto(q).replace(/[?!.,;:'"()]/g, " ").split(/\s+/)
@@ -160,8 +174,18 @@
       var nomiPaesi = paesiCitati.map(function (p) { return normaTesto(p.paese).slice(0, 6); });
       ts.extra = ts.extra.concat(nomiPaesi).concat(nomiPaesi).concat(nomiPaesi); // triplo peso al paese citato
     }
+    var storiaBase = (window.DATA_STORIA || []);
+    if (!scopoEstero) {
+      storiaBase = storiaBase.filter(function (r) {
+        if (r.capitolo && r.capitolo.indexOf("Raccolta per paese:") === 0)
+          return r.capitolo.indexOf("Italia") !== -1 || r.capitolo.indexOf("Onu") !== -1 || r.capitolo.indexOf("Unione") !== -1;
+        return true;
+      });
+    }
     var d = {
       domanda: q,
+      storia: top(storiaBase, ["titolo", "opera", "temi", "capitolo", "estratto"], ts, 5, 3,
+        function (r) { return CORPO_ST[r.id] || ""; }),
       norme: top(norme, ["titolo", "categoria"], ts, 5, 2),
       pronunce: top(window.DATA_GIURISPRUDENZA || [], ["titolo", "massima", "materia", "organo"], ts, 5, 2),
       articoli: top(articoliBase, ["titolo", "estratto", "categorie"], ts, 5, 2,
@@ -169,7 +193,8 @@
       paesi: paesiCitati.slice(0, 2),
       statistiche: /statistic|dat[oi]|numer|quant[ei]|percentual|accord|iscrizion|durata media|quanti/.test(nq),
       linkUtili: top(window.DATA_LINK || [], ["nome", "paese", "tipologia"], ts, 3, 2.5),
-      scopoEstero: scopoEstero
+      scopoEstero: scopoEstero,
+      storicaPrima: /stori|antic|grec|\brom[aa]\b|romani|medioev|ottocent|mit[oi]|mesopotam|divinit|origin|evoluz|conciliatore|barbar|due sicilie|1865|foramiti/.test(nq)
     };
     // se la domanda cita l'Italia esplicitamente aggiungi la scheda Italia
     if (/itali/.test(nq)) (window.DATA_SISTEMI || []).forEach(function (p) { if (p.codice === "it") d.paesi.unshift(p); });
@@ -187,6 +212,15 @@
       });
       h += "</ul>";
     }
+    var hStoria = "";
+    if (d.storia.length) {
+      hStoria = "<h4>Storia della composizione delle controversie</h4><ul>";
+      d.storia.forEach(function (x) {
+        hStoria += "<li><strong>" + esc(x.r.titolo) + "</strong> <span class='cit'>(" + esc(x.r.opera) + (x.r.capitolo ? " \u00b7 " + esc(x.r.capitolo) : "") + ")</span><br>" + esc(x.r.estratto.slice(0, 240)) + "\u2026</li>";
+      });
+      hStoria += "</ul>";
+    }
+    if (d.storicaPrima) h += hStoria;
     if (d.norme.length) {
       h += "<h4>Normativa pertinente</h4><ul>";
       d.norme.forEach(function (x) { h += "<li>" + esc(x.r.titolo) + " <span class='cit'>(" + esc(x.r.anno) + " · " + esc(x.r.ambito) + ")</span></li>"; });
@@ -200,6 +234,7 @@
       });
       h += "</ul>";
     }
+    if (!d.storicaPrima) h += hStoria;
     if (d.articoli.length) {
       h += "<h4>Approfondimenti dell'autore</h4><ul>";
       d.articoli.forEach(function (x) {
@@ -225,6 +260,7 @@
 
   function fontiPerPrompt(d) {
     var righe = [];
+    d.storia.slice(0, 4).forEach(function (x) { righe.push("[STORIA] " + x.r.titolo + " (" + x.r.opera + (x.r.capitolo ? ", " + x.r.capitolo : "") + "): " + (CORPO_ST[x.r.id] || x.r.estratto).slice(0, 900)); });
     d.norme.slice(0, 4).forEach(function (x) { righe.push("[NORMA] " + x.r.titolo + " (" + x.r.anno + ", " + x.r.ambito + ")"); });
     d.pronunce.slice(0, 4).forEach(function (x) { righe.push("[PRONUNCIA] " + x.r.titolo + " (" + x.r.anno + ", " + x.r.organo + ")" + (x.r.massima ? " — " + x.r.massima : "")); });
     d.articoli.slice(0, 4).forEach(function (x) { righe.push("[ARTICOLO] " + x.r.titolo + " (" + x.r.data + "): " + (CORPO[x.r.id] || x.r.estratto).slice(0, 900)); });
@@ -259,7 +295,7 @@
     var cont = document.getElementById("contenitore-risposta");
     var d = cerca(q);
     if (!d) { stato.textContent = "Scrivi una domanda più precisa."; return; }
-    var nFonti = d.norme.length + d.pronunce.length + d.articoli.length + d.paesi.length + d.linkUtili.length;
+    var nFonti = d.storia.length + d.norme.length + d.pronunce.length + d.articoli.length + d.paesi.length + d.linkUtili.length;
     ultimaRisposta = { domanda: q, dossier: d, ai: "" };
     cont.innerHTML = "<div class='risposta'>" +
       "<h3 class='titolo-risposta'>" + esc(q) + "</h3>" +
@@ -370,6 +406,7 @@
       if (punti.length) slideElenco("Punti chiave", punti.slice(0, 10));
     }
     var d = ultimaRisposta.dossier;
+    if (d.storia.length) slideElenco("Radici storiche", d.storia.map(function (x) { return x.r.titolo + " (" + x.r.opera + ")"; }));
     if (d.norme.length) slideElenco("Normativa essenziale", d.norme.map(function (x) { return x.r.titolo + " (" + x.r.anno + ", " + x.r.ambito + ")"; }));
     if (d.pronunce.length) slideElenco("Giurisprudenza", d.pronunce.map(function (x) { return x.r.titolo + " (" + x.r.anno + ", " + x.r.organo + ")"; }));
     if (d.statistiche && window.DATA_DGSTAT) {
