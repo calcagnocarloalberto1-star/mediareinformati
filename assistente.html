@@ -69,6 +69,7 @@
 <script src="data/sistemi.js"></script>
 <script src="data/dgstat.js"></script>
 <script src="data/link.js"></script>
+<script src="data/corpus.js"></script>
 <script src="assets/app.js"></script>
 <script src="https://js.puter.com/v2/"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -76,50 +77,102 @@
 <script>
 (function () {
   "use strict";
-  var STOP = "il lo la i gli le un una uno di a da in con su per tra fra e o ma che chi cui non come dove quando quanto quale quali cosa cos è e' della delle dei degli del al alla alle ai agli sul sulla sulle nei nelle nel si mi ti ci vi ne se più meno molto poco tutto tutti ogni questo questa questi queste quello quella essere avere fare può puo sono viene vengono stato stata quali qual mediante circa anche ancora poi già gia verso presso senza sotto sopra".split(" ");
+  var STOP = "il lo la i gli le un una uno di a da in con su per tra fra e o ma che chi cui non come dove quando quanto quale quali cosa cos \u00e8 e' della delle dei degli del al alla alle ai agli sul sulla sulle nei nelle nel si mi ti ci vi ne se pi\u00f9 meno molto poco tutto tutti ogni questo questa questi queste quello quella essere avere fare pu\u00f2 puo sono viene vengono stato stata quali qual mediante circa anche ancora poi gi\u00e0 gia verso presso senza sotto sopra funziona prevede".split(" ");
+  var SINONIMI = [
+    [/obbligator|procedibilit/, ["condizione di procedibilita", "procedibilita", "28/2010", "obbligo", "obbligatoria"]],
+    [/demandat|delegat/, ["demandata", "delegata", "disposta dal giudice", "5 quater"]],
+    [/cost[oi]|spes[ae]|indennit|tariff/, ["indennita", "spese", "compenso", "gratuito patrocinio", "credito d'imposta"]],
+    [/durat|termin|tempo|quanto dura/, ["durata", "termine", "tre mesi", "giorni"]],
+    [/cartabia|riform/, ["cartabia", "149/2022", "riforma", "28/2010"]],
+    [/telematic|online|distanz/, ["telematica", "videoconferenza", "firma digitale"]],
+    [/primo incontro/, ["primo incontro", "incontro informativo", "effettivit"]],
+    [/accord|esit|success/, ["accordo", "conciliazione", "esito", "verbale"]],
+    [/avvocat|assistenza legale|difensor/, ["avvocato", "assistenza legale", "difensore"]],
+    [/statistic|numer|dat[oi]/, ["dgstat", "iscrizioni", "statistiche"]],
+    [/condominio|condominial/, ["condominio"]],
+    [/famili|famigli|divorz|separazion/, ["familiare", "famiglia"]],
+    [/storia|origin|evoluz|antic/, ["storia", "origini", "conciliazione"]]
+  ];
   var ultimaRisposta = null;
+  var CORPO = {};
+  (window.DATA_CORPUS || []).forEach(function (c) { CORPO[c.id] = c.testo; });
 
   function termini(q) {
-    return normaTesto(q).replace(/[?!.,;:'"()]/g, " ").split(/\s+/)
+    var base = normaTesto(q).replace(/[?!.,;:'"()]/g, " ").split(/\s+/)
       .filter(function (t) { return t.length > 2 && STOP.indexOf(t) === -1; });
+    var extra = [];
+    SINONIMI.forEach(function (sn) { if (sn[0].test(normaTesto(q))) extra = extra.concat(sn[1].map(normaTesto)); });
+    return { base: base, extra: extra, frase: normaTesto(q).replace(/[?!.]/g, "").trim() };
   }
   function punteggio(testo, ts) {
     var n = normaTesto(testo), s = 0;
-    ts.forEach(function (t) {
+    ts.base.forEach(function (t) {
       var i = -1, c = 0;
-      while ((i = n.indexOf(t, i + 1)) !== -1 && c < 5) { s++; c++; }
-      // radice (primi 5 caratteri) per flessioni
+      while ((i = n.indexOf(t, i + 1)) !== -1 && c < 4) { s += 1; c++; }
       if (c === 0 && t.length > 5 && n.indexOf(t.slice(0, 5)) !== -1) s += 0.4;
     });
+    ts.extra.forEach(function (t) { if (n.indexOf(t) !== -1) s += 1.6; });
+    if (ts.frase.length > 12 && n.indexOf(ts.frase) !== -1) s += 6;
     return s;
   }
-  function top(arr, campi, ts, n, pesoTitolo) {
-    return arr.map(function (r) {
+  function dedup(lista) {
+    var visti = {}, out = [];
+    lista.forEach(function (x) {
+      var k = normaTesto(x.r.titolo || x.r.nome || "").replace(/\(\d+\)|copia|\bdef\b/g, "").replace(/\s+/g, " ").trim().slice(0, 60);
+      if (!visti[k]) { visti[k] = 1; out.push(x); }
+    });
+    return out;
+  }
+  function top(arr, campi, ts, n, soglia, extraTesto) {
+    return dedup(arr.map(function (r) {
       var s = 0;
       campi.forEach(function (c, i) {
         var v = r[c]; if (Array.isArray(v)) v = v.join(" ");
-        if (v) s += punteggio(String(v), ts) * (i === 0 ? (pesoTitolo || 2.5) : 1);
+        if (v) s += punteggio(String(v), ts) * (i === 0 ? 2.2 : 1);
       });
+      if (extraTesto) { var t2 = extraTesto(r); if (t2) s += punteggio(t2, ts) * 0.8; }
       return { r: r, s: s };
-    }).filter(function (x) { return x.s > 0; })
-      .sort(function (a, b) { return b.s - a.s; }).slice(0, n);
+    }).filter(function (x) { return x.s >= (soglia || 1); })
+      .sort(function (a, b) { return b.s - a.s; })).slice(0, n);
   }
 
   function cerca(q) {
     var ts = termini(q);
-    if (!ts.length) return null;
+    if (!ts.base.length && !ts.extra.length) return null;
+    var nq = normaTesto(q);
+    // ambito: Italia salvo che la domanda citi un paese o l'estero
+    var paesiCitati = [];
+    (window.DATA_SISTEMI || []).forEach(function (p) {
+      if (p.codice !== "it" && nq.indexOf(normaTesto(p.paese)) !== -1) paesiCitati.push(p);
+    });
+    var scopoEstero = paesiCitati.length > 0 || /\bue\b|europe|ester[oe]|comparat|mondo|internazional|stranier/.test(nq);
+    var ESTERO_NOMI = /kosov|giappon|angol|argentin|brasil|canad|cines|kazak|marocc|russ|svizzer|turc|ucrain|australi|india|israel|alban|bulgar|rumen|romen|spagn|portog|tedesc|german|frances|francia|irland|oland|polon|polacc|cec[ao]|slovacc|sloven|ungher|grec|cipro|malta|lituan|letton|eston|finland|svez|danim|belgio|austria|croaz|regno unito|inghilterra|stati uniti|\busa\b|perù|peru|colombia|messic|vietnam|singapore/;
+    var norme = (window.DATA_NORMATIVA || []);
+    var articoliBase = (window.DATA_ARTICOLI || []);
+    if (!scopoEstero) {
+      norme = norme.filter(function (r) { return r.ambito === "Italia"; });
+      articoliBase = articoliBase.filter(function (r) {
+        var t = normaTesto(r.titolo);
+        return !(ESTERO_NOMI.test(t) && t.indexOf("itali") === -1);
+      });
+    }
+    if (paesiCitati.length) {
+      var nomiPaesi = paesiCitati.map(function (p) { return normaTesto(p.paese).slice(0, 6); });
+      ts.extra = ts.extra.concat(nomiPaesi).concat(nomiPaesi).concat(nomiPaesi); // triplo peso al paese citato
+    }
     var d = {
       domanda: q,
-      norme: top(window.DATA_NORMATIVA || [], ["titolo", "categoria"], ts, 6),
-      pronunce: top(window.DATA_GIURISPRUDENZA || [], ["titolo", "organo", "massima", "materia"], ts, 6),
-      articoli: top(window.DATA_ARTICOLI || [], ["titolo", "estratto", "categorie"], ts, 6),
-      paesi: [],
-      statistiche: /statistic|dati|numer|quant[ei]|percentual|accord|iscrizion|durata media/.test(normaTesto(q)),
-      linkUtili: top(window.DATA_LINK || [], ["nome", "paese", "tipologia"], ts, 4)
+      norme: top(norme, ["titolo", "categoria"], ts, 5, 2),
+      pronunce: top(window.DATA_GIURISPRUDENZA || [], ["titolo", "massima", "materia", "organo"], ts, 5, 2),
+      articoli: top(articoliBase, ["titolo", "estratto", "categorie"], ts, 5, 2,
+        function (r) { return CORPO[r.id] || ""; }),
+      paesi: paesiCitati.slice(0, 2),
+      statistiche: /statistic|dat[oi]|numer|quant[ei]|percentual|accord|iscrizion|durata media|quanti/.test(nq),
+      linkUtili: top(window.DATA_LINK || [], ["nome", "paese", "tipologia"], ts, 3, 2.5),
+      scopoEstero: scopoEstero
     };
-    (window.DATA_SISTEMI || []).forEach(function (p) {
-      if (normaTesto(q).indexOf(normaTesto(p.paese)) !== -1) d.paesi.push(p);
-    });
+    // se la domanda cita l'Italia esplicitamente aggiungi la scheda Italia
+    if (/itali/.test(nq)) (window.DATA_SISTEMI || []).forEach(function (p) { if (p.codice === "it") d.paesi.unshift(p); });
     return d;
   }
 
@@ -174,7 +227,7 @@
     var righe = [];
     d.norme.slice(0, 4).forEach(function (x) { righe.push("[NORMA] " + x.r.titolo + " (" + x.r.anno + ", " + x.r.ambito + ")"); });
     d.pronunce.slice(0, 4).forEach(function (x) { righe.push("[PRONUNCIA] " + x.r.titolo + " (" + x.r.anno + ", " + x.r.organo + ")" + (x.r.massima ? " — " + x.r.massima : "")); });
-    d.articoli.slice(0, 4).forEach(function (x) { righe.push("[ARTICOLO] " + x.r.titolo + " (" + x.r.data + "): " + x.r.estratto.slice(0, 260)); });
+    d.articoli.slice(0, 4).forEach(function (x) { righe.push("[ARTICOLO] " + x.r.titolo + " (" + x.r.data + "): " + (CORPO[x.r.id] || x.r.estratto).slice(0, 900)); });
     d.paesi.forEach(function (p) { righe.push("[SCHEDA " + p.paese.toUpperCase() + "] " + testoPuro(p.html).slice(0, 900)); });
     if (d.statistiche && window.DATA_DGSTAT) {
       var s = window.DATA_DGSTAT.sintesi2025, e = window.DATA_DGSTAT.esiti, u = e[e.length - 1];
@@ -227,9 +280,9 @@
     var bAI = document.getElementById("blocco-ai");
     if (window.puter && puter.ai && puter.ai.chat && nFonti > 0) {
       bAI.innerHTML = "<p class='cit'>Sto preparando la sintesi con l'assistenza dell'AI…</p>";
-      var prompt = "Sei l'assistente di mediareinformati.it, piattaforma italiana di consultazione sulla mediazione civile e commerciale. Rispondi in italiano, con rigore giuridico e tono didattico per mediatori e formatori.\n" +
-        "DOMANDA: " + q + "\n\nFONTI D'ARCHIVIO (usa SOLO queste, citandole):\n" + fontiPerPrompt(d) +
-        "\n\nStruttura la risposta in markdown con queste sezioni: ## Risposta in sintesi (3-5 frasi), ## Punti chiave (elenco puntato, max 6), ## Per la formazione (2-3 spunti didattici). Non inventare estremi normativi non presenti nelle fonti.";
+      var prompt = "Sei l'assistente di mediareinformati.it, piattaforma italiana di consultazione sulla mediazione civile e commerciale (giurisdizione di riferimento: ITALIA, d.lgs. 28/2010, salvo che la domanda riguardi altri paesi). Rispondi in italiano, con rigore giuridico e tono didattico per mediatori e formatori.\n" +
+        "DOMANDA: " + q + "\n\nFONTI D'ARCHIVIO CANDIDATE (provengono da una ricerca automatica: alcune possono essere NON pertinenti — scartale e non citarle):\n" + fontiPerPrompt(d) +
+        "\n\nREGOLE: 1) usa solo le fonti davvero pertinenti alla domanda e citale con i loro estremi; 2) ignora le fonti fuori tema (es. leggi straniere se la domanda riguarda l'Italia); 3) se le fonti pertinenti sono poche o assenti, dillo espressamente e limita la risposta a quanto documentato; 4) non inventare estremi normativi o giurisprudenziali.\nStruttura in markdown: ## Risposta in sintesi (3-5 frasi), ## Punti chiave (max 6 punti), ## Per la formazione (2-3 spunti didattici).";
       Promise.resolve(puter.ai.chat(prompt)).then(function (r) {
         var t = (r && r.message && r.message.content) ? r.message.content : (typeof r === "string" ? r : "");
         if (t) { ultimaRisposta.ai = t; bAI.innerHTML = "<h4>Sintesi (AI, da verificare sulle fonti)</h4>" + mdPulito(t); }
