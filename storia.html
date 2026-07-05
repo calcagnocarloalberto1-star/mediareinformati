@@ -14,7 +14,7 @@
   </div>
   <nav class="principale">
     <a href="index.html">Home</a>
-    <a href="storia.html">Storia</a>
+    <a href="storia.html" class="attivo">Storia</a>
     <a href="pratica.html">Pratica</a>
     <a href="diritto.html">Diritto</a>
     <a href="sistemi.html">Sistemi nazionali</a>
@@ -29,51 +29,204 @@
 
 <main>
   <h2 class="pagina">Storia della mediazione</h2>
-  <p class="sottotitolo">933 voci consultabili: capitoli, sezioni e leggi storiche dalle opere dell&rsquo;autore</p>
+  <p class="sottotitolo">Fai una domanda, anche articolata: la risposta &egrave; un contributo organico costruito sulle opere dell&rsquo;autore</p>
   <div class="intro-motore">
-    <p>Questo motore esplora l&rsquo;evoluzione storica della composizione delle controversie attraverso i contenuti reali delle opere dell&rsquo;autore: i cinque volumi dei <em>Sistemi di composizione delle controversie</em> (compresa la raccolta delle leggi italiane e straniere dal XVIII secolo), la <em>Breve storia della risoluzione del conflitto</em>, gli studi sul mondo orientale, sui miti mesopotamici e sull&rsquo;avvocatura, e la parte storica del Manuale CNMA-CMNA per il corso mediatori (d.m. 150/2023). Ogni voce &egrave; una sezione consultabile con estratto e riferimento all&rsquo;opera.</p>
+    <p>Questo motore attinge a 933 sezioni delle opere dell&rsquo;autore &mdash; i cinque volumi dei <em>Sistemi di composizione delle controversie</em> (con la raccolta delle leggi italiane e straniere dal XVIII secolo), la <em>Breve storia della risoluzione del conflitto</em>, gli studi sul mondo orientale e sui miti mesopotamici, la parte storica del Manuale CNMA-CMNA &mdash; e compone una trattazione unitaria, scaricabile in Word. In coda, le sezioni d&rsquo;archivio utilizzate.</p>
   </div>
-  <div class="avviso-provvisorio">Nota della redazione: per le opere edite il sito pubblica <strong>solo estratti limitati</strong> di ciascuna sezione, mai il testo integrale. L&rsquo;indicazione di capitolo e opera consente il riscontro sull&rsquo;edizione a stampa.</div>
-  <div id="motore"></div>
+
+  <div class="strumenti">
+    <div class="assistente-domanda">
+      <input type="text" id="domanda" placeholder="Es. Come si è evoluta la conciliazione dall'antichità al codice del 1865?" autocomplete="off">
+      <button class="bottone-primario" id="chiedi">Componi</button>
+    </div>
+    <div class="suggerimenti-domande" id="suggerimenti">
+      <button>Come si conciliava presso i Greci e i Romani?</button>
+      <button>Che ruolo hanno i miti mesopotamici nella mediazione?</button>
+      <button>Come nasce il conciliatore italiano dell'Ottocento?</button>
+      <button>La conciliazione nel mondo orientale: Cina, Giappone, India</button>
+      <button>Quali filosofi si sono occupati del conflitto?</button>
+      <button>Come si è arrivati dalla conciliazione del 1865 al d.lgs. 28/2010?</button>
+    </div>
+  </div>
+  <p class="conteggio" id="stato"></p>
+  <div id="contenitore-risposta"></div>
+
+  <div class="avviso-provvisorio" style="margin-top:30px">
+    <strong>Nota della redazione.</strong> Il contributo &egrave; composto dall&rsquo;intelligenza artificiale esclusivamente sui testi delle opere dell&rsquo;autore e va verificato sulle fonti indicate. I testi integrali delle opere &mdash; alcune edite &mdash; non sono pubblicati sul sito: le sezioni in coda riportano solo estratti limitati.
+  </div>
 </main>
 
 <footer class="sito">
   <div class="interno">
-    <span>mediareinformati.it — prototipo di consultazione, luglio 2026</span>
-    <span>Fonte: opere e studi dell&rsquo;autore</span>
+    <span>mediareinformati.it — piattaforma di consultazione</span>
+    <span>Archivio: Carlo Alberto Calcagno · mediaresenzaconfini.org</span>
   </div>
 </footer>
 
 <script src="data/storia.js"></script>
+<script src="data/corpus_storia.js"></script>
 <script src="assets/app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+<script src="https://js.puter.com/v2/"></script>
 <script>
-initMotore({
-  dati: window.DATA_STORIA,
-  campiRicerca: ["titolo", "opera", "capitolo", "temi", "estratto"],
-  segnapostoRicerca: "Cerca per epoca, istituto, paese, parola chiave\u2026",
-  filtri: [],
-  esportaWord: true,
-  titoloDoc: "Storia della mediazione \u2014 risultati della ricerca",
-  rendiDoc: function (r) {
-    return '<h2>' + esc(r.titolo) + '</h2>' +
-      '<p class="m">' + esc(r.opera) + (r.capitolo ? ' \u00b7 ' + esc(r.capitolo) : '') + ' \u00b7 ' + esc(r.temi.join(", ")) + '</p>' +
-      '<p>' + esc(r.estratto) + '\u2026</p>';
-  },
-  rendi: function (r) {
-    return '<p class="r-titolo"><a>' + esc(r.titolo) + '</a></p>' +
-      '<p class="r-meta"><span class="etichetta">' + esc(r.opera) + '</span>' +
-      (r.capitolo ? esc(r.capitolo) + '<span class="sep">\u00b7</span>' : '') +
-      esc(r.temi.join(", ")) + '</p>' +
-      '<p class="r-testo">' + esc(r.estratto.slice(0, 260)) + '\u2026</p>';
-  },
-  dettaglio: function (r) {
-    return '<dl><dt>Opera</dt><dd>' + esc(r.opera) + ' (' + esc(r.stato) + ')</dd>' +
-      (r.capitolo ? '<dt>Capitolo / collocazione</dt><dd>' + esc(r.capitolo) + '</dd>' : '') +
-      '<dt>Temi</dt><dd>' + esc(r.temi.join(", ")) + '</dd>' +
-      '<dt>Estratto</dt><dd>' + esc(r.estratto) + '\u2026</dd>' +
-      '<dt>Avvertenza</dt><dd>Estratto limitato a fini di consultazione; il testo integrale non \u00e8 pubblicato sul sito.</dd></dl>';
+(function () {
+  "use strict";
+  var STOP = "il lo la i gli le un una uno di a da in con su per tra fra e o ma che chi cui non come dove quando quanto quale quali cosa cos è e' della delle dei degli del al alla alle ai agli sul sulla sulle nei nelle nel si mi ti ci vi ne se più meno molto poco tutto tutti ogni questo questa questi queste quello quella essere avere fare può puo sono viene vengono stato stata qual mediante circa anche ancora poi già gia verso presso senza sotto sopra hanno ruolo modo era erano quali arrivati evoluta evoluto nasce nascono occupati".split(" ");
+  var SINONIMI = [
+    [/grec|omero|aten|magna grecia/, ["grecia", "greci", "omero", "arbitrato", "diaitetes"]],
+    [/\brom[aa]\b|romani|romano|digesto|pretor|transactio/, ["roma", "romani", "romano", "transactio", "arbitrato"]],
+    [/mesopotam|mit[oi]|sumer|inanna|divinit|archetip/, ["mesopotamia", "sumeri", "inanna", "divinita", "archetip", "harvard"]],
+    [/medioev|barbar|longobard|comunal|federico/, ["medioevo", "barbariche", "statuti", "federico"]],
+    [/ottocent|conciliatore|1865|napoleon|due sicilie|sardegna|1790|lumi/, ["conciliatore", "1865", "regno", "codice", "1790", "lumi"]],
+    [/cina|cinese|giappon|india|orient|malesia|vietnam/, ["cina", "giappone", "india", "orientale", "shuohe"]],
+    [/filosof|pensator/, ["filosofi", "conflitto", "pensiero"]],
+    [/28\/2010|cartabia|riforma|moderna|oggi/, ["28/2010", "mediazione", "decreto", "2010"]],
+    [/avvocat|deontolog|legale/, ["avvocato", "deontologia", "doveri"]],
+    [/arbitr/, ["arbitrato", "arbitri", "lodo"]],
+    [/conciliaz|composizion|bonari/, ["conciliazione", "componimento", "bonario"]],
+    [/enneagramma|counseling|trasformativ/, ["enneagramma", "harvard", "trasformativa"]]
+  ];
+  var CORPO = {};
+  (function () {
+    try {
+      if (window.DATA_CORPUS_STORIA_C && window.pako) {
+        var bin = atob(window.DATA_CORPUS_STORIA_C);
+        var buf = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+        JSON.parse(new TextDecoder("utf-8").decode(pako.inflate(buf))).forEach(function (c) { CORPO[c.id] = c.testo; });
+      }
+    } catch (e) { /* senza corpus si usano gli estratti */ }
+  })();
+  var ultima = null;
+
+  function termini(q) {
+    var n = normaTesto(q).replace(/[?!.,;:'"()]/g, " ");
+    var base = n.split(/\s+/).filter(function (t) { return t.length > 2 && STOP.indexOf(t) === -1; });
+    var extra = [];
+    SINONIMI.forEach(function (s) { if (s[0].test(n)) extra = extra.concat(s[1].map(normaTesto)); });
+    return { base: base, extra: extra };
   }
-});
+  function punteggio(testo, ts) {
+    var n = normaTesto(testo), s = 0;
+    ts.base.forEach(function (t) {
+      var i = -1, c = 0;
+      while ((i = n.indexOf(t, i + 1)) !== -1 && c < 5) { s += 1; c++; }
+      if (c === 0 && t.length > 5 && n.indexOf(t.slice(0, 5)) !== -1) s += 0.4;
+    });
+    ts.extra.forEach(function (t) { if (n.indexOf(t) !== -1) s += 1.5; });
+    return s;
+  }
+  var ESTERO = /russ|spagn|svizzer|franc|prussia|danes|danimarc|portog|austri|german|tedesc|inghilterr|inglese|regno unito|stati uniti|\busa\b|slovacc|sloven|romania|rumen|bulgar|polon|ungher|olanda|belgio|grecia moderna|malta|cipro|kosovo|albania|croaz|onu|uncitral|malesia|vietnam|yemen|giappon|cina|cinese|india|egiz/;
+  function cerca(q) {
+    var ts = termini(q);
+    if (!ts.base.length && !ts.extra.length) return [];
+    var nq = normaTesto(q);
+    var vuoleEstero = ESTERO.test(nq) || /orient|stranier|estero|europe|mondo|comparat/.test(nq);
+    var base = (window.DATA_STORIA || []);
+    if (!vuoleEstero) {
+      base = base.filter(function (r) {
+        var chiave = normaTesto(r.titolo + " " + (r.capitolo || ""));
+        return !(ESTERO.test(chiave) && chiave.indexOf("itali") === -1);
+      });
+    }
+    return base.map(function (r) {
+      var s = punteggio(r.titolo, ts) * 2.4 + punteggio(r.opera + " " + r.capitolo + " " + r.temi.join(" "), ts) * 1.1 +
+              punteggio(CORPO[r.id] || r.estratto, ts) * 0.9;
+      return { r: r, s: s };
+    }).filter(function (x) { return x.s >= 1.5; })
+      .sort(function (a, b) { return b.s - a.s; })
+      .slice(0, 14);
+  }
+
+  function mdPulito(t) {
+    var righe = esc(t).split(/\r?\n/), h = "", inUl = false;
+    righe.forEach(function (r) {
+      r = r.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+      if (/^\s*[-*•]\s+/.test(r)) {
+        if (!inUl) { h += "<ul>"; inUl = true; }
+        h += "<li>" + r.replace(/^\s*[-*•]\s+/, "") + "</li>";
+      } else {
+        if (inUl) { h += "</ul>"; inUl = false; }
+        if (/^\s*#{2,4}\s+/.test(r)) h += "<h4>" + r.replace(/^\s*#{2,4}\s+/, "") + "</h4>";
+        else if (r.trim()) h += "<p>" + r + "</p>";
+      }
+    });
+    if (inUl) h += "</ul>";
+    return h;
+  }
+
+  function fontiHtml(fonti) {
+    var h = "<details open><summary class='fonti-titolo'>Sezioni d'archivio utilizzate (" + fonti.length + ")</summary><ul>";
+    fonti.forEach(function (x) {
+      h += "<li><strong>" + esc(x.r.titolo) + "</strong> <span class='cit'>(" + esc(x.r.opera) +
+        (x.r.capitolo ? " · " + esc(x.r.capitolo) : "") + ")</span><br>" + esc(x.r.estratto.slice(0, 220)) + "…</li>";
+    });
+    return h + "</ul></details>";
+  }
+
+  function componi(q) {
+    var stato = document.getElementById("stato");
+    var cont = document.getElementById("contenitore-risposta");
+    var fonti = cerca(q);
+    if (!fonti.length) { stato.textContent = "Nessuna sezione dell'archivio corrisponde: prova a riformulare la domanda."; cont.innerHTML = ""; return; }
+    stato.textContent = "";
+    ultima = { domanda: q, fonti: fonti, ai: "" };
+    cont.innerHTML = "<div class='risposta'>" +
+      "<h3 class='titolo-risposta'>" + esc(q) + "</h3>" +
+      "<p class='fonti-conteggio'>" + fonti.length + " sezioni d'archivio individuate</p>" +
+      "<div id='blocco-ai'><p class='cit'>Sto componendo il contributo sulle opere dell'autore…</p></div>" +
+      "<div id='blocco-fonti'>" + fontiHtml(fonti) + "</div>" +
+      "<div class='barra-export'><button class='bottone-secondario' id='ex-doc'>Scarica il contributo in Word</button></div>" +
+      "</div>";
+    document.getElementById("ex-doc").addEventListener("click", esportaDoc);
+
+    var bAI = document.getElementById("blocco-ai");
+    if (!(window.puter && puter.ai && puter.ai.chat)) {
+      bAI.innerHTML = "<p class='cit'>Composizione AI non disponibile: di seguito le sezioni pertinenti.</p>";
+      return;
+    }
+    var materiali = fonti.map(function (x) {
+      return "[" + x.r.opera + (x.r.capitolo ? " — " + x.r.capitolo : "") + " — " + x.r.titolo + "]\n" +
+        (CORPO[x.r.id] || x.r.estratto).slice(0, 2400);
+    }).join("\n\n");
+    var prompt = "Sei l'assistente di mediareinformati.it e componi un CONTRIBUTO ORGANICO di storia della mediazione e della composizione delle controversie, per mediatori, formatori e studiosi. Scrivi in italiano, in prosa da saggio didattico.\n" +
+      "DOMANDA: " + q + "\n\nMATERIALI DALLE OPERE DELL'AUTORE (Carlo Alberto Calcagno):\n" + materiali +
+      "\n\nREGOLE: 1) componi una trattazione CONTINUA e ARMONICA (700-1100 parole) che risponda esattamente alla domanda, NON un elenco di frammenti; 2) collega i materiali in un percorso cronologico o tematico con transizioni esplicite, date, istituti e protagonisti; 3) cita l'opera tra parentesi quando riprendi un contenuto specifico, es. (Breve storia, cap. I); 4) scarta in silenzio i materiali non pertinenti; 5) puoi aggiungere solo brevi raccordi di contesto storico generale, senza inventare citazioni; 6) rielabora sempre: nessun passo letterale oltre 40 parole; se la domanda chiede il testo integrale di un'opera, spiega che non è pubblicato e offri una sintesi; 7) chiudi con 2-3 spunti per la formazione.\n" +
+      "Struttura in markdown: ## Inquadramento, ## Sviluppo (più paragrafi collegati), ## Istituti e figure, ## Per la formazione.";
+    Promise.resolve(puter.ai.chat(prompt)).then(function (r) {
+      var t = (r && r.message && r.message.content) ? r.message.content : (typeof r === "string" ? r : "");
+      if (t) { ultima.ai = t; bAI.innerHTML = "<h4>Contributo (composto sulle opere dell'autore — da verificare sulle fonti)</h4>" + mdPulito(t); }
+      else bAI.innerHTML = "<p class='cit'>Composizione AI non riuscita: di seguito le sezioni pertinenti.</p>";
+    }).catch(function () {
+      bAI.innerHTML = "<p class='cit'>Composizione AI non disponibile in questo momento: di seguito le sezioni pertinenti.</p>";
+    });
+  }
+
+  function esportaDoc() {
+    if (!ultima) return;
+    var corpo = document.getElementById("blocco-ai").innerHTML + document.getElementById("blocco-fonti").innerHTML;
+    var html = "<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'>" +
+      "<style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.5}h1{color:#152a46;font-size:18pt}h4{color:#152a46;border-bottom:1px solid #ccc}.cit{color:#777;font-size:10pt}summary{font-weight:bold;color:#152a46}</style></head><body>" +
+      "<h1>" + esc(ultima.domanda) + "</h1><p><em>mediareinformati.it — contributo di storia della mediazione, " + new Date().toLocaleDateString("it") + "</em></p>" +
+      corpo + "<hr><p style='font-size:9pt;color:#777'>Contributo composto sulle opere di Carlo Alberto Calcagno; estratti a fini di consultazione, testi integrali non pubblicati. Verificare sempre le fonti.</p></body></html>";
+    var blob = new Blob(["﻿" + html], { type: "application/msword" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "storia_" + normaTesto(ultima.domanda).replace(/[^a-z0-9]+/g, "_").slice(0, 40) + ".doc";
+    a.click();
+  }
+
+  document.getElementById("chiedi").addEventListener("click", function () {
+    var q = document.getElementById("domanda").value.trim();
+    if (q) componi(q);
+  });
+  document.getElementById("domanda").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { var q = this.value.trim(); if (q) componi(q); }
+  });
+  document.getElementById("suggerimenti").addEventListener("click", function (e) {
+    if (e.target.tagName === "BUTTON") { document.getElementById("domanda").value = e.target.textContent; componi(e.target.textContent); }
+  });
+})();
 </script>
 </body>
 </html>
