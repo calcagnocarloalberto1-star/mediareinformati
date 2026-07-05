@@ -28,8 +28,8 @@
 
 <main>
   <h2 class="pagina">Pratica della mediazione</h2>
-  <p class="sottotitolo">Fai una domanda: la risposta &egrave; un contributo costruito sui materiali didattici e operativi dell'archivio</p>
-  <div class="intro-motore"><p>Questo motore attinge alle dispense dei corsi, ai manuali operativi e ai prontuari dell&rsquo;archivio e compone una trattazione unitaria, scaricabile in Word. La banca dati testuale di questa sezione &egrave; in corso di arricchimento.</p></div>
+  <p class="sottotitolo">Fai una domanda: la risposta &egrave; un contributo costruito su 902 sezioni di dispense, prontuari e manuali operativi</p>
+  <div class="intro-motore"><p>Questo motore attinge alle dispense dei corsi, ai manuali operativi e ai prontuari dell&rsquo;archivio e compone una trattazione unitaria, scaricabile in Word. La banca dati conta 902 sezioni operative tratte da dispense, prontuari e manuali, oltre agli articoli pertinenti.</p></div>
 
   <div class="strumenti">
     <div class="assistente-domanda">
@@ -59,14 +59,27 @@
 </footer>
 
 <script src="data/pratica.js"></script>
+<script src="data/corpus_pratica.js"></script>
 <script src="data/articoli.js"></script>
 <script src="data/corpus.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/consulta.js"></script>
 <script src="https://js.puter.com/v2/"></script>
 <script>
+var CORPO_ART = {};
+(window.DATA_CORPUS || []).forEach(function (c) { CORPO_ART[c.id] = c.testo; });
 var CORPO_PR = {};
-(window.DATA_CORPUS || []).forEach(function (c) { CORPO_PR[c.id] = c.testo; });
+(function () {
+  try {
+    if (window.DATA_CORPUS_PRATICA_C && window.pako) {
+      var bin = atob(window.DATA_CORPUS_PRATICA_C);
+      var buf = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+      JSON.parse(new TextDecoder("utf-8").decode(pako.inflate(buf))).forEach(function (c) { CORPO_PR[c.id] = c.testo; });
+    }
+  } catch (e) {}
+})();
 initConsulta({
   nomeSezione: "contributo di pratica della mediazione",
   nomeFile: "pratica",
@@ -81,11 +94,11 @@ initConsulta({
     [/domand|tecnic|negozia/, ["domande", "tecniche", "negoziazione", "harvard"]]
   ],
   dati: function () {
-    var didattici = (window.DATA_PRATICA || []).map(function (r) {
-      return { titolo: r.titolo, meta: (r.tipo || "Materiale") + (r.anno ? " · " + r.anno : "") + (r.contesto ? " · " + r.contesto : ""), estratto: "", testo: r.titolo };
+    var didattici = (window.DATA_PRATICA_SEZ || []).map(function (r) {
+      return { titolo: r.titolo, meta: r.opera + (r.capitolo ? " · " + r.capitolo : "") + " · " + r.temi.join(", "), estratto: r.estratto, testo: CORPO_PR[r.id] || r.estratto };
     });
     var art = (window.DATA_ARTICOLI || []).map(function (r) {
-      return { titolo: r.titolo, meta: "Articolo · " + r.data, estratto: r.estratto, testo: CORPO_PR[r.id] || r.estratto, url: r.url };
+      return { titolo: r.titolo, meta: "Articolo · " + r.data, estratto: r.estratto, testo: CORPO_ART[r.id] || r.estratto, url: r.url };
     });
     return didattici.concat(art);
   }
