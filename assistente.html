@@ -22,7 +22,7 @@
     <a href="articoli.html">Articoli</a>
     <a href="giurisprudenza.html">Giurisprudenza</a>
     <a href="assistente.html" class="attivo">Assistente</a>
-    <a href="progetto.html">Progetto / Autore</a>
+    <a href="progetto.html">Chi sono</a>
   </nav>
 </header>
 
@@ -60,7 +60,7 @@
 <footer class="sito">
   <div class="interno">
     <span>mediareinformati.it — piattaforma di consultazione</span>
-    <span>Archivio: Carlo Alberto Calcagno · mediaresenzaconfini.org</span>
+    <span><a href="progetto.html" style="color:#d8d4cb">Chi sono e le fonti del progetto</a></span>
   </div>
 </footer>
 
@@ -334,8 +334,8 @@
       var prompt;
       if (d.storicaPrima) {
         prompt = "Sei l'assistente di mediareinformati.it e stai componendo un CONTRIBUTO ORGANICO di storia della mediazione e della composizione delle controversie, destinato a mediatori, formatori e studiosi. Scrivi in italiano, in prosa da saggio didattico.\n" +
-          "DOMANDA: " + q + "\n\nMATERIALI DALLE OPERE DELL'AUTORE (Carlo Alberto Calcagno) — usali come base della trattazione, integrandoli in un discorso unitario:\n" + fontiPerPrompt(d) +
-          "\n\nREGOLE: 1) componi un contributo continuo e approfondito (700-1100 parole), NON un elenco di fonti; 2) intreccia i materiali in un percorso cronologico o tematico coerente, con date, istituti, protagonisti e passaggi normativi; 3) cita l'opera tra parentesi quando riprendi un contenuto specifico, es. (Breve storia, cap. I); 4) scarta i materiali non pertinenti senza menzionarli; 5) puoi integrare con nozioni storiche generali solo per raccordare i materiali, senza inventare citazioni; 6) RIELABORA sempre con parole tue: non riprodurre passi letterali superiori a 40 parole; 7) se la domanda chiede il testo integrale di un'opera, di un capitolo o di lunghi brani, NON fornirlo: spiega che i testi integrali non sono pubblicati e offri una trattazione ragionata; 8) chiudi con spunti per la formazione.\n" +
+          "DOMANDA: " + q + "\n\nMATERIALI DELL'ARCHIVIO DEL SITO — usali come base della trattazione, integrandoli in un discorso unitario:\n" + fontiPerPrompt(d) +
+          "\n\nREGOLE: 1) componi un contributo continuo e approfondito (700-1100 parole), NON un elenco di fonti; 2) intreccia i materiali in un percorso cronologico o tematico coerente, con date, istituti, protagonisti e passaggi normativi; 3) NON menzionare mai il curatore dell'archivio ne' le sue opere: valorizza le fonti primarie richiamate nei materiali (leggi, codici storici, pronunce, autori) citandole tra parentesi; 4) scarta i materiali non pertinenti senza menzionarli; 5) puoi integrare con nozioni storiche generali solo per raccordare i materiali, senza inventare citazioni; 6) RIELABORA sempre con parole tue: non riprodurre passi letterali superiori a 40 parole; 7) se la domanda chiede il testo integrale di un'opera, di un capitolo o di lunghi brani, NON fornirlo: spiega che i testi integrali non sono pubblicati e offri una trattazione ragionata; 8) chiudi con spunti per la formazione.\n" +
           "Struttura in markdown: ## Inquadramento, ## Sviluppo storico (il cuore della trattazione, piu' paragrafi), ## Istituti e figure, ## Per la formazione.";
       } else {
         prompt = "Sei l'assistente di mediareinformati.it, piattaforma italiana di consultazione sulla mediazione civile e commerciale (giurisdizione di riferimento: ITALIA, d.lgs. 28/2010, salvo che la domanda riguardi altri paesi). Rispondi in italiano, con rigore giuridico e tono didattico per mediatori e formatori.\n" +

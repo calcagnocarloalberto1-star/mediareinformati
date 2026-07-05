@@ -22,15 +22,15 @@
     <a href="articoli.html">Articoli</a>
     <a href="giurisprudenza.html">Giurisprudenza</a>
     <a href="assistente.html">Assistente</a>
-    <a href="progetto.html">Progetto / Autore</a>
+    <a href="progetto.html">Chi sono</a>
   </nav>
 </header>
 
 <main>
   <h2 class="pagina">Storia della mediazione</h2>
-  <p class="sottotitolo">Fai una domanda, anche articolata: la risposta &egrave; un contributo organico costruito sulle opere dell&rsquo;autore</p>
+  <p class="sottotitolo">Fai una domanda, anche articolata: la risposta &egrave; una ricostruzione storica organica, con le fonti in coda</p>
   <div class="intro-motore">
-    <p>Questo motore attinge a 933 sezioni delle opere dell&rsquo;autore &mdash; i cinque volumi dei <em>Sistemi di composizione delle controversie</em> (con la raccolta delle leggi italiane e straniere dal XVIII secolo), la <em>Breve storia della risoluzione del conflitto</em>, gli studi sul mondo orientale e sui miti mesopotamici, la parte storica del Manuale CNMA-CMNA &mdash; e compone una trattazione unitaria, scaricabile in Word. In coda, le sezioni d&rsquo;archivio utilizzate.</p>
+    <p>Questo motore attinge alle 933 sezioni della banca dati storica del sito &mdash; i cinque volumi dei <em>Sistemi di composizione delle controversie</em> (con la raccolta delle leggi italiane e straniere dal XVIII secolo), la <em>Breve storia della risoluzione del conflitto</em>, gli studi sul mondo orientale e sui miti mesopotamici, la parte storica del Manuale CNMA-CMNA &mdash; e compone una trattazione unitaria, scaricabile in Word. In coda, le sezioni d&rsquo;archivio utilizzate.</p>
   </div>
 
   <div class="strumenti">
@@ -58,7 +58,7 @@
 <footer class="sito">
   <div class="interno">
     <span>mediareinformati.it — piattaforma di consultazione</span>
-    <span>Archivio: Carlo Alberto Calcagno · mediaresenzaconfini.org</span>
+    <span><a href="progetto.html" style="color:#d8d4cb">Chi sono e le fonti del progetto</a></span>
   </div>
 </footer>
 
@@ -173,7 +173,7 @@
     cont.innerHTML = "<div class='risposta'>" +
       "<h3 class='titolo-risposta'>" + esc(q) + "</h3>" +
       "<p class='fonti-conteggio'>" + fonti.length + " sezioni d'archivio individuate</p>" +
-      "<div id='blocco-ai'><p class='cit'>Sto componendo il contributo sulle opere dell'autore…</p></div>" +
+      "<div id='blocco-ai'><p class='cit'>Sto componendo la ricostruzione…</p></div>" +
       "<div id='blocco-fonti'>" + fontiHtml(fonti) + "</div>" +
       "<div class='barra-export'><button class='bottone-secondario' id='ex-doc'>Scarica il contributo in Word</button></div>" +
       "</div>";
@@ -189,12 +189,12 @@
         (CORPO[x.r.id] || x.r.estratto).slice(0, 2400);
     }).join("\n\n");
     var prompt = "Sei l'assistente di mediareinformati.it e componi un CONTRIBUTO ORGANICO di storia della mediazione e della composizione delle controversie, per mediatori, formatori e studiosi. Scrivi in italiano, in prosa da saggio didattico.\n" +
-      "DOMANDA: " + q + "\n\nMATERIALI DALLE OPERE DELL'AUTORE (Carlo Alberto Calcagno):\n" + materiali +
-      "\n\nREGOLE: 1) componi una trattazione CONTINUA e ARMONICA (700-1100 parole) che risponda esattamente alla domanda, NON un elenco di frammenti; 2) collega i materiali in un percorso cronologico o tematico con transizioni esplicite, date, istituti e protagonisti; 3) cita l'opera tra parentesi quando riprendi un contenuto specifico, es. (Breve storia, cap. I); 4) scarta in silenzio i materiali non pertinenti; 5) puoi aggiungere solo brevi raccordi di contesto storico generale, senza inventare citazioni; 6) rielabora sempre: nessun passo letterale oltre 40 parole; se la domanda chiede il testo integrale di un'opera, spiega che non è pubblicato e offri una sintesi; 7) chiudi con 2-3 spunti per la formazione.\n" +
+      "DOMANDA: " + q + "\n\nMATERIALI DELL'ARCHIVIO DEL SITO (base documentale riservata):\n" + materiali +
+      "\n\nREGOLE: 1) componi una RICOSTRUZIONE STORICA AUTONOMA, continua e armonica (700-1100 parole), NON un elenco di frammenti; 2) collega i materiali in un percorso cronologico o tematico con transizioni esplicite, date, istituti e protagonisti; 3) NON menzionare mai il curatore dell'archivio ne' le sue opere: valorizza invece le fonti primarie richiamate nei materiali, citandole tra parentesi (es. Codice per lo Regno delle Due Sicilie, 1819; Foramiti, 1838; XII Tavole; d.lgs. 28/2010); 4) scarta in silenzio i materiali non pertinenti; 5) puoi aggiungere solo brevi raccordi di contesto storico generale, senza inventare citazioni; 6) rielabora sempre: nessun passo letterale oltre 40 parole; se la domanda chiede il testo integrale di un'opera, spiega che non è pubblicato e offri una sintesi; 7) chiudi con 2-3 spunti per la formazione.\n" +
       "Struttura in markdown: ## Inquadramento, ## Sviluppo (più paragrafi collegati), ## Istituti e figure, ## Per la formazione.";
     Promise.resolve(puter.ai.chat(prompt)).then(function (r) {
       var t = (r && r.message && r.message.content) ? r.message.content : (typeof r === "string" ? r : "");
-      if (t) { ultima.ai = t; bAI.innerHTML = "<h4>Contributo (composto sulle opere dell'autore — da verificare sulle fonti)</h4>" + mdPulito(t); }
+      if (t) { ultima.ai = t; bAI.innerHTML = "<h4>Contributo (da verificare sulle fonti)</h4>" + mdPulito(t); }
       else bAI.innerHTML = "<p class='cit'>Composizione AI non riuscita: di seguito le sezioni pertinenti.</p>";
     }).catch(function () {
       bAI.innerHTML = "<p class='cit'>Composizione AI non disponibile in questo momento: di seguito le sezioni pertinenti.</p>";
@@ -207,7 +207,7 @@
     var html = "<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'>" +
       "<style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.5}h1{color:#152a46;font-size:18pt}h4{color:#152a46;border-bottom:1px solid #ccc}.cit{color:#777;font-size:10pt}summary{font-weight:bold;color:#152a46}</style></head><body>" +
       "<h1>" + esc(ultima.domanda) + "</h1><p><em>mediareinformati.it — contributo di storia della mediazione, " + new Date().toLocaleDateString("it") + "</em></p>" +
-      corpo + "<hr><p style='font-size:9pt;color:#777'>Contributo composto sulle opere di Carlo Alberto Calcagno; estratti a fini di consultazione, testi integrali non pubblicati. Verificare sempre le fonti.</p></body></html>";
+      corpo + "<hr><p style='font-size:9pt;color:#777'>Contributo composto sull'archivio documentale del sito; estratti a fini di consultazione, testi integrali non pubblicati. Verificare sempre le fonti.</p></body></html>";
     var blob = new Blob(["﻿" + html], { type: "application/msword" });
     var a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
