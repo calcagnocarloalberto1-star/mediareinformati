@@ -259,6 +259,8 @@
         function (r) { return CORPO[r.id] || ""; }),
       leggi: (function () {
         var hits = top(LEGGI, ["paese", "titolo", "meta"], ts, 5, 2, function (r) { return (r.testo || "").slice(0, 3000); });
+        // se la domanda nomina un paese specifico, mostra solo quello (via gli altri agganciati da termini generici)
+        if (soloEstero) hits = hits.filter(function (h) { return citaPaese(h.r.paese); });
         // i paesi esplicitamente citati vanno in testa, anche se poco "scoranti"
         leggiCitate.forEach(function (v) {
           if (!hits.some(function (h) { return h.r.paese === v.paese; })) hits.unshift({ r: v, s: 99 });
