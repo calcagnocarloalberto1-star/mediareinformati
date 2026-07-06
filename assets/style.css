@@ -239,3 +239,15 @@ dl dd { margin: 2px 0 0; }
   header.sito .testata { justify-content: center; }
   .numeri-archivio div { min-width: 45%; border-right: none; border-bottom: 2px solid var(--bordo); }
 }
+
+/* Tabelle nei contributi AI (evitano il collasso delle colonne) */
+.risposta .tab-contributo, .tab-contributo {
+  border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.9rem; display: table;
+}
+.tab-contributo thead th { background: var(--inchiostro); color: #fff; text-align: left; padding: 6px 10px; border: 1px solid var(--bordo); }
+.tab-contributo td { border: 1px solid var(--bordo); padding: 5px 10px; vertical-align: top; }
+.tab-contributo th, .tab-contributo td { display: table-cell; }
+.tab-contributo tbody tr:nth-child(even) td { background: var(--crema); }
+@media (max-width: 640px) {
+  .tab-contributo { display: block; overflow-x: auto; white-space: nowrap; font-size: 0.8rem; }
+}

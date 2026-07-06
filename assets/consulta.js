@@ -51,9 +51,25 @@
     }
 
     function mdPulito(t) {
-      var righe = esc(t).split(/\r?\n/), h = "", inUl = false;
-      righe.forEach(function (r) {
-        r = r.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+      function bold(s){ return s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>"); }
+      function celle(s){ return s.trim().replace(/^\||\|$/g, "").split("|").map(function (c){ return bold(c.trim()); }); }
+      var righe = esc(t).split(/\r?\n/), h = "", inUl = false, i;
+      for (i = 0; i < righe.length; i++) {
+        var r = righe[i];
+        // tabella markdown: riga con | seguita da riga separatrice tipo |---|---|
+        if (/\|/.test(r) && i + 1 < righe.length && /-/.test(righe[i + 1]) && /^[\s|:\-]+$/.test(righe[i + 1])) {
+          if (inUl) { h += "</ul>"; inUl = false; }
+          var intest = celle(r); i += 2; var corpo = [];
+          while (i < righe.length && /\|/.test(righe[i]) && righe[i].trim()) { corpo.push(celle(righe[i])); i++; }
+          i--;
+          h += "<table class='tab-contributo'><thead><tr>";
+          intest.forEach(function (c){ h += "<th>" + c + "</th>"; });
+          h += "</tr></thead><tbody>";
+          corpo.forEach(function (row){ h += "<tr>"; row.forEach(function (c){ h += "<td>" + c + "</td>"; }); h += "</tr>"; });
+          h += "</tbody></table>";
+          continue;
+        }
+        r = bold(r);
         if (/^\s*[-*•]\s+/.test(r)) {
           if (!inUl) { h += "<ul>"; inUl = true; }
           h += "<li>" + r.replace(/^\s*[-*•]\s+/, "") + "</li>";
@@ -62,7 +78,7 @@
           if (/^\s*#{2,4}\s+/.test(r)) h += "<h4>" + r.replace(/^\s*#{2,4}\s+/, "") + "</h4>";
           else if (r.trim()) h += "<p>" + r + "</p>";
         }
-      });
+      }
       if (inUl) h += "</ul>";
       return h;
     }
