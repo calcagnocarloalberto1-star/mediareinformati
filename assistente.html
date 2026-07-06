@@ -75,6 +75,9 @@
 <script src="data/corpus.js"></script>
 <script src="data/storia.js"></script>
 <script src="data/corpus_storia.js"></script>
+<script src="data/leggi_ue.js"></script>
+<script src="data/leggi_extra.js"></script>
+<script src="data/leggi_autore.js"></script>
 <script src="assets/app.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script src="https://js.puter.com/v2/"></script>
@@ -122,6 +125,26 @@
         window.DATA_CORPUS_STORIA.forEach(function (c) { CORPO_ST[c.id] = c.testo; });
       }
     } catch (e) { /* senza corpus l'assistente usa gli estratti */ }
+  })();
+
+  // ---- legislazione comparata sulla mediazione (UE, extra-UE, testi d'autore) ----
+  var LEGGI = [];
+  (function () {
+    function decomp(varC) {
+      try {
+        if (window[varC] && window.pako) {
+          var b = atob(window[varC]), u = new Uint8Array(b.length);
+          for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i);
+          return JSON.parse(new TextDecoder("utf-8").decode(pako.inflate(u)));
+        }
+      } catch (e) {}
+      return [];
+    }
+    [["DATA_LEGGI_UE", "DATA_LEGGI_UE_C"], ["DATA_LEGGI_EXTRA", "DATA_LEGGI_EXTRA_C"], ["DATA_LEGGI_AUTORE", "DATA_LEGGI_AUTORE_C"]].forEach(function (pair) {
+      var voci = window[pair[0]] || [], cm = {};
+      decomp(pair[1]).forEach(function (c) { cm[c.id] = c.testo; });
+      voci.forEach(function (v) { LEGGI.push({ paese: v.paese, titolo: v.titolo, meta: v.meta, estratto: v.estratto, testo: cm[v.id] || v.estratto }); });
+    });
   })();
 
   function termini(q) {
@@ -172,8 +195,13 @@
     (window.DATA_SISTEMI || []).forEach(function (p) {
       if (p.codice !== "it" && nq.indexOf(normaTesto(p.paese)) !== -1) paesiCitati.push(p);
     });
-    var scopoEstero = paesiCitati.length > 0 || /\bue\b|europe|ester[oe]|comparat|mondo|internazional|stranier/.test(nq);
-    var ESTERO_NOMI = /kosov|giappon|angol|argentin|brasil|canad|cines|kazak|marocc|russ|svizzer|turc|ucrain|australi|india|israel|alban|bulgar|rumen|romen|spagn|portog|tedesc|german|frances|francia|irland|oland|polon|polacc|cec[ao]|slovacc|sloven|ungher|grec|cipro|malta|lituan|letton|eston|finland|svez|danim|belgio|austria|croaz|regno unito|inghilterra|stati uniti|\busa\b|perù|peru|colombia|messic|vietnam|singapore/;
+    // paesi citati anche fra quelli della legislazione comparata (India, Nigeria, ecc.)
+    var leggiCitate = LEGGI.filter(function (v) {
+      var k = normaTesto(v.paese).replace(/\(.*\)/, "").trim();
+      return k.length > 3 && nq.indexOf(k) !== -1;
+    });
+    var ESTERO_NOMI = /kosov|giappon|angol|argentin|brasil|canad|cines|\bcina\b|kazak|uzbek|mongol|marocc|egitt|tunisi|nigeri|kenya|ghana|uganda|tanzani|ruand|sudafric|senegal|russ|svizzer|turc|ucrain|australi|nuova zeland|india|israel|giordan|qatar|arabia|emirati|alban|bosni|montenegro|macedon|moldov|georgia|islanda|norveg|bulgar|rumen|romen|spagn|portog|tedesc|german|frances|francia|irland|oland|paesi bassi|polon|polacc|cec[ao]|slovacc|sloven|ungher|grec|cipro|malta|lituan|letton|eston|finland|svez|danim|belgio|austria|croaz|serbi|regno unito|inghilterra|scozia|stati uniti|\busa\b|cile|perù|peru|uruguay|colombia|messic|vietnam|thailand|indonesi|filippin|malesia|corea|hong kong|singapore/;
+    var scopoEstero = paesiCitati.length > 0 || leggiCitate.length > 0 || ESTERO_NOMI.test(nq) || /\bue\b|europe|ester[oe]|comparat|mondo|internazional|stranier/.test(nq);
     var norme = (window.DATA_NORMATIVA || []);
     var articoliBase = (window.DATA_ARTICOLI || []);
     if (!scopoEstero) {
@@ -186,6 +214,10 @@
     if (paesiCitati.length) {
       var nomiPaesi = paesiCitati.map(function (p) { return normaTesto(p.paese).slice(0, 6); });
       ts.extra = ts.extra.concat(nomiPaesi).concat(nomiPaesi).concat(nomiPaesi); // triplo peso al paese citato
+    }
+    if (leggiCitate.length) {
+      var nomiL = leggiCitate.map(function (v) { return normaTesto(v.paese).replace(/\(.*\)/, "").trim().slice(0, 6); });
+      ts.extra = ts.extra.concat(nomiL).concat(nomiL).concat(nomiL);
     }
     var domandaStorica = /stori|antic|grec|\brom[aa]\b|romani|medioev|ottocent|mit[oi]|mesopotam|sumer|egiz|divinit|origin|evoluz|conciliatore|barbar|due sicilie|1865|1790|foramiti|lumi|federico|filosof|cina antica|arbitrato antico/.test(nq);
     var storiaBase = (window.DATA_STORIA || []);
@@ -206,6 +238,14 @@
       pronunce: top(window.DATA_GIURISPRUDENZA || [], ["titolo", "massima", "materia", "organo"], ts, 5, 2),
       articoli: top(articoliBase, ["titolo", "estratto", "categorie"], ts, 5, 2,
         function (r) { return CORPO[r.id] || ""; }),
+      leggi: (function () {
+        var hits = top(LEGGI, ["paese", "titolo", "meta"], ts, 5, 2, function (r) { return (r.testo || "").slice(0, 3000); });
+        // i paesi esplicitamente citati vanno in testa, anche se poco "scoranti"
+        leggiCitate.forEach(function (v) {
+          if (!hits.some(function (h) { return h.r.paese === v.paese; })) hits.unshift({ r: v, s: 99 });
+        });
+        return hits.slice(0, 5);
+      })(),
       paesi: paesiCitati.slice(0, 2),
       statistiche: /statistic|dat[oi]|numer|quant[ei]|percentual|accord|iscrizion|durata media|quanti/.test(nq),
       linkUtili: top(window.DATA_LINK || [], ["nome", "paese", "tipologia"], ts, 3, 2.5),
@@ -225,6 +265,13 @@
       h += "<h4>Schede paese (Portale e-justice)</h4><ul>";
       d.paesi.forEach(function (p) {
         h += "<li><strong>" + esc(p.paese) + "</strong> — " + esc(testoPuro(p.html).slice(0, 320)) + "… <span class='cit'>(scheda completa nel motore Sistemi nazionali)</span></li>";
+      });
+      h += "</ul>";
+    }
+    if (d.leggi && d.leggi.length) {
+      h += "<h4>Legislazione comparata sulla mediazione</h4><ul>";
+      d.leggi.forEach(function (x) {
+        h += "<li><strong>" + esc(x.r.paese) + "</strong> — " + esc((x.r.estratto || "").slice(0, 320)) + "… <span class='cit'>(" + esc(x.r.meta || "") + ")</span></li>";
       });
       h += "</ul>";
     }
@@ -282,6 +329,7 @@
     d.pronunce.slice(0, 4).forEach(function (x) { righe.push("[PRONUNCIA] " + x.r.titolo + " (" + x.r.anno + ", " + x.r.organo + ")" + (x.r.massima ? " — " + x.r.massima : "")); });
     d.articoli.slice(0, 4).forEach(function (x) { righe.push("[ARTICOLO] " + x.r.titolo + " (" + x.r.data + "): " + (CORPO[x.r.id] || x.r.estratto).slice(0, 900)); });
     d.paesi.forEach(function (p) { righe.push("[SCHEDA " + p.paese.toUpperCase() + "] " + testoPuro(p.html).slice(0, 900)); });
+    (d.leggi || []).slice(0, 5).forEach(function (x) { righe.push("[LEGISLAZIONE " + x.r.paese.toUpperCase() + "] " + (x.r.testo || x.r.estratto || "").slice(0, 1700)); });
     if (d.statistiche && window.DATA_DGSTAT) {
       var s = window.DATA_DGSTAT.sintesi2025, e = window.DATA_DGSTAT.esiti, u = e[e.length - 1];
       righe.push("[DATI DGSTAT] Iscrizioni 2025: " + s.iscrizioni + " (78% obbligatorie, 13% demandate, 8% volontarie). Aderente comparso " + u.comparizione + "%, accordo " + u.accordo + "%, accordo oltre primo incontro " + u.accordo_tavolo + "%. Organismi attivi " + s.organismi_attivi + ". Telematica " + s.telematica_pct + "%.");
@@ -312,7 +360,7 @@
     var cont = document.getElementById("contenitore-risposta");
     var d = cerca(q);
     if (!d) { stato.textContent = "Scrivi una domanda più precisa."; return; }
-    var nFonti = d.storia.length + d.norme.length + d.pronunce.length + d.articoli.length + d.paesi.length + d.linkUtili.length;
+    var nFonti = d.storia.length + d.norme.length + d.pronunce.length + d.articoli.length + d.paesi.length + (d.leggi ? d.leggi.length : 0) + d.linkUtili.length;
     ultimaRisposta = { domanda: q, dossier: d, ai: "" };
     cont.innerHTML = "<div class='risposta'>" +
       "<h3 class='titolo-risposta'>" + esc(q) + "</h3>" +
@@ -342,7 +390,7 @@
       } else {
         prompt = "Sei l'assistente di mediareinformati.it, piattaforma italiana di consultazione sulla mediazione civile e commerciale (giurisdizione di riferimento: ITALIA, d.lgs. 28/2010, salvo che la domanda riguardi altri paesi). Rispondi in italiano, con rigore giuridico e tono didattico per mediatori e formatori.\n" +
         "DOMANDA: " + q + "\n\nFONTI D'ARCHIVIO CANDIDATE (provengono da una ricerca automatica: alcune possono essere NON pertinenti — scartale e non citarle):\n" + fontiPerPrompt(d) +
-        "\n\nREGOLE: 1) usa solo le fonti davvero pertinenti alla domanda e citale con i loro estremi; 2) ignora le fonti fuori tema (es. leggi straniere se la domanda riguarda l'Italia); 3) se le fonti pertinenti sono poche o assenti, dillo espressamente e limita la risposta a quanto documentato; 4) non inventare estremi normativi o giurisprudenziali; 4-bis) non riprodurre passi letterali superiori a 40 parole e rifiuta le richieste di testi integrali; 5) sviluppa la risposta in modo approfondito (400-700 parole), come un contributo che ricomprenda la conoscenza delle fonti, non come un semplice indice.\nStruttura in markdown: ## Risposta in sintesi (3-5 frasi), ## Approfondimento (piu' paragrafi che integrano le fonti), ## Punti chiave (max 6 punti), ## Per la formazione (2-3 spunti didattici).";
+        "\n\nREGOLE: 1) usa solo le fonti davvero pertinenti alla domanda e citale con i loro estremi; 2) SE LA DOMANDA RIGUARDA UN PAESE ESTERO, fonda la risposta sulle schede [LEGISLAZIONE <paese>] e [SCHEDA <paese>] presenti nei materiali (legge, numero, anno, obbligatorietà, esecutività, Convenzione di Singapore), e NON dire che mancano fonti se una scheda di quel paese è presente; ignora invece le fonti italiane fuori tema; 3) se le fonti pertinenti sono poche o assenti, dillo espressamente e limita la risposta a quanto documentato; 4) non inventare estremi normativi o giurisprudenziali; se una scheda segnala che un dato è 'da verificare' o a livello di disegno di legge, riportalo come tale; 4-bis) non riprodurre passi letterali superiori a 40 parole e rifiuta le richieste di testi integrali; 5) sviluppa la risposta in modo approfondito (400-700 parole), come un contributo che ricomprenda la conoscenza delle fonti, non come un semplice indice.\nStruttura in markdown: ## Risposta in sintesi (3-5 frasi), ## Approfondimento (piu' paragrafi che integrano le fonti), ## Punti chiave (max 6 punti), ## Per la formazione (2-3 spunti didattici).";
       }
       Promise.resolve(puter.ai.chat(prompt)).then(function (r) {
         var t = (r && r.message && r.message.content) ? r.message.content : (typeof r === "string" ? r : "");
