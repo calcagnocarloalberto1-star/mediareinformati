@@ -29,7 +29,7 @@
 
 <main>
   <h2 class="pagina">Giurisprudenza</h2>
-  <p class="sottotitolo">Fai una domanda: la risposta &egrave; un contributo costruito sui testi di 171 provvedimenti dal 1996 a oggi</p>
+  <p class="sottotitolo">Fai una domanda: la risposta &egrave; un contributo costruito sui testi di 171 provvedimenti dal 1996 a oggi e sulle rassegne giurisprudenziali dei corsi</p>
   <div class="intro-motore"><p>Questo motore attinge alla giurisprudenza dell&rsquo;archivio &mdash; Corte costituzionale, Cassazione, corti europee, TAR e merito &mdash; e compone una trattazione unitaria con gli estremi delle pronunce, scaricabile in Word.</p></div>
 
   <div class="strumenti">
@@ -61,6 +61,7 @@
 
 <script src="data/giurisprudenza.js"></script>
 <script src="data/corpus_giur.js"></script>
+<script src="data/slide_giur.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/consulta.js"></script>
@@ -91,10 +92,21 @@ initConsulta({
     [/effettiv|primo incontro/, ["effettivita", "primo incontro"]]
   ],
   dati: function () {
+    var SL = {}, slideVoci = window.DATA_SLIDE_GIUR || [];
+    try {
+      if (window.DATA_SLIDE_GIUR_C && window.pako) {
+        var b = atob(window.DATA_SLIDE_GIUR_C), u = new Uint8Array(b.length);
+        for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i);
+        JSON.parse(new TextDecoder("utf-8").decode(pako.inflate(u))).forEach(function (c) { SL[c.id] = c.testo; });
+      }
+    } catch (e) {}
+    var slide = slideVoci.map(function (r) {
+      return { titolo: r.titolo, meta: r.meta, estratto: r.estratto, testo: (SL[r.id] || r.estratto) };
+    });
     return (window.DATA_GIURISPRUDENZA || []).map(function (r) {
       var testo = CORPO_G[r.percorso] || "";
       return { titolo: r.titolo, meta: r.anno + " · " + r.organo + (r.sede ? " " + r.sede : ""), estratto: r.massima || testo.slice(0, 200), testo: r.titolo + " " + (r.massima || "") + " " + (r.sintesi || "") + " " + (r.materia || "") + " " + testo };
-    });
+    }).concat(slide);
   }
 });
 </script>
