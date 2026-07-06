@@ -154,12 +154,15 @@
     SINONIMI.forEach(function (sn) { if (sn[0].test(normaTesto(q))) extra = extra.concat(sn[1].map(normaTesto)); });
     return { base: base, extra: extra, frase: normaTesto(q).replace(/[?!.]/g, "").trim() };
   }
+  // parole onnipresenti nell'archivio: non discriminano, quindi pesano pochissimo (logica IDF)
+  var DEBOLI = { "mediazione": 1, "mediazioni": 1, "mediatore": 1, "mediatori": 1, "mediare": 1, "mediata": 1, "mediato": 1, "conciliazione": 1, "conciliativa": 1, "controversia": 1, "controversie": 1, "procedura": 1, "procedimento": 1, "procedimenti": 1, "civile": 1, "commerciale": 1, "parti": 1 };
   function punteggio(testo, ts) {
     var n = normaTesto(testo), s = 0;
     ts.base.forEach(function (t) {
+      var w = DEBOLI[t] ? 0.15 : 1;
       var i = -1, c = 0;
-      while ((i = n.indexOf(t, i + 1)) !== -1 && c < 4) { s += 1; c++; }
-      if (c === 0 && t.length > 5 && n.indexOf(t.slice(0, 5)) !== -1) s += 0.4;
+      while ((i = n.indexOf(t, i + 1)) !== -1 && c < 4) { s += w; c++; }
+      if (c === 0 && t.length > 5 && n.indexOf(t.slice(0, 5)) !== -1) s += 0.4 * w;
     });
     ts.extra.forEach(function (t) { if (n.indexOf(t) !== -1) s += 1.6; });
     if (ts.frase.length > 12 && n.indexOf(ts.frase) !== -1) s += 6;
@@ -228,6 +231,22 @@
         return true;
       });
     }
+    // PRECISIONE: se la domanda riguarda uno specifico paese estero (non l'Italia),
+    // scarta le fonti italiane inconferenti — la risposta deve venire dalle schede di quel paese
+    var nomiCit = leggiCitate.map(function (v) { return normaTesto(v.paese).replace(/\(.*\)/, "").trim(); })
+      .concat(paesiCitati.map(function (p) { return normaTesto(p.paese); }));
+    var soloEstero = nomiCit.length > 0 && !/itali/.test(nq);
+    function citaPaese(txt) {
+      var n = normaTesto(txt || "");
+      return nomiCit.some(function (k) { return k.length > 3 && n.indexOf(k) !== -1; });
+    }
+    var giurBase = (window.DATA_GIURISPRUDENZA || []);
+    if (soloEstero) {
+      norme = norme.filter(function (r) { return citaPaese(r.titolo + " " + (r.categoria || "") + " " + (r.ambito || "")); });
+      giurBase = giurBase.filter(function (r) { return citaPaese(r.titolo + " " + (r.materia || "") + " " + (r.massima || "") + " " + (r.organo || "")); });
+      articoliBase = articoliBase.filter(function (r) { return citaPaese(r.titolo + " " + (r.estratto || "")); });
+      storiaBase = storiaBase.filter(function (r) { return citaPaese(r.titolo + " " + (r.capitolo || "") + " " + (r.opera || "") + " " + (r.estratto || "")); });
+    }
     var d = {
       domanda: q,
       storia: top(storiaBase, ["titolo", "opera", "temi", "capitolo", "estratto"], ts,
@@ -235,7 +254,7 @@
         (/stori|antic|grec|roman|medioev|ottocent|mit|mesopotam|origin|conciliatore/.test(nq) ? 2 : 3),
         function (r) { return CORPO_ST[r.id] || ""; }),
       norme: top(norme, ["titolo", "categoria"], ts, 5, 2),
-      pronunce: top(window.DATA_GIURISPRUDENZA || [], ["titolo", "massima", "materia", "organo"], ts, 5, 2),
+      pronunce: top(giurBase, ["titolo", "massima", "materia", "organo"], ts, 5, 2),
       articoli: top(articoliBase, ["titolo", "estratto", "categorie"], ts, 5, 2,
         function (r) { return CORPO[r.id] || ""; }),
       leggi: (function () {
