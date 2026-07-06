@@ -86,7 +86,7 @@
 <script>
 (function () {
   "use strict";
-  var STOP = "il lo la i gli le un una uno di a da in con su per tra fra e o ma che chi cui non come dove quando quanto quale quali cosa cos \u00e8 e' della delle dei degli del al alla alle ai agli sul sulla sulle nei nelle nel si mi ti ci vi ne se pi\u00f9 meno molto poco tutto tutti ogni questo questa questi queste quello quella essere avere fare pu\u00f2 puo sono viene vengono stato stata quali qual mediante circa anche ancora poi gi\u00e0 gia verso presso senza sotto sopra funziona prevede".split(" ");
+  var STOP = "il lo la i gli le un una uno di a da in con su per tra fra e o ma che chi cui non come dove quando quanto quale quali cosa cos \u00e8 e' della delle dei degli del al alla alle ai agli sul sulla sulle nei nelle nel si mi ti ci vi ne se pi\u00f9 meno molto poco tutto tutti ogni questo questa questi queste quello quella essere avere fare pu\u00f2 puo sono viene vengono stato stata quali qual mediante circa anche ancora poi gi\u00e0 gia verso presso senza sotto sopra funziona prevede aggiornato aggiornata aggiornati aggiornate aggiornamento quadro panorama situazione attuale attualmente odierno oggi mondo mondiale globale internazionale fammi dammi voglio vorrei dimmi spiegami parlami".split(" ");
   var SINONIMI = [
     [/obbligator|procedibilit/, ["condizione di procedibilita", "procedibilita", "28/2010", "obbligo", "obbligatoria"]],
     [/demandat|delegat/, ["demandata", "delegata", "disposta dal giudice", "5 quater"]],
@@ -236,6 +236,8 @@
     var nomiCit = leggiCitate.map(function (v) { return normaTesto(v.paese).replace(/\(.*\)/, "").trim(); })
       .concat(paesiCitati.map(function (p) { return normaTesto(p.paese); }));
     var soloEstero = nomiCit.length > 0 && !/itali/.test(nq);
+    var qOrig = normaTesto(q);
+    var comparativa = !soloEstero && !domandaStorica && /mondo|mondial|comparat|internazional|vari paesi|quali paesi|panorama|diritto comparato|in europa|paesi europei|nell ue|nella ue/.test(qOrig);
     function citaPaese(txt) {
       var n = normaTesto(txt || "");
       return nomiCit.some(function (k) { return k.length > 3 && n.indexOf(k) !== -1; });
@@ -246,11 +248,15 @@
       giurBase = giurBase.filter(function (r) { return citaPaese(r.titolo + " " + (r.materia || "") + " " + (r.massima || "") + " " + (r.organo || "")); });
       articoliBase = articoliBase.filter(function (r) { return citaPaese(r.titolo + " " + (r.estratto || "")); });
       storiaBase = storiaBase.filter(function (r) { return citaPaese(r.titolo + " " + (r.capitolo || "") + " " + (r.opera || "") + " " + (r.estratto || "")); });
+    } else if (scopoEstero && !/itali/.test(nq)) {
+      // domanda estera/comparativa non italiana: norme e pronunce italiane sono inconferenti
+      norme = norme.filter(function (r) { return r.ambito && r.ambito !== "Italia"; });
+      giurBase = giurBase.filter(function (r) { return /\bue\b|union|cgue|corte di giustizia|estero|comparat/i.test((r.organo || "") + " " + (r.materia || "") + " " + (r.titolo || "")); });
     }
     var d = {
       domanda: q,
       storia: top(storiaBase, ["titolo", "opera", "temi", "capitolo", "estratto"], ts,
-        (/stori|antic|grec|roman|medioev|ottocent|mit|mesopotam|origin|conciliatore/.test(nq) ? 14 : 5),
+        (/stori|antic|grec|roman|medioev|ottocent|mit|mesopotam|origin|conciliatore/.test(nq) ? 14 : (comparativa ? 2 : 5)),
         (/stori|antic|grec|roman|medioev|ottocent|mit|mesopotam|origin|conciliatore/.test(nq) ? 2 : 3),
         function (r) { return CORPO_ST[r.id] || ""; }),
       norme: top(norme, ["titolo", "categoria"], ts, 5, 2),
@@ -258,6 +264,17 @@
       articoli: top(articoliBase, ["titolo", "estratto", "categorie"], ts, 5, 2,
         function (r) { return CORPO[r.id] || ""; }),
       leggi: (function () {
+        // domanda comparativa/mondiale: mostra un ventaglio rappresentativo di paesi con scheda aggiornata
+        if (comparativa) {
+          var RAPPR = ["Italia", "Francia", "Germania", "Spagna", "Regno Unito (Inghilterra e Galles)", "Grecia", "Stati Uniti", "Brasile", "Messico", "India", "Cina", "Giappone", "Australia", "Nigeria", "Turchia", "Argentina"];
+          var out = [];
+          RAPPR.forEach(function (nome) {
+            var cand = LEGGI.filter(function (x) { return x.paese === nome; });
+            var v = cand.filter(function (x) { return /aggiorn/i.test(x.testo || ""); })[0] || cand[0];
+            if (v) out.push({ r: v, s: 5 });
+          });
+          if (out.length >= 4) return out.slice(0, 12);
+        }
         var hits = top(LEGGI, ["paese", "titolo", "meta"], ts, 5, 2, function (r) { return (r.testo || "").slice(0, 3000); });
         // se la domanda nomina un paese specifico, mostra solo quello (via gli altri agganciati da termini generici)
         if (soloEstero) hits = hits.filter(function (h) { return citaPaese(h.r.paese); });
@@ -412,7 +429,7 @@
       } else {
         prompt = "Sei l'assistente di mediareinformati.it, piattaforma italiana di consultazione sulla mediazione civile e commerciale (giurisdizione di riferimento: ITALIA, d.lgs. 28/2010, salvo che la domanda riguardi altri paesi). Rispondi in italiano, con rigore giuridico e tono didattico per mediatori e formatori.\n" +
         "DOMANDA: " + q + "\n\nFONTI D'ARCHIVIO CANDIDATE (provengono da una ricerca automatica: alcune possono essere NON pertinenti — scartale e non citarle):\n" + fontiPerPrompt(d) +
-        "\n\nREGOLE: 1) PRIORITÀ ASSOLUTA ALLA VIGENZA: le schede [LEGISLAZIONE VIGENTE — <paese>] riportano lo stato AGGIORNATO AL 2026 e sono la fonte PREVALENTE; apri sempre la risposta enunciando la regola VIGENTE con i suoi estremi (legge, numero, anno, se la mediazione è obbligatoria/volontaria e da quando, esecutività, Convenzione di Singapore). Le leggi anteriori (es. del 2007-2012, la direttiva 2008/52/CE, la 'disciplina classica') e le voci marcate [ARTICOLO — possibile fonte datata] o [STORIA] vanno usate SOLO come contesto storico e MAI presentate come regola attuale; se contraddicono la scheda vigente, prevale la scheda vigente. Non usare tue conoscenze pregresse che potrebbero essere superate: attieniti alle date delle schede; 2) SE LA DOMANDA RIGUARDA UN PAESE ESTERO, fonda la risposta sulla scheda [LEGISLAZIONE VIGENTE — <paese>] e non dire che mancano fonti se quella scheda è presente; ignora le fonti italiane fuori tema; 3) se le fonti pertinenti sono poche o assenti, dillo e limita la risposta a quanto documentato; 4) non inventare estremi; se una scheda segnala che un dato è 'da verificare' o a livello di disegno di legge, riportalo come tale; 4-bis) non riprodurre passi letterali superiori a 40 parole e rifiuta le richieste di testi integrali; 5) sviluppa la risposta in modo approfondito (400-700 parole), non un semplice indice.\nStruttura in markdown: ## Risposta in sintesi (apri con la regola VIGENTE e la sua data), ## Approfondimento (piu' paragrafi; se utile, distingui 'quadro vigente' e 'evoluzione storica'), ## Punti chiave (max 6 punti), ## Per la formazione (2-3 spunti didattici).";
+        "\n\nREGOLE: 1) PRIORITÀ ASSOLUTA ALLA VIGENZA: le schede [LEGISLAZIONE VIGENTE — <paese>] riportano lo stato AGGIORNATO AL 2026 e sono la fonte PREVALENTE; apri sempre la risposta enunciando la regola VIGENTE con i suoi estremi (legge, numero, anno, se la mediazione è obbligatoria/volontaria e da quando, esecutività, Convenzione di Singapore). Le leggi anteriori (es. del 2007-2012, la direttiva 2008/52/CE, la 'disciplina classica') e le voci marcate [ARTICOLO — possibile fonte datata] o [STORIA] vanno usate SOLO come contesto storico e MAI presentate come regola attuale; se contraddicono la scheda vigente, prevale la scheda vigente. Non usare tue conoscenze pregresse che potrebbero essere superate: attieniti alle date delle schede; 2) SE LA DOMANDA RIGUARDA UN PAESE ESTERO, fonda la risposta sulla scheda [LEGISLAZIONE VIGENTE — <paese>] e non dire che mancano fonti se quella scheda è presente; ignora le fonti italiane fuori tema; 3) se le fonti pertinenti sono poche o assenti, dillo e limita la risposta a quanto documentato; 4) non inventare estremi; se una scheda segnala che un dato è 'da verificare' o a livello di disegno di legge, riportalo come tale; 4-bis) non riprodurre passi letterali superiori a 40 parole e rifiuta le richieste di testi integrali; 5) sviluppa la risposta in modo approfondito (400-700 parole), non un semplice indice.\nSTRUTTURA in markdown: ## Risposta in sintesi — se la domanda riguarda UN paese, apri con la regola VIGENTE di QUEL paese e la sua data; se è COMPARATIVA o mondiale, apri con una sintesi comparata dei paesi documentati nelle schede [LEGISLAZIONE VIGENTE]; NON usare l'Italia come riferimento e NON scrivere 'regola vigente (IT)' se la domanda non riguarda l'Italia. ## Approfondimento (piu' paragrafi; nelle domande comparative organizza per paese o per criterio: obbligatorietà, esecutività, Convenzione di Singapore). ## Punti chiave (max 6 punti). ## Per la formazione (2-3 spunti didattici).";
       }
       Promise.resolve(puter.ai.chat(prompt)).then(function (r) {
         var t = (r && r.message && r.message.content) ? r.message.content : (typeof r === "string" ? r : "");
