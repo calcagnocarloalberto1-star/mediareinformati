@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Profili paese — mediareinformati.it</title>
+<meta name="description" content="Profili paese sulla mediazione: legislazione storica e vigente, recepimento della direttiva UE, dati statistici (Scoreboard UE e World Justice Project).">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="sito">
+  <div class="testata"><h1><a href="index.html">mediareinformati.it</a></h1></div>
+  <nav class="principale">
+    <a href="index.html">Home</a>
+    <a href="storia.html">Storia</a>
+    <a href="pratica.html">Pratica</a>
+    <a href="diritto.html">Diritto</a>
+    <a href="sistemi.html">Sistemi nazionali</a>
+    <a href="profili.html" class="attivo">Profili paese</a>
+    <a href="link.html">Link mondiali</a>
+    <a href="statistiche.html">Dati e statistiche</a>
+    <a href="articoli.html">Articoli</a>
+    <a href="giurisprudenza.html">Giurisprudenza</a>
+    <a href="assistente.html">Assistente</a>
+    <a href="dossier.html">Dossier</a>
+    <a href="progetto.html">Chi sono</a>
+  </nav>
+</header>
+<main>
+  <h2 class="pagina">Profili paese</h2>
+  <p class="sottotitolo">Per ogni paese: la legislazione sulla mediazione &mdash; storica e vigente &mdash; unita ai dati statistici (Scoreboard UE 2026 e World Justice Project)</p>
+  <div class="strumenti">
+    <div class="campo largo">
+      <label for="sel">Scegli il paese</label>
+      <select id="sel"><option value="">— seleziona —</option></select>
+    </div>
+  </div>
+  <div id="scheda"></div>
+  <div class="avviso-provvisorio" style="margin-top:26px"><strong>Nota.</strong> La legislazione vigente e storica &egrave; a cura della redazione e va verificata sulle fonti ufficiali indicate; i paesi contrassegnati &laquo;in aggiornamento&raquo; sono in corso di completamento. Dati statistici: Commissione europea (EU Justice Scoreboard 2026) e World Justice Project. Non costituisce parere legale.</div>
+</main>
+<footer class="sito"><div class="interno">
+  <span>mediareinformati.it — piattaforma di consultazione sulla mediazione</span>
+  <span><a href="progetto.html" style="color:#d8d4cb">Chi sono e le fonti del progetto</a></span>
+</div></footer>
+<script src="data/profili_paesi.js"></script>
+<script src="assets/app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+<script>
+(function(){
+  "use strict";
+  var P = window.DATA_PROFILI || [];
+  var DET = {};
+  try {
+    if (window.DATA_PROFILI_C && window.pako) {
+      var b = atob(window.DATA_PROFILI_C), u = new Uint8Array(b.length);
+      for (var i=0;i<b.length;i++) u[i]=b.charCodeAt(i);
+      JSON.parse(new TextDecoder("utf-8").decode(pako.inflate(u))).forEach(function(c){ DET[c.id]=c.testo; });
+    }
+  } catch(e){}
+  var sel = document.getElementById("sel");
+  P.slice().sort(function(a,b){return a.paese.localeCompare(b.paese);}).forEach(function(p){
+    var o=document.createElement("option"); o.value=p.id; o.textContent=p.paese+(p.vigente?"":" (in aggiornamento)"); sel.appendChild(o);
+  });
+  function num(x){ return (x||x===0)?x:"—"; }
+  function scheda(p){
+    var s=p.stat||{}, h="<div class='risposta'>";
+    h+="<h3 class='titolo-risposta'>"+esc(p.paese)+"</h3>";
+    h+="<p class='fonti-conteggio'>"+esc(p.gruppo)+"</p>";
+    // dati statistici
+    var stats=[];
+    if(s.scoreboard) stats.push("<span class='etichetta'>EU Scoreboard 2026</span> posto <strong>"+num(s.scoreboard.posto)+"</strong>/27 · punteggio ADR <strong>"+esc(s.scoreboard.punteggio)+"</strong>/10");
+    if(s.wjp) stats.push("<span class='etichetta'>World Justice Project "+esc(s.wjp.anno)+"</span> Stato di diritto <strong>"+num(s.wjp.overall)+"</strong> · ADR/giustizia civile <strong>"+num(s.wjp.adr)+"</strong>");
+    if(stats.length) h+="<p class='r-meta'>"+stats.join("<br>")+"</p>";
+    if(p.vigente){ h+="<h4>Legislazione vigente</h4><p>"+esc(p.vigente)+"</p>"; }
+    else { h+="<h4>Legislazione vigente</h4><p><em>Scheda in aggiornamento.</em></p>"; }
+    if(p.storica){ h+="<h4>Evoluzione storica</h4><p>"+esc(p.storica)+"</p>"; }
+    if(p.recepimento && p.recepimento!=="Non applicabile (fuori UE)." && p.recepimento!=="Non applicabile."){ h+="<h4>Recepimento della direttiva 2008/52/CE</h4><p>"+esc(p.recepimento)+"</p>"; }
+    var det=DET[p.id]||"";
+    var mArch=det.split("[ARCHIVIO");
+    if(mArch.length>1){
+      h+="<details><summary class='fonti-titolo'>Dettaglio d'archivio (testi e link delle leggi)</summary><div style='white-space:pre-wrap;font-size:.9rem'>[ARCHIVIO"+esc(mArch.slice(1).join("[ARCHIVIO"))+"</div></details>";
+    }
+    h+="<div class='barra-export'><button class='bottone-secondario' id='ex'>Scarica il profilo in Word</button></div>";
+    h+="</div>";
+    return h;
+  }
+  function esportaDoc(p){
+    var s=p.stat||{}, c="<h1>"+esc(p.paese)+" — profilo mediazione</h1>";
+    c+="<p><em>mediareinformati.it, "+new Date().toLocaleDateString("it")+"</em></p>";
+    if(s.scoreboard) c+="<p><b>EU Justice Scoreboard 2026:</b> posto "+num(s.scoreboard.posto)+"/27, punteggio ADR "+esc(s.scoreboard.punteggio)+"/10</p>";
+    if(s.wjp) c+="<p><b>World Justice Project "+esc(s.wjp.anno)+":</b> Stato di diritto "+num(s.wjp.overall)+", ADR "+num(s.wjp.adr)+"</p>";
+    if(p.vigente) c+="<h2>Legislazione vigente</h2><p>"+esc(p.vigente)+"</p>";
+    if(p.storica) c+="<h2>Evoluzione storica</h2><p>"+esc(p.storica)+"</p>";
+    if(p.recepimento && p.recepimento.indexOf("Non applicabile")!==0) c+="<h2>Recepimento direttiva 2008/52/CE</h2><p>"+esc(p.recepimento)+"</p>";
+    var det=DET[p.id]||""; if(det.indexOf("[ARCHIVIO")>=0) c+="<h2>Dettaglio d'archivio</h2><pre style='white-space:pre-wrap;font-family:Georgia'>"+esc(det.slice(det.indexOf("[ARCHIVIO")))+"</pre>";
+    var html="<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'><style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.5}h1{color:#9c2b1f}h2{color:#111;border-bottom:1px solid #ccc}</style></head><body>"+c+"<hr><p style='font-size:9pt;color:#777'>Profilo a cura di mediareinformati.it; verificare sulle fonti ufficiali. Non costituisce parere legale.</p></body></html>";
+    var blob=new Blob(["﻿"+html],{type:"application/msword"});
+    var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="profilo_"+normaTesto(p.paese).replace(/[^a-z0-9]+/g,"_")+".doc"; a.click();
+  }
+  sel.addEventListener("change",function(){
+    var p=P.filter(function(x){return x.id===sel.value;})[0];
+    var box=document.getElementById("scheda");
+    if(!p){ box.innerHTML=""; return; }
+    box.innerHTML=scheda(p);
+    var b=document.getElementById("ex"); if(b) b.addEventListener("click",function(){esportaDoc(p);});
+  });
+})();
+</script>
+</body>
+</html>
