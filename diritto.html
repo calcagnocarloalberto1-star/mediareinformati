@@ -30,7 +30,7 @@
 
 <main>
   <h2 class="pagina">Diritto della mediazione</h2>
-  <p class="sottotitolo">Fai una domanda anche su un paese straniero: la risposta &egrave; un contributo costruito sui 443 atti italiani, sulla legislazione di 67 paesi (UE ed extra-UE) e sulle slide dei corsi</p>
+  <p class="sottotitolo">Fai una domanda su qualunque paese e su ogni tipo di mediazione &mdash; civile, commerciale, familiare, penale, del lavoro: la risposta attinge ai 443 atti italiani, alla legislazione di 67 paesi e allo studio «Arbitrato e negoziato in Europa» con gli indirizzi ufficiali</p>
   <div class="intro-motore"><p>Questo motore attinge alla banca dati normativa dell&rsquo;archivio &mdash; dal d.lgs. 28/2010 e la riforma Cartabia alle direttive europee, fino alla legislazione sulla mediazione di 67 paesi UE ed extra-UE (per es. «quali sono i provvedimenti in materia di mediazione in Bulgaria?») &mdash; e compone una trattazione unitaria, scaricabile in Word. In coda, gli atti utilizzati.</p></div>
 
   <div class="strumenti">
@@ -45,6 +45,9 @@
       <button>Quali sono le regole della mediazione telematica?</button>
       <button>Quali provvedimenti di legge sulla mediazione ci sono in Bulgaria?</button>
       <button>Com'è disciplinata la mediazione in India e a Singapore?</button>
+      <button>Come funziona la mediazione familiare in Francia?</button>
+      <button>La mediazione penale minorile in Europa</button>
+      <button>La mediazione nel diritto del lavoro: quali paesi la prevedono?</button>
     </div>
   </div>
   <p class="conteggio" id="stato"></p>
@@ -66,6 +69,7 @@
 <script src="data/corpus_diritto.js"></script>
 <script src="data/slide_diritto.js"></script>
 <script src="data/legislazione_paesi.js"></script>
+<script src="data/cendom.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/consulta.js"></script>
@@ -119,10 +123,21 @@ initConsulta({
     var legislazioni = legVoci.map(function (r) {
       return { titolo: r.titolo, meta: r.meta, estratto: r.estratto, testo: (r.paese + " " + r.paese + " " + (LG[r.id] || r.estratto)) };
     });
+    var CN = {}, cnVoci = window.DATA_CENDOM || [];
+    try {
+      if (window.DATA_CENDOM_C && window.pako) {
+        var bc = atob(window.DATA_CENDOM_C), uc = new Uint8Array(bc.length);
+        for (var k = 0; k < bc.length; k++) uc[k] = bc.charCodeAt(k);
+        JSON.parse(new TextDecoder("utf-8").decode(pako.inflate(uc))).forEach(function (c) { CN[c.id] = c.testo; });
+      }
+    } catch (e) {}
+    var cendom = cnVoci.map(function (r) {
+      return { titolo: r.titolo, meta: r.meta, estratto: r.estratto, testo: (r.paese + " " + r.temi.join(" ") + " " + (CN[r.id] || r.estratto)), url: r.url };
+    });
     return (window.DATA_NORMATIVA || []).map(function (r) {
       var testo = CORPO_DIR[r.percorso] || "";
       return { titolo: r.titolo, meta: r.anno + " · " + r.ambito + (r.categoria ? " · " + r.categoria : ""), estratto: testo.slice(0, 200), testo: r.titolo + " " + (r.categoria || "") + " " + testo };
-    }).concat(slide).concat(legislazioni);
+    }).concat(slide).concat(legislazioni).concat(cendom);
   }
 });
 </script>
