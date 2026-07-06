@@ -279,6 +279,7 @@
 <script src="data/slide_diritto.js"></script>
 <script src="data/legislazione_paesi.js"></script>
 <script src="data/cendom.js"></script>
+<script src="data/leggi_ue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/consulta.js"></script>
@@ -343,10 +344,21 @@ initConsulta({
     var cendom = cnVoci.map(function (r) {
       return { titolo: r.titolo, meta: r.meta, estratto: r.estratto, testo: (r.paese + " " + r.temi.join(" ") + " " + (CN[r.id] || r.estratto)), url: r.url };
     });
+    var UE = {}, ueVoci = window.DATA_LEGGI_UE || [];
+    try {
+      if (window.DATA_LEGGI_UE_C && window.pako) {
+        var bu = atob(window.DATA_LEGGI_UE_C), uu = new Uint8Array(bu.length);
+        for (var q = 0; q < bu.length; q++) uu[q] = bu.charCodeAt(q);
+        JSON.parse(new TextDecoder("utf-8").decode(pako.inflate(uu))).forEach(function (c) { UE[c.id] = c.testo; });
+      }
+    } catch (e) {}
+    var leggiUe = ueVoci.map(function (r) {
+      return { titolo: r.titolo, meta: r.meta, estratto: r.estratto, testo: (r.paese + " " + r.paese + " mediazione legge " + (UE[r.id] || r.estratto)) };
+    });
     return (window.DATA_NORMATIVA || []).map(function (r) {
       var testo = CORPO_DIR[r.percorso] || "";
       return { titolo: r.titolo, meta: r.anno + " · " + r.ambito + (r.categoria ? " · " + r.categoria : ""), estratto: testo.slice(0, 200), testo: r.titolo + " " + (r.categoria || "") + " " + testo };
-    }).concat(slide).concat(legislazioni).concat(cendom);
+    }).concat(slide).concat(legislazioni).concat(cendom).concat(leggiUe);
   }
 });
 </script>
