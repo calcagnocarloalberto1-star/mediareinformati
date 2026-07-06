@@ -281,6 +281,7 @@
 <script src="data/cendom.js"></script>
 <script src="data/leggi_ue.js"></script>
 <script src="data/leggi_extra.js"></script>
+<script src="data/leggi_autore.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/consulta.js"></script>
@@ -367,10 +368,21 @@ initConsulta({
     var leggiExtra = exVoci.map(function (r) {
       return { titolo: r.titolo, meta: r.meta, estratto: r.estratto, testo: (r.paese + " " + r.paese + " mediazione legge " + (EX[r.id] || r.estratto)) };
     });
+    var AU = {}, auVoci = window.DATA_LEGGI_AUTORE || [];
+    try {
+      if (window.DATA_LEGGI_AUTORE_C && window.pako) {
+        var ba = atob(window.DATA_LEGGI_AUTORE_C), ua = new Uint8Array(ba.length);
+        for (var w = 0; w < ba.length; w++) ua[w] = ba.charCodeAt(w);
+        JSON.parse(new TextDecoder("utf-8").decode(pako.inflate(ua))).forEach(function (c) { AU[c.id] = c.testo; });
+      }
+    } catch (e) {}
+    var leggiAutore = auVoci.map(function (r) {
+      return { titolo: r.titolo, meta: r.meta, estratto: r.estratto, testo: (AU[r.id] || r.estratto) };
+    });
     return (window.DATA_NORMATIVA || []).map(function (r) {
       var testo = CORPO_DIR[r.percorso] || "";
       return { titolo: r.titolo, meta: r.anno + " · " + r.ambito + (r.categoria ? " · " + r.categoria : ""), estratto: testo.slice(0, 200), testo: r.titolo + " " + (r.categoria || "") + " " + testo };
-    }).concat(slide).concat(legislazioni).concat(cendom).concat(leggiUe).concat(leggiExtra);
+    }).concat(slide).concat(legislazioni).concat(cendom).concat(leggiUe).concat(leggiExtra).concat(leggiAutore);
   }
 });
 </script>
