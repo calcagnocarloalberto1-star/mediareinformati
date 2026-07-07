@@ -51,6 +51,19 @@
       <button>Cosa prevede la riforma Cartabia sulla mediazione?</button>
     </div>
   </div>
+  <div class="genera-slide" style="margin-top:22px;border:1px solid #d9d3c7;border-radius:10px;padding:16px 18px;background:#faf9f6">
+    <h3 style="margin:0 0 4px;color:#152a46;font-size:1.05rem">Genera slide da un file o da un link</h3>
+    <p class="cit" style="margin:0 0 12px">Allega un documento (<strong>.pdf, .docx, .txt, .md</strong>) oppure incolla l&rsquo;indirizzo di una <strong>pagina web</strong>: l&rsquo;assistente ne estrae i contenuti, li fonde con i materiali pertinenti dell&rsquo;archivio e genera le slide per formatori (scaricabili anche in Word e PDF).</p>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+      <input type="file" id="slide-file" accept=".txt,.md,.markdown,.pdf,.docx" style="flex:1 1 240px">
+      <input type="url" id="slide-url" placeholder="https://esempio.it/articolo" autocomplete="off" style="flex:1 1 240px;padding:8px 10px;border:1px solid #cfc9bd;border-radius:6px">
+    </div>
+    <input type="text" id="slide-titolo" placeholder="Titolo o argomento delle slide (facoltativo)" autocomplete="off" style="width:100%;margin-top:10px;padding:8px 10px;border:1px solid #cfc9bd;border-radius:6px;box-sizing:border-box">
+    <div style="margin-top:12px">
+      <button class="bottone-primario" id="genera-slide">Genera slide</button>
+    </div>
+    <p class="cit" id="slide-stato" style="margin-top:10px"></p>
+  </div>
   <p class="conteggio" id="stato"></p>
   <div id="contenitore-risposta"></div>
 
@@ -83,6 +96,8 @@
 <script src="https://js.puter.com/v2/"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PptxGenJS/3.12.0/pptxgen.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
 (function () {
   "use strict";
@@ -558,6 +573,119 @@
   document.getElementById("suggerimenti").addEventListener("click", function (e) {
     if (e.target.tagName === "BUTTON") { document.getElementById("domanda").value = e.target.textContent; rispondi(e.target.textContent); }
   });
+
+  /* ---------- slide da un file o da un link (fonte esterna + archivio) ---------- */
+  function estraiTestoDaFile(file) {
+    var nome = (file.name || "").toLowerCase();
+    if (/\.(txt|md|markdown)$/.test(nome)) return file.text();
+    if (/\.docx$/.test(nome)) {
+      if (!window.mammoth) return Promise.reject(new Error("libreria per i .docx non caricata"));
+      return file.arrayBuffer().then(function (buf) {
+        return mammoth.extractRawText({ arrayBuffer: buf }).then(function (r) { return r.value || ""; });
+      });
+    }
+    if (/\.pdf$/.test(nome)) {
+      if (!window.pdfjsLib) return Promise.reject(new Error("libreria per i .pdf non caricata"));
+      if (!pdfjsLib.GlobalWorkerOptions.workerSrc)
+        pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+      return file.arrayBuffer().then(function (buf) {
+        return pdfjsLib.getDocument({ data: buf }).promise.then(function (pdf) {
+          var pagine = [];
+          for (var i = 1; i <= pdf.numPages; i++) pagine.push(i);
+          return pagine.reduce(function (acc, n) {
+            return acc.then(function (txt) {
+              return pdf.getPage(n).then(function (page) {
+                return page.getTextContent().then(function (c) {
+                  return txt + c.items.map(function (it) { return it.str; }).join(" ") + "\n";
+                });
+              });
+            });
+          }, Promise.resolve(""));
+        });
+      });
+    }
+    return Promise.reject(new Error("formato non supportato: usa pdf, docx, txt o md"));
+  }
+
+  function estraiTestoDaLink(url) {
+    // Sito statico: il browser non puo' leggere direttamente pagine di altri domini (CORS).
+    // Jina Reader (r.jina.ai) restituisce il testo pulito della pagina, con CORS consentito.
+    return fetch("https://r.jina.ai/" + url).then(function (resp) {
+      if (!resp.ok) throw new Error("pagina non leggibile (codice " + resp.status + ")");
+      return resp.text();
+    });
+  }
+
+  function generaSlideDaFonte() {
+    var stato = document.getElementById("slide-stato");
+    var fileEl = document.getElementById("slide-file");
+    var file = fileEl.files && fileEl.files[0];
+    var url = document.getElementById("slide-url").value.trim();
+    var titoloUtente = document.getElementById("slide-titolo").value.trim();
+    if (!file && !url) { stato.textContent = "Allega un file oppure incolla un link."; return; }
+    if (file && url) { stato.textContent = "Usa un file OPPURE un link, non entrambi."; return; }
+    stato.textContent = "Estraggo il contenuto della fonte…";
+    var etichetta = file ? file.name : url;
+    var fonteP = file ? estraiTestoDaFile(file) : estraiTestoDaLink(url);
+    Promise.resolve(fonteP).then(function (testo) {
+      testo = (testo || "").replace(/\r/g, " ").replace(/[ \t]+/g, " ").replace(/\n{3,}/g, "\n\n").trim();
+      if (testo.replace(/\s+/g, "").length < 40) throw new Error("la fonte non contiene testo sufficiente");
+      var testoRid = testo.slice(0, 12000);
+      var queryArchivio = titoloUtente || testo.slice(0, 300);
+      var d = cerca(queryArchivio) || { domanda: queryArchivio, storia: [], norme: [], pronunce: [], articoli: [], paesi: [], leggi: [], linkUtili: [], statistiche: false };
+      d.domanda = titoloUtente || ("Slide da " + etichetta);
+      var titolo = d.domanda;
+      var nFonti = d.storia.length + d.norme.length + d.pronunce.length + d.articoli.length + d.paesi.length + (d.leggi ? d.leggi.length : 0) + d.linkUtili.length;
+      ultimaRisposta = { domanda: titolo, dossier: d, ai: "" };
+      var cont = document.getElementById("contenitore-risposta");
+      cont.innerHTML = "<div class='risposta'>" +
+        "<h3 class='titolo-risposta'>" + esc(titolo) + "</h3>" +
+        "<p class='fonti-conteggio'>Fonte esterna: " + esc(etichetta) + " · " + nFonti + " materiali d'archivio integrati</p>" +
+        "<div id='blocco-ai'></div>" +
+        "<details open><summary class='fonti-titolo'>Apparato delle fonti d'archivio</summary><div id='blocco-dossier'>" + dossierHtml(d) + "</div></details>" +
+        "<div class='barra-export'>" +
+        "<button class='bottone-secondario' id='ex-doc'>Scarica Word</button>" +
+        "<button class='bottone-secondario' id='ex-pdf'>Scarica PDF</button>" +
+        "<button class='bottone-secondario' id='ex-pptx'>Slide per formatori (PPTX)</button>" +
+        "</div></div>";
+      document.getElementById("ex-doc").addEventListener("click", esportaDoc);
+      document.getElementById("ex-pdf").addEventListener("click", esportaPdf);
+      document.getElementById("ex-pptx").addEventListener("click", esportaPptx);
+
+      var bAI = document.getElementById("blocco-ai");
+      if (window.puter && puter.ai && puter.ai.chat) {
+        stato.textContent = "Compongo le slide fondendo la fonte con l'archivio…";
+        bAI.innerHTML = "<p class='cit'>Sto componendo il contributo con l'assistenza dell'AI…</p>";
+        var prompt = "Sei l'assistente di mediareinformati.it. Devi produrre il CONTENUTO di una presentazione a slide per formatori, FONDENDO due corpi di materiale:\n" +
+          "1) una FONTE ESTERNA fornita dall'utente (documento o pagina web) — e' il filo conduttore;\n" +
+          "2) i MATERIALI D'ARCHIVIO pertinenti del sito (normativa, giurisprudenza, storia, dati, schede paese) — servono ad arricchire e verificare.\n" +
+          "TITOLO/ARGOMENTO: " + titolo + "\n\n=== FONTE ESTERNA (da \"" + etichetta + "\") ===\n" + testoRid +
+          "\n\n=== MATERIALI D'ARCHIVIO ===\n" + fontiPerPrompt(d) +
+          "\n\nREGOLE: 1) integra i due corpi in una trattazione coerente e didattica pensata per la proiezione; 2) dai priorita' ai contenuti della FONTE ESTERNA, arricchendoli con normativa, giurisprudenza, dati e contesto dell'archivio quando pertinenti; 3) scarta i materiali d'archivio non pertinenti senza citarli; 4) NON menzionare il curatore dell'archivio ne' le sue opere: valorizza le fonti primarie tra parentesi; 5) rielabora con parole tue, nessuna citazione letterale oltre 40 parole; 6) non e' un parere legale.\n" +
+          "STRUTTURA in markdown: ogni intestazione ## diventa una o piu' slide. Inizia con '## " + titolo + "' seguito da 1-2 righe di inquadramento; poi 4-7 sezioni ## con ELENCHI PUNTATI concisi (righe che iniziano con '- ', max ~14 parole a punto); chiudi con '## Dati e riferimenti' (se pertinenti) e '## Per la formazione'. Preferisci sempre elenchi puntati brevi, adatti alle slide.";
+        Promise.resolve(puter.ai.chat(prompt)).then(function (r) {
+          var t = (r && r.message && r.message.content) ? r.message.content : (typeof r === "string" ? r : "");
+          if (t) { ultimaRisposta.ai = t; bAI.innerHTML = "<h4>Contributo per le slide (AI, da fonte esterna + archivio — da verificare)</h4>" + mdPulito(t); }
+          else { ultimaRisposta.ai = "## " + titolo + "\n\n" + testoRid.slice(0, 3000); bAI.innerHTML = "<p class='cit'>Sintesi AI non disponibile: le slide useranno il testo della fonte e l'apparato documentale.</p>"; }
+          esportaPptx();
+          stato.textContent = "Slide generate e scaricate. Puoi rigenerarle o esportare anche in Word/PDF dai pulsanti qui sopra.";
+        }).catch(function () {
+          ultimaRisposta.ai = "## " + titolo + "\n\n" + testoRid.slice(0, 3000);
+          bAI.innerHTML = "<p class='cit'>Sintesi AI non disponibile: le slide usano il testo della fonte e l'apparato documentale.</p>";
+          esportaPptx();
+          stato.textContent = "Slide generate dalla fonte e dall'archivio (senza sintesi AI).";
+        });
+      } else {
+        ultimaRisposta.ai = "## " + titolo + "\n\n" + testoRid.slice(0, 3000);
+        esportaPptx();
+        stato.textContent = "Slide generate dalla fonte e dall'archivio.";
+      }
+    }).catch(function (e) {
+      stato.textContent = "Errore: " + (e && e.message ? e.message : "impossibile leggere la fonte") + ".";
+    });
+  }
+
+  document.getElementById("genera-slide").addEventListener("click", generaSlideDaFonte);
 })();
 </script>
 </body>
