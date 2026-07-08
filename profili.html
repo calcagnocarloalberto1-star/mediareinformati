@@ -65,6 +65,9 @@
   function fmtDet(det){
     var di=det.search(/\[(ARCHIVIO|STUDI)/); if(di<0) return "";
     var t=det.slice(di);
+    // taglia lo sbordo del capitolo successivo (es. "6.7. La mediazione in Oceania")
+    var cut=t.search(/\n\s*\d+\.\d+\.?\s+La mediazion\w* in\b/);
+    if(cut>0) t=t.slice(0,cut);
     // pulizia: numeri di nota rimasti attaccati alle parole (artefatti di estrazione)
     t=t.replace(/([A-Za-z\u00C0-\u017F\u2019\u00AB\u00BB])\d{2,}/g,"$1");
     // porta ogni marcatore strutturale a inizio riga
@@ -108,7 +111,7 @@
     if(p.storica) c+="<h2>Evoluzione storica</h2><p>"+esc(p.storica)+"</p>";
     if(p.recepimento && p.recepimento.indexOf("Non applicabile")!==0) c+="<h2>Recepimento direttiva 2008/52/CE</h2><p>"+esc(p.recepimento)+"</p>";
     if((DET[p.id]||"").search(/\[(ARCHIVIO|STUDI)/)>=0) c+="<h2>Dettaglio d'archivio e studio d'autore</h2>"+fmtDet(DET[p.id]||"");
-    var html="<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'><style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.5}h1{color:#9c2b1f;font-size:20pt}h2{color:#1F3A5F;font-size:15pt;border-bottom:1px solid #ccc;margin-top:18pt}h3{color:#1F3A5F;font-size:12.5pt;margin:14pt 0 3pt}p{margin:0 0 9pt;text-align:justify}</style></head><body>"+c+"<hr><p style='font-size:9pt;color:#777'>Profilo a cura di mediareinformati.it; verificare sulle fonti ufficiali. Non costituisce parere legale.</p></body></html>";
+    var html="<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'><style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.9}h1{color:#9c2b1f;font-size:20pt}h2{color:#1F3A5F;font-size:15pt;border-bottom:1px solid #ccc;margin-top:20pt}h3{color:#1F3A5F;font-size:12.5pt;margin:16pt 0 4pt}p{margin:0 0 11pt;text-align:justify;line-height:1.9}</style></head><body>"+c+"<hr><p style='font-size:9pt;color:#777'>Profilo a cura di mediareinformati.it; verificare sulle fonti ufficiali. Non costituisce parere legale.</p></body></html>";
     var blob=new Blob(["﻿"+html],{type:"application/msword"});
     var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="profilo_"+normaTesto(p.paese).replace(/[^a-z0-9]+/g,"_")+".doc"; a.click();
   }
