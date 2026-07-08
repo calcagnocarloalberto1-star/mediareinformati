@@ -62,6 +62,22 @@
     var o=document.createElement("option"); o.value=p.id; o.textContent=p.paese+(p.vigente?"":" (in aggiornamento)"); sel.appendChild(o);
   });
   function num(x){ return (x||x===0)?x:"—"; }
+  function fmtDet(det){
+    var di=det.search(/\[(ARCHIVIO|STUDI)/); if(di<0) return "";
+    var t=det.slice(di);
+    // pulizia: numeri di nota rimasti attaccati alle parole (artefatti di estrazione)
+    t=t.replace(/([A-Za-z\u00C0-\u017F\u2019\u00AB\u00BB])\d{2,}/g,"$1");
+    // porta ogni marcatore strutturale a inizio riga
+    t=t.replace(/\s*\[(ARCHIVIO|STUDIO? D[\u0027\u2019]AUTORE)/g,"\n[$1");
+    var out="";
+    t.split(/\n/).forEach(function(r){
+      r=r.trim(); if(!r) return;
+      var m=r.match(/^\[(?:ARCHIVIO|STUDIO? D[\u0027\u2019]AUTORE)[^\]]*\]/);
+      if(m){ out+="<h3>"+esc(m[0].replace(/^\[|\]$/g,""))+"</h3>"; var rest=r.slice(m[0].length).trim(); if(rest) out+="<p>"+esc(rest)+"</p>"; }
+      else out+="<p>"+esc(r)+"</p>";
+    });
+    return out;
+  }
   function scheda(p){
     var s=p.stat||{}, h="<div class='risposta'>";
     h+="<h3 class='titolo-risposta'>"+esc(p.paese)+"</h3>";
@@ -76,9 +92,8 @@
     if(p.storica){ h+="<h4>Evoluzione storica</h4><p>"+esc(p.storica)+"</p>"; }
     if(p.recepimento && p.recepimento!=="Non applicabile (fuori UE)." && p.recepimento!=="Non applicabile."){ h+="<h4>Recepimento della direttiva 2008/52/CE</h4><p>"+esc(p.recepimento)+"</p>"; }
     var det=DET[p.id]||"";
-    var idx=det.search(/\[(ARCHIVIO|STUDI)/);
-    if(idx>=0){
-      h+="<details><summary class='fonti-titolo'>Dettaglio d'archivio e studio comparato d'autore</summary><div style='white-space:pre-wrap;font-size:.9rem'>"+esc(det.slice(idx))+"</div></details>";
+    if(det.search(/\[(ARCHIVIO|STUDI)/)>=0){
+      h+="<details><summary class='fonti-titolo'>Dettaglio d'archivio e studio comparato d'autore</summary><div class='det-formattato'>"+fmtDet(det)+"</div></details>";
     }
     h+="<div class='barra-export'><button class='bottone-secondario' id='ex'>Scarica il profilo in Word</button></div>";
     h+="</div>";
@@ -92,8 +107,8 @@
     if(p.vigente) c+="<h2>Legislazione vigente</h2><p>"+esc(p.vigente)+"</p>";
     if(p.storica) c+="<h2>Evoluzione storica</h2><p>"+esc(p.storica)+"</p>";
     if(p.recepimento && p.recepimento.indexOf("Non applicabile")!==0) c+="<h2>Recepimento direttiva 2008/52/CE</h2><p>"+esc(p.recepimento)+"</p>";
-    var det=DET[p.id]||""; var di=det.search(/\[(ARCHIVIO|STUDI)/); if(di>=0) c+="<h2>Dettaglio d'archivio e studio d'autore</h2><pre style='white-space:pre-wrap;font-family:Georgia'>"+esc(det.slice(di))+"</pre>";
-    var html="<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'><style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.5}h1{color:#9c2b1f}h2{color:#111;border-bottom:1px solid #ccc}</style></head><body>"+c+"<hr><p style='font-size:9pt;color:#777'>Profilo a cura di mediareinformati.it; verificare sulle fonti ufficiali. Non costituisce parere legale.</p></body></html>";
+    if((DET[p.id]||"").search(/\[(ARCHIVIO|STUDI)/)>=0) c+="<h2>Dettaglio d'archivio e studio d'autore</h2>"+fmtDet(DET[p.id]||"");
+    var html="<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'><style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.5}h1{color:#9c2b1f;font-size:20pt}h2{color:#1F3A5F;font-size:15pt;border-bottom:1px solid #ccc;margin-top:18pt}h3{color:#1F3A5F;font-size:12.5pt;margin:14pt 0 3pt}p{margin:0 0 9pt;text-align:justify}</style></head><body>"+c+"<hr><p style='font-size:9pt;color:#777'>Profilo a cura di mediareinformati.it; verificare sulle fonti ufficiali. Non costituisce parere legale.</p></body></html>";
     var blob=new Blob(["﻿"+html],{type:"application/msword"});
     var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="profilo_"+normaTesto(p.paese).replace(/[^a-z0-9]+/g,"_")+".doc"; a.click();
   }
