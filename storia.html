@@ -209,7 +209,8 @@
     var html = "<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'>" +
       "<style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.5}h1{color:#152a46;font-size:18pt}h4{color:#152a46;border-bottom:1px solid #ccc}.cit{color:#777;font-size:10pt}summary{font-weight:bold;color:#152a46}</style></head><body>" +
       "<h1>" + esc(ultima.domanda) + "</h1><p><em>mediareinformati.it — contributo di storia della mediazione, " + new Date().toLocaleDateString("it") + "</em></p>" +
-      corpo + "<hr><p style='font-size:9pt;color:#777'>Contributo composto sull'archivio documentale del sito; estratti a fini di consultazione, testi integrali non pubblicati. Verificare sempre le fonti.</p></body></html>";
+      corpo + "<hr><p style='font-size:9pt;color:#777'>Contributo composto sull'archivio documentale del sito; estratti a fini di consultazione, testi integrali non pubblicati. Verificare sempre le fonti.</p><script defer src="assets/legal.js"></script>
+</body></html>";
     var blob = new Blob(["﻿" + html], { type: "application/msword" });
     var a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
