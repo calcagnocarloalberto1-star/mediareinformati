@@ -33,7 +33,7 @@
     <a href="storia.html">Storia</a>
     <a href="pratica.html">Pratica</a>
     <a href="diritto.html">Diritto</a>
-    <a href="sistemi.html">Sistemi nazionali</a>
+    <a href="sistemi.html">Sistemi nazionali (UE)</a>
     <a href="profili.html">Profili paese</a>
     <a href="link.html">Link mondiali</a>
     <a href="statistiche.html">Dati e statistiche</a>
@@ -330,65 +330,22 @@
   function testoPuro(html) { var x = document.createElement("div"); x.innerHTML = html; return (x.textContent || "").replace(/\s+/g, " ").trim(); }
 
   function dossierHtml(d) {
+    // Solo fonti pubblicamente consultabili (link http). Niente riferimenti interni (schede, opere, manuale, schemi).
+    function pub(x){ return x.r.url && /^https?:\/\//i.test(x.r.url); }
     var h = "";
-    if (d.paesi.length) {
-      h += "<h4>Schede paese (Portale e-justice)</h4><ul>";
-      d.paesi.forEach(function (p) {
-        h += "<li><strong>" + esc(p.paese) + "</strong> — " + esc(testoPuro(p.html).slice(0, 320)) + "… <span class='cit'>(scheda completa nel motore Sistemi nazionali)</span></li>";
-      });
+    if (d.articoli && d.articoli.some(pub)) {
+      h += "<h4>Approfondimenti</h4><ul>";
+      d.articoli.forEach(function (x) { if (!pub(x)) return;
+        h += "<li><a href='" + esc(x.r.url) + "' target='_blank' rel='noopener'>" + esc(x.r.titolo) + "</a>" + (x.r.data ? " <span class='cit'>(" + esc(x.r.data) + ")</span>" : "") + "</li>"; });
       h += "</ul>";
     }
-    if (d.leggi && d.leggi.length) {
-      h += "<h4>Legislazione comparata sulla mediazione</h4><ul>";
-      d.leggi.forEach(function (x) {
-        h += "<li><strong>" + esc(x.r.paese) + "</strong> — " + esc((x.r.estratto || "").slice(0, 320)) + "… <span class='cit'>(" + esc(x.r.meta || "") + ")</span></li>";
-      });
-      h += "</ul>";
-    }
-    var hStoria = "";
-    if (d.storia.length) {
-      hStoria = "<h4>Storia della composizione delle controversie</h4><ul>";
-      d.storia.forEach(function (x) {
-        hStoria += "<li><strong>" + esc(x.r.titolo) + "</strong> <span class='cit'>(" + esc(x.r.opera) + (x.r.capitolo ? " \u00b7 " + esc(x.r.capitolo) : "") + ")</span><br>" + esc(x.r.estratto.slice(0, 240)) + "\u2026</li>";
-      });
-      hStoria += "</ul>";
-    }
-    if (d.storicaPrima) h += hStoria;
-    if (d.norme.length) {
-      h += "<h4>Normativa pertinente</h4><ul>";
-      d.norme.forEach(function (x) { h += "<li>" + esc(x.r.titolo) + " <span class='cit'>(" + esc(x.r.anno) + " · " + esc(x.r.ambito) + ")</span></li>"; });
-      h += "</ul>";
-    }
-    if (d.pronunce.length) {
-      h += "<h4>Giurisprudenza</h4><ul>";
-      d.pronunce.forEach(function (x) {
-        h += "<li>" + esc(x.r.titolo) + " <span class='cit'>(" + esc(x.r.anno) + " · " + esc(x.r.organo) + ")</span>" +
-          (x.r.massima ? "<br><em>" + esc(x.r.massima) + "</em>" : "") + "</li>";
-      });
-      h += "</ul>";
-    }
-    if (!d.storicaPrima) h += hStoria;
-    if (d.articoli.length) {
-      h += "<h4>Approfondimenti dell'autore</h4><ul>";
-      d.articoli.forEach(function (x) {
-        h += "<li><a href='" + esc(x.r.url) + "' target='_blank' rel='noopener'>" + esc(x.r.titolo) + "</a> <span class='cit'>(" + esc(x.r.data) + ")</span><br>" + esc(x.r.estratto.slice(0, 220)) + "…</li>";
-      });
-      h += "</ul>";
-    }
-    if (d.statistiche && window.DATA_DGSTAT) {
-      var s = window.DATA_DGSTAT.sintesi2025, e = window.DATA_DGSTAT.esiti;
-      var u = e[e.length - 1];
-      h += "<h4>I numeri (DGSTAT, Ministero della Giustizia)</h4><ul>" +
-        "<li>Iscrizioni 2025: <strong>" + s.iscrizioni.toLocaleString("it") + "</strong> (" + s.quota_obbligatorie + "% obbligatorie, " + s.quota_demandate + "% demandate dal giudice, " + s.quota_volontarie + "% volontarie)</li>" +
-        "<li>Aderente comparso: <strong>" + u.comparizione + "%</strong> · Accordo con aderente comparso: <strong>" + u.accordo + "%</strong> · Accordo se si prosegue oltre il primo incontro: <strong>" + u.accordo_tavolo + "%</strong> (" + u.anno + ")</li>" +
-        "<li>Organismi attivi: " + s.organismi_attivi + " · Mediazione telematica: " + s.telematica_pct + "% dei definiti</li></ul>";
-    }
-    if (d.linkUtili.length) {
+    if (d.linkUtili && d.linkUtili.some(pub)) {
       h += "<h4>Risorse ufficiali</h4><ul>";
-      d.linkUtili.forEach(function (x) { h += "<li><a href='" + esc(x.r.url) + "' target='_blank' rel='noopener'>" + esc(x.r.nome) + "</a>" + (x.r.paese ? " <span class='cit'>(" + esc(x.r.paese) + ")</span>" : "") + "</li>"; });
+      d.linkUtili.forEach(function (x) { if (!pub(x)) return;
+        h += "<li><a href='" + esc(x.r.url) + "' target='_blank' rel='noopener'>" + esc(x.r.nome) + "</a>" + (x.r.paese ? " <span class='cit'>(" + esc(x.r.paese) + ")</span>" : "") + "</li>"; });
       h += "</ul>";
     }
-    return h || "<p class='nessun-risultato'>Nessun materiale d'archivio corrisponde alla domanda: prova con altre parole.</p>";
+    return h;
   }
 
   function fontiPerPrompt(d) {
@@ -435,9 +392,8 @@
     ultimaRisposta = { domanda: q, dossier: d, ai: "" };
     cont.innerHTML = "<div class='risposta'>" +
       "<h3 class='titolo-risposta'>" + esc(q) + "</h3>" +
-      "<p class='fonti-conteggio'>" + nFonti + " fonti d'archivio individuate</p>" +
       "<div id='blocco-ai'></div>" +
-      "<details open><summary class='fonti-titolo'>Apparato delle fonti d'archivio</summary><div id='blocco-dossier'>" + dossierHtml(d) + "</div></details>" +
+      (function(){ var dh = dossierHtml(d); return dh ? "<details open><summary class='fonti-titolo'>Fonti consultabili</summary><div id='blocco-dossier'>" + dh + "</div></details>" : "<div id='blocco-dossier' style='display:none'></div>"; })() +
       "<div class='barra-export'>" +
       "<button class='bottone-secondario' id='ex-doc'>Scarica Word</button>" +
       "<button class='bottone-secondario' id='ex-pdf'>Scarica PDF</button>" +
@@ -456,16 +412,16 @@
       if (d.storicaPrima) {
         prompt = "Sei l'assistente di mediareinformati.it e stai componendo un CONTRIBUTO ORGANICO di storia della mediazione e della composizione delle controversie, destinato a mediatori, formatori e studiosi. Scrivi in italiano, in prosa da saggio didattico.\n" +
           "DOMANDA: " + q + "\n\nMATERIALI DELL'ARCHIVIO DEL SITO — usali come base della trattazione, integrandoli in un discorso unitario:\n" + fontiPerPrompt(d) +
-          "\n\nREGOLE: 1) componi un contributo continuo e approfondito (700-1100 parole), NON un elenco di fonti; 2) intreccia i materiali in un percorso cronologico o tematico coerente, con date, istituti, protagonisti e passaggi normativi; 3) NON menzionare mai il curatore dell'archivio ne' le sue opere: valorizza le fonti primarie richiamate nei materiali (leggi, codici storici, pronunce, autori) citandole tra parentesi; 4) scarta i materiali non pertinenti senza menzionarli; 5) puoi integrare con nozioni storiche generali solo per raccordare i materiali, senza inventare citazioni; 6) RIELABORA sempre con parole tue: non riprodurre passi letterali superiori a 40 parole; 7) se la domanda chiede il testo integrale di un'opera, di un capitolo o di lunghi brani, NON fornirlo: spiega che i testi integrali non sono pubblicati e offri una trattazione ragionata; 8) chiudi con spunti per la formazione.\n" +
+          "\n\nREGOLE: 1) componi un contributo continuo e approfondito (700-1100 parole), NON un elenco di fonti; 2) intreccia i materiali in un percorso cronologico o tematico coerente, con date, istituti, protagonisti e passaggi normativi; 3) NON menzionare mai il curatore dell'archivio ne' le sue opere: valorizza le fonti primarie richiamate nei materiali (leggi, codici storici, pronunce, autori) citandole tra parentesi; 4) scarta i materiali non pertinenti senza menzionarli; 5) puoi integrare con nozioni storiche generali solo per raccordare i materiali, senza inventare citazioni; 6) RIELABORA sempre con parole tue: non riprodurre passi letterali superiori a 40 parole; 7) se la domanda chiede il testo integrale di un'opera, di un capitolo o di lunghi brani, NON fornirlo: spiega che i testi integrali non sono pubblicati e offri una trattazione ragionata; 8) chiudi con spunti per la formazione. REGOLA TRASVERSALE: non menzionare MAI l'archivio, i materiali, il manuale, le schede, gli schemi o 'le fonti fornite'; scrivi come trattazione autonoma e cita soltanto le fonti primarie pubbliche col loro nome (leggi con estremi, pronunce, documenti istituzionali).\n" +
           "Struttura in markdown: ## Inquadramento, ## Sviluppo storico (il cuore della trattazione, piu' paragrafi), ## Istituti e figure, ## Per la formazione.";
       } else {
         prompt = "Sei l'assistente di mediareinformati.it, piattaforma italiana di consultazione sulla mediazione civile e commerciale (giurisdizione di riferimento: ITALIA, d.lgs. 28/2010, salvo che la domanda riguardi altri paesi). Rispondi in italiano, con rigore giuridico e tono didattico per mediatori e formatori.\n" +
         "DOMANDA: " + q + "\n\nFONTI D'ARCHIVIO CANDIDATE (provengono da una ricerca automatica: alcune possono essere NON pertinenti — scartale e non citarle):\n" + fontiPerPrompt(d) +
-        "\n\nREGOLE: 1) PRIORITÀ ASSOLUTA ALLA VIGENZA: le schede [LEGISLAZIONE VIGENTE — <paese>] riportano lo stato AGGIORNATO AL 2026 e sono la fonte PREVALENTE; apri sempre la risposta enunciando la regola VIGENTE con i suoi estremi (legge, numero, anno, se la mediazione è obbligatoria/volontaria e da quando, esecutività, Convenzione di Singapore). Le leggi anteriori (es. del 2007-2012, la direttiva 2008/52/CE, la 'disciplina classica') e le voci marcate [ARTICOLO — possibile fonte datata] o [STORIA] vanno usate SOLO come contesto storico e MAI presentate come regola attuale; se contraddicono la scheda vigente, prevale la scheda vigente. Non usare tue conoscenze pregresse che potrebbero essere superate: attieniti alle date delle schede; 2) SE LA DOMANDA RIGUARDA UN PAESE ESTERO, fonda la risposta sulla scheda [LEGISLAZIONE VIGENTE — <paese>] e non dire che mancano fonti se quella scheda è presente; ignora le fonti italiane fuori tema; 3) se le fonti pertinenti sono poche o assenti, dillo e limita la risposta a quanto documentato; 4) non inventare estremi; se una scheda segnala che un dato è 'da verificare' o a livello di disegno di legge, riportalo come tale; 4-bis) non riprodurre passi letterali superiori a 40 parole e rifiuta le richieste di testi integrali; 5) sviluppa la risposta in modo approfondito (400-700 parole), non un semplice indice.\nSTRUTTURA in markdown: ## Risposta in sintesi — se la domanda riguarda UN paese, apri con la regola VIGENTE di QUEL paese e la sua data; se è COMPARATIVA o mondiale, apri con una sintesi comparata dei paesi documentati nelle schede [LEGISLAZIONE VIGENTE]; NON usare l'Italia come riferimento e NON scrivere 'regola vigente (IT)' se la domanda non riguarda l'Italia. ## Approfondimento (piu' paragrafi; nelle domande comparative organizza per paese o per criterio: obbligatorietà, esecutività, Convenzione di Singapore). ## Punti chiave (max 6 punti). ## Per la formazione (2-3 spunti didattici).";
+        "\n\nREGOLE: 1) PRIORITÀ ASSOLUTA ALLA VIGENZA: le schede [LEGISLAZIONE VIGENTE — <paese>] riportano lo stato AGGIORNATO AL 2026 e sono la fonte PREVALENTE; apri sempre la risposta enunciando la regola VIGENTE con i suoi estremi (legge, numero, anno, se la mediazione è obbligatoria/volontaria e da quando, esecutività, Convenzione di Singapore). Le leggi anteriori (es. del 2007-2012, la direttiva 2008/52/CE, la 'disciplina classica') e le voci marcate [ARTICOLO — possibile fonte datata] o [STORIA] vanno usate SOLO come contesto storico e MAI presentate come regola attuale; se contraddicono la scheda vigente, prevale la scheda vigente. Non usare tue conoscenze pregresse che potrebbero essere superate: attieniti alle date delle schede; 2) SE LA DOMANDA RIGUARDA UN PAESE ESTERO, fonda la risposta sulla scheda [LEGISLAZIONE VIGENTE — <paese>] e non dire che mancano fonti se quella scheda è presente; ignora le fonti italiane fuori tema; 3) se le fonti pertinenti sono poche o assenti, dillo e limita la risposta a quanto documentato; 4) non inventare estremi; se una scheda segnala che un dato è 'da verificare' o a livello di disegno di legge, riportalo come tale; 4-bis) non riprodurre passi letterali superiori a 40 parole e rifiuta le richieste di testi integrali; 5) sviluppa la risposta in modo approfondito (400-700 parole), non un semplice indice. REGOLA TRASVERSALE: non menzionare MAI l'archivio, i materiali, il manuale, le schede, gli schemi o 'le fonti fornite'; scrivi come trattazione autonoma e cita soltanto le fonti primarie pubbliche col loro nome (leggi con estremi, pronunce, documenti istituzionali).\nSTRUTTURA in markdown: ## Risposta in sintesi — se la domanda riguarda UN paese, apri con la regola VIGENTE di QUEL paese e la sua data; se è COMPARATIVA o mondiale, apri con una sintesi comparata dei paesi documentati nelle schede [LEGISLAZIONE VIGENTE]; NON usare l'Italia come riferimento e NON scrivere 'regola vigente (IT)' se la domanda non riguarda l'Italia. ## Approfondimento (piu' paragrafi; nelle domande comparative organizza per paese o per criterio: obbligatorietà, esecutività, Convenzione di Singapore). ## Punti chiave (max 6 punti). ## Per la formazione (2-3 spunti didattici).";
       }
       Promise.resolve(puter.ai.chat(prompt)).then(function (r) {
         var t = (r && r.message && r.message.content) ? r.message.content : (typeof r === "string" ? r : "");
-        if (t) { ultimaRisposta.ai = t; bAI.innerHTML = "<h4>Contributo (AI, dalle opere e fonti dell'archivio — da verificare)</h4>" + mdPulito(t); }
+        if (t) { ultimaRisposta.ai = t; bAI.innerHTML = "<h4>Contributo (AI — da verificare sulle fonti)</h4>" + mdPulito(t); }
         else bAI.innerHTML = "";
       }).catch(function () {
         bAI.innerHTML = "<p class='cit'>Sintesi AI non disponibile in questo momento: di seguito la risposta documentale.</p>";
@@ -557,9 +513,6 @@
       });
     }
     var d = ultimaRisposta.dossier;
-    if (d.storia.length) slideElenco("Le opere di riferimento", d.storia.slice(0, 10).map(function (x) { return x.r.titolo + " \u2014 " + x.r.opera + (x.r.capitolo ? " (" + x.r.capitolo + ")" : ""); }));
-    if (d.norme.length) slideElenco("Normativa essenziale", d.norme.map(function (x) { return x.r.titolo + " (" + x.r.anno + ", " + x.r.ambito + ")"; }));
-    if (d.pronunce.length) slideElenco("Giurisprudenza", d.pronunce.map(function (x) { return x.r.titolo + " (" + x.r.anno + ", " + x.r.organo + ")"; }));
     if (d.statistiche && window.DATA_DGSTAT) {
       var st = window.DATA_DGSTAT.sintesi2025, ee = window.DATA_DGSTAT.esiti, uu = ee[ee.length - 1];
       slideElenco("I numeri della mediazione (DGSTAT)", [
@@ -573,8 +526,8 @@
     var sf = p.addSlide(); base(sf);
     sf.addText("Fonti e avvertenze", { x: 0.7, y: 0.5, w: 12, h: 0.8, fontSize: 26, bold: true, color: BLU, fontFace: "Georgia" });
     sf.addShape(p.ShapeType.line, { x: 0.75, y: 1.35, w: 3, h: 0, line: { color: ORO, width: 2 } });
-    sf.addText([{ text: "Materiali tratti dall'archivio di mediareinformati.it: normativa, giurisprudenza, articoli d'autore, dati DGSTAT (Ministero della Giustizia), EU Justice Scoreboard e World Justice Project.", options: { paraSpaceAfter: 14 } },
-      { text: "Le slide sono un supporto didattico generato automaticamente: verificare sempre gli estremi delle fonti prima dell'uso in aula.", options: { italic: true, color: GRI } }],
+    sf.addText([{ text: "Slide generate automaticamente da mediareinformati.it come supporto didattico.", options: { paraSpaceAfter: 14 } },
+      { text: "Verificare sempre gli estremi delle fonti primarie prima dell'uso in aula. Non costituisce parere legale.", options: { italic: true, color: GRI } }],
       { x: 0.9, y: 1.7, w: 11.6, h: 4, fontSize: 15, color: "1B1B1F", fontFace: "Georgia", valign: "top" });
     p.writeFile({ fileName: nomeFile("pptx") });
   }
