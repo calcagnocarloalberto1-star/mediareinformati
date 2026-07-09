@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tutti gli articoli — mediareinformati.it</title>
+<meta name="description" content="Elenco completo degli articoli di mediaresenzaconfini.org: ricerca, filtro per categoria e ordinamento, con il link a ogni post. Oltre 530 contributi dal 2011.">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+main.elenco{max-width:1000px}
+.barra-elenco{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0 6px}
+.barra-elenco input[type=text],.barra-elenco select{padding:9px 11px;border:1px solid #cfc9bd;border-radius:6px;font-family:inherit;font-size:.95rem;background:#fff}
+.barra-elenco input[type=text]{flex:1 1 280px}
+.conteggio-el{color:#55524c;font-size:.9rem;margin:6px 0 10px}
+table.art{border-collapse:collapse;width:100%;font-size:.93rem}
+table.art th,table.art td{border-bottom:1px solid #e4e0d6;padding:9px 10px;text-align:left;vertical-align:top}
+table.art th{color:#152a46;background:#faf9f6;cursor:pointer;user-select:none;white-space:nowrap}
+table.art th.sortable::after{content:" \2195";color:#b8b2a6;font-size:.8em}
+table.art th.asc::after{content:" \2191";color:#a93226}
+table.art th.desc::after{content:" \2193";color:#a93226}
+table.art td.data{white-space:nowrap;color:#55524c;font-variant-numeric:tabular-nums}
+table.art td.cat{color:#7a756a;font-size:.85rem}
+table.art a{color:#a93226;text-decoration:none;font-weight:600}
+table.art a:hover{text-decoration:underline}
+.paginazione{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:16px 0;justify-content:center}
+.paginazione button{padding:7px 12px;border:1px solid #cfc9bd;background:#fff;border-radius:6px;cursor:pointer;font-family:inherit}
+.paginazione button.attiva{background:#152a46;color:#fff;border-color:#152a46;font-weight:700}
+.paginazione button:disabled{opacity:.4;cursor:default}
+.nessuno-el{padding:20px;color:#7a756a;font-style:italic}
+</style>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="mediareinformati.it">
+<meta property="og:locale" content="it_IT">
+<meta property="og:title" content="Tutti gli articoli — mediareinformati.it">
+<meta property="og:description" content="Elenco completo degli articoli di mediaresenzaconfini.org: ricerca, filtro per categoria e ordinamento, con il link a ogni post.">
+<meta property="og:url" content="https://mediareinformati.it/elenco-articoli.html">
+<meta property="og:image" content="https://mediareinformati.it/assets/og-cover.png">
+<meta property="og:image:secure_url" content="https://mediareinformati.it/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="mediareinformati.it — il sapere della mediazione, interrogabile">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tutti gli articoli — mediareinformati.it">
+<meta name="twitter:description" content="Elenco completo degli articoli di mediaresenzaconfini.org, con ricerca, filtri e link a ogni post.">
+<meta name="twitter:image" content="https://mediareinformati.it/assets/og-cover.png">
+</head>
+<body>
+<header class="sito">
+  <div class="testata"><h1><a href="index.html">mediareinformati.it</a></h1></div>
+  <nav class="principale">
+    <a href="index.html">Home</a>
+    <a href="storia.html">Storia</a>
+    <a href="pratica.html">Pratica</a>
+    <a href="diritto.html">Diritto</a>
+    <a href="sistemi.html">Sistemi nazionali (UE)</a>
+    <a href="profili.html">Profili paese</a>
+    <a href="link.html">Link mondiali</a>
+    <a href="statistiche.html">Dati e statistiche</a>
+    <a href="articoli.html" class="attivo">Articoli</a>
+    <a href="giurisprudenza.html">Giurisprudenza</a>
+    <a href="assistente.html">Assistente</a>
+    <a href="dossier.html">Dossier</a>
+    <a href="progetto.html">Chi sono</a>
+  </nav>
+</header>
+<main class="elenco">
+  <h2 class="pagina">Tutti gli articoli</h2>
+  <p class="sottotitolo">L&rsquo;elenco completo dei contributi pubblicati su <strong>mediaresenzaconfini.org</strong> dal 2011: cerca, filtra per categoria e ordina. Ogni titolo apre il post originale. Per una trattazione ragionata su un tema, usa invece il motore <a href="articoli.html">Articoli</a>.</p>
+  <div class="barra-elenco">
+    <input type="text" id="cerca" placeholder="Cerca nel titolo&hellip;" autocomplete="off">
+    <select id="categoria"><option value="">Tutte le categorie</option></select>
+    <select id="ordine">
+      <option value="data-desc">Data (dal pi&ugrave; recente)</option>
+      <option value="data-asc">Data (dal pi&ugrave; antico)</option>
+      <option value="titolo-asc">Titolo (A&ndash;Z)</option>
+      <option value="titolo-desc">Titolo (Z&ndash;A)</option>
+    </select>
+  </div>
+  <p class="conteggio-el" id="conteggio"></p>
+  <table class="art">
+    <thead><tr>
+      <th class="sortable" data-col="titolo">Titolo</th>
+      <th class="sortable" data-col="data" style="width:110px">Data</th>
+      <th style="width:220px">Categorie</th>
+    </tr></thead>
+    <tbody id="corpo"></tbody>
+  </table>
+  <div id="vuoto" class="nessuno-el" style="display:none">Nessun articolo corrisponde alla ricerca.</div>
+  <div class="paginazione" id="paginazione"></div>
+</main>
+<footer class="sito">
+  <div class="interno">
+    <span>mediareinformati.it — piattaforma di consultazione sulla mediazione</span>
+    <span><a href="progetto.html" style="color:#d8d4cb">Chi sono e le fonti del progetto</a></span>
+  </div>
+</footer>
+<script src="data/articoli.js"></script>
+<script>
+(function(){
+  var A=(window.DATA_ARTICOLI||[]).filter(function(r){return r.url && /^https?:/.test(r.url);});
+  var PER=30, pagina=1, ordine="data-desc";
+  var elCerca=document.getElementById("cerca"), elCat=document.getElementById("categoria"),
+      elOrd=document.getElementById("ordine"), corpo=document.getElementById("corpo"),
+      cont=document.getElementById("conteggio"), pag=document.getElementById("paginazione"),
+      vuoto=document.getElementById("vuoto");
+  // categorie
+  var cats={};
+  A.forEach(function(r){(r.categorie||[]).forEach(function(c){if(c)cats[c]=(cats[c]||0)+1;});});
+  Object.keys(cats).sort(function(a,b){return a.localeCompare(b,"it");}).forEach(function(c){
+    var o=document.createElement("option"); o.value=c; o.textContent=c+" ("+cats[c]+")"; elCat.appendChild(o);
+  });
+  function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  function fmtData(d){ if(!d)return ""; var p=String(d).split("-"); return p.length===3? p[2]+"/"+p[1]+"/"+p[0] : d; }
+  function filtrati(){
+    var q=(elCerca.value||"").toLowerCase().trim(), cat=elCat.value;
+    var arr=A.filter(function(r){
+      if(cat && !(r.categorie||[]).includes(cat)) return false;
+      if(q && (r.titolo||"").toLowerCase().indexOf(q)===-1) return false;
+      return true;
+    });
+    var by=ordine.split("-")[0], dir=ordine.split("-")[1]==="asc"?1:-1;
+    arr.sort(function(a,b){
+      var va=by==="titolo"?(a.titolo||"").toLowerCase():(a.data||""), vb=by==="titolo"?(b.titolo||"").toLowerCase():(b.data||"");
+      return va<vb?-1*dir:va>vb?1*dir:0;
+    });
+    return arr;
+  }
+  function render(){
+    var arr=filtrati(), tot=arr.length, pagine=Math.max(1,Math.ceil(tot/PER));
+    if(pagina>pagine)pagina=pagine;
+    cont.textContent=tot+" articoli"+(elCerca.value||elCat.value?" (filtrati)":"")+" · pagina "+pagina+" di "+pagine;
+    var start=(pagina-1)*PER, page=arr.slice(start,start+PER);
+    vuoto.style.display=tot?"none":"block";
+    corpo.innerHTML=page.map(function(r){
+      var cat=(r.categorie||[]).join(", ");
+      return "<tr><td><a href='"+esc(r.url)+"' target='_blank' rel='noopener'>"+esc(r.titolo)+"</a></td>"+
+             "<td class='data'>"+fmtData(r.data)+"</td><td class='cat'>"+esc(cat)+"</td></tr>";
+    }).join("");
+    // paginazione
+    pag.innerHTML="";
+    function btn(txt,p,dis,att){var b=document.createElement("button");b.textContent=txt;if(att)b.className="attiva";if(dis)b.disabled=true;b.onclick=function(){pagina=p;render();window.scrollTo(0,0);};pag.appendChild(b);}
+    btn("‹",pagina-1,pagina<=1);
+    var from=Math.max(1,pagina-2), to=Math.min(pagine,pagina+2);
+    if(from>1){btn("1",1,false,pagina===1); if(from>2){var s=document.createElement("span");s.textContent="…";s.style.padding="0 4px";pag.appendChild(s);}}
+    for(var i=from;i<=to;i++) btn(String(i),i,false,i===pagina);
+    if(to<pagine){ if(to<pagine-1){var s2=document.createElement("span");s2.textContent="…";s2.style.padding="0 4px";pag.appendChild(s2);} btn(String(pagine),pagine,false,pagina===pagine); }
+    btn("›",pagina+1,pagina>=pagine);
+    // header sort indicator
+    document.querySelectorAll("th.sortable").forEach(function(th){
+      th.classList.remove("asc","desc");
+      if(th.dataset.col===ordine.split("-")[0]) th.classList.add(ordine.split("-")[1]);
+    });
+  }
+  elCerca.addEventListener("input",function(){pagina=1;render();});
+  elCat.addEventListener("change",function(){pagina=1;render();});
+  elOrd.addEventListener("change",function(){ordine=elOrd.value;pagina=1;render();});
+  document.querySelectorAll("th.sortable").forEach(function(th){
+    th.addEventListener("click",function(){
+      var col=th.dataset.col, cur=ordine.split("-");
+      ordine = (cur[0]===col && cur[1]==="asc")? col+"-desc" : (cur[0]===col? col+"-asc" : (col==="data"?"data-desc":"titolo-asc"));
+      elOrd.value=ordine; pagina=1; render();
+    });
+  });
+  render();
+})();
+</script>
+<script defer src="assets/legal.js"></script>
+</body>
+</html>
