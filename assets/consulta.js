@@ -84,11 +84,13 @@
     }
 
     function fontiHtml(fonti) {
-      var h = "<details open><summary class='fonti-titolo'>" + (cfg.fonteTitolo || "Fonti d'archivio utilizzate") + " (" + fonti.length + ")</summary><ul>";
-      fonti.forEach(function (x) {
-        var tit = x.r.url ? "<a href='" + esc(x.r.url) + "' target='_blank' rel='noopener'>" + esc(x.r.titolo) + "</a>" : esc(x.r.titolo);
-        h += "<li><strong>" + tit + "</strong>" + (x.r.meta ? " <span class='cit'>(" + esc(x.r.meta) + ")</span>" : "") +
-          (x.r.estratto ? "<br>" + esc(String(x.r.estratto).slice(0, 220)) + "…" : "") + "</li>";
+      // Solo fonti pubblicamente consultabili (link http). Niente riferimenti interni.
+      var pub = (fonti || []).filter(function (x) { return x.r.url && /^https?:\/\//i.test(x.r.url); });
+      if (!pub.length) return "";
+      var h = "<details open><summary class='fonti-titolo'>Fonti consultabili (" + pub.length + ")</summary><ul>";
+      pub.forEach(function (x) {
+        h += "<li><a href='" + esc(x.r.url) + "' target='_blank' rel='noopener'>" + esc(x.r.titolo) + "</a>" +
+          (x.r.meta ? " <span class='cit'>(" + esc(x.r.meta) + ")</span>" : "") + "</li>";
       });
       return h + "</ul></details>";
     }
@@ -97,13 +99,12 @@
       var stato = document.getElementById("stato");
       var cont = document.getElementById("contenitore-risposta");
       var fonti = cerca(q);
-      if (!fonti.length) { stato.textContent = "Nessun materiale dell'archivio corrisponde: prova a riformulare la domanda."; cont.innerHTML = ""; return; }
+      if (!fonti.length) { stato.textContent = "Nessun contenuto corrisponde alla domanda: prova a riformularla."; cont.innerHTML = ""; return; }
       stato.textContent = "";
       ultima = { domanda: q, fonti: fonti, ai: "" };
       cont.innerHTML = "<div class='risposta'>" +
         "<h3 class='titolo-risposta'>" + esc(q) + "</h3>" +
-        "<p class='fonti-conteggio'>" + fonti.length + " materiali d'archivio individuati</p>" +
-        "<div id='blocco-ai'><p class='cit'>Sto componendo il contributo sull'archivio…</p></div>" +
+        "<div id='blocco-ai'><p class='cit'>Sto componendo il contributo…</p></div>" +
         "<div id='blocco-fonti'>" + fontiHtml(fonti) + "</div>" +
         "<div class='barra-export'><button class='bottone-secondario' id='ex-doc'>Scarica il contributo in Word</button></div>" +
         "</div>";
@@ -120,7 +121,7 @@
       var prompt = "Sei l'assistente di mediareinformati.it, piattaforma italiana di consultazione sulla mediazione. " + (cfg.ruolo || "") +
         " Scrivi in italiano, in prosa da saggio didattico per mediatori, avvocati e formatori.\n" +
         "DOMANDA: " + q + "\n\nMATERIALI DELL'ARCHIVIO DEL SITO (base documentale riservata):\n" + materiali +
-        "\n\nREGOLE: 1) componi una RICOSTRUZIONE AUTONOMA, continua e armonica (600-1000 parole), che risponda esattamente alla domanda, NON un elenco di frammenti; 2) NON menzionare mai il curatore dell'archivio ne' le sue opere: scrivi come trattazione scientifica autonoma; 3) VALORIZZA e cita tra parentesi le fonti primarie ed esterne richiamate nei materiali (leggi con estremi, codici storici, pronunce, documenti istituzionali, autori storici); 4) scarta in silenzio i materiali non pertinenti; se quelli pertinenti sono pochi, dillo e limita la trattazione a quanto documentato; 5) non inventare estremi normativi o giurisprudenziali; 5-bis) PRIORITÀ ALLA VIGENZA: se un materiale riporta un 'AGGIORNAMENTO AL 2026' o comunque una data più recente, quello è lo stato VIGENTE e prevale sulle versioni anteriori (leggi del 2007-2012, direttiva 2008/52/CE, testi tradotti storici); enuncia per prima la regola attuale con la sua data e usa il resto come contesto storico, senza presentarlo come diritto vigente e senza ricorrere a tue conoscenze pregresse eventualmente superate; 6) rielabora sempre: nessun passo letterale oltre 40 parole; niente testi integrali; 7) chiudi con 2-3 spunti operativi o formativi.\n" +
+        "\n\nREGOLE: 1) componi una RICOSTRUZIONE AUTONOMA, continua e armonica (600-1000 parole), che risponda esattamente alla domanda, NON un elenco di frammenti; 2) NON menzionare mai il curatore dell'archivio ne' le sue opere: scrivi come trattazione scientifica autonoma; 3) VALORIZZA e cita tra parentesi le fonti primarie ed esterne richiamate nei materiali (leggi con estremi, codici storici, pronunce, documenti istituzionali, autori storici); 4) scarta in silenzio i materiali non pertinenti; se quelli pertinenti sono pochi, dillo e limita la trattazione a quanto documentato; 5) non inventare estremi normativi o giurisprudenziali; 5-bis) PRIORITÀ ALLA VIGENZA: se un materiale riporta un 'AGGIORNAMENTO AL 2026' o comunque una data più recente, quello è lo stato VIGENTE e prevale sulle versioni anteriori (leggi del 2007-2012, direttiva 2008/52/CE, testi tradotti storici); enuncia per prima la regola attuale con la sua data e usa il resto come contesto storico, senza presentarlo come diritto vigente e senza ricorrere a tue conoscenze pregresse eventualmente superate; 6) rielabora sempre: nessun passo letterale oltre 40 parole; niente testi integrali; 7) chiudi con 2-3 spunti operativi o formativi; 8) NON fare MAI riferimento all'archivio, ai materiali, al manuale, alle schede, agli schemi o alle 'fonti fornite': scrivi come trattazione autonoma e cita soltanto le fonti primarie pubbliche col loro nome (leggi con estremi, pronunce, documenti istituzionali).\n" +
         "Struttura in markdown: ## Inquadramento, ## Sviluppo (più paragrafi collegati), ## Punti essenziali, ## Per la pratica e la formazione.";
       Promise.resolve(puter.ai.chat(prompt)).then(function (r) {
         var t = (r && r.message && r.message.content) ? r.message.content : (typeof r === "string" ? r : "");
@@ -137,7 +138,7 @@
       var html = "<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'>" +
         "<style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.5}h1{color:#9c2b1f;font-size:18pt}h4{color:#111;border-bottom:1px solid #ccc}.cit{color:#777;font-size:10pt}summary{font-weight:bold}</style></head><body>" +
         "<h1>" + esc(ultima.domanda) + "</h1><p><em>mediareinformati.it — " + (cfg.nomeSezione || "contributo") + ", " + new Date().toLocaleDateString("it") + "</em></p>" +
-        corpo + "<hr><p style='font-size:9pt;color:#777'>Contributo composto sull'archivio di mediareinformati.it; verificare sempre le fonti. Non costituisce parere legale.</p></body></html>";
+        corpo + "<hr><p style='font-size:9pt;color:#777'>Contributo elaborato da mediareinformati.it; verificare sempre le fonti primarie citate. Non costituisce parere legale.</p></body></html>";
       var blob = new Blob(["﻿" + html], { type: "application/msword" });
       var a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
