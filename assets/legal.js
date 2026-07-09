@@ -12,7 +12,9 @@
     if (!interno || interno.querySelector(".legale-link")) return;
     var span = document.createElement("span");
     span.className = "legale-link";
-    span.innerHTML = '<a href="privacy.html" style="color:#d8d4cb">Privacy</a> &middot; ' +
+    span.innerHTML = '<a href="come-si-usa.html" style="color:#d8d4cb">Come si usa</a> &middot; ' +
+                     '<a href="glossario.html" style="color:#d8d4cb">Glossario</a> &middot; ' +
+                     '<a href="privacy.html" style="color:#d8d4cb">Privacy</a> &middot; ' +
                      '<a href="cookie.html" style="color:#d8d4cb">Cookie</a>';
     interno.appendChild(span);
   }
