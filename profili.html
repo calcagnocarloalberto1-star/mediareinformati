@@ -9,6 +9,7 @@
 <style>.agg2026{font-size:.62em;vertical-align:middle;background:#1a7a3a;color:#fff;padding:2px 7px;border-radius:10px;font-weight:normal;letter-spacing:.3px}
 .r-fonte{font-size:.86rem;color:#555;margin:.2em 0 .6em}
 .novita2026{background:#fff6e6;border-left:4px solid #d9822b;border-radius:6px;padding:8px 12px;margin:.5em 0;font-size:.9rem}
+.inforse{background:#eef1f6;border-left:4px solid #7d8aa0;border-radius:6px;padding:8px 12px;margin:.5em 0;font-size:.9rem;color:#333}
 .r-commenti{margin:.3em 0 .6em}.r-commenti li{margin:.25em 0;font-size:.92rem}</style>
 </head>
 <body>
@@ -94,6 +95,10 @@
     if(s.scoreboard) stats.push("<span class='etichetta'>EU Scoreboard 2026</span> posto <strong>"+num(s.scoreboard.posto)+"</strong>/27 · punteggio ADR <strong>"+esc(s.scoreboard.punteggio)+"</strong>/10");
     if(s.wjp) stats.push("<span class='etichetta'>World Justice Project "+esc(s.wjp.anno)+"</span> Stato di diritto <strong>"+num(s.wjp.overall)+"</strong> · ADR/giustizia civile <strong>"+num(s.wjp.adr)+"</strong>");
     if(stats.length) h+="<p class='r-meta'>"+stats.join("<br>")+"</p>";
+    if(p.riforma_in_corso){
+      var ric=p.riforma_in_corso;
+      h+="<div class='inforse'><b>&#128220; In discussione (riforma non ancora approvata):</b> "+esc(ric.modifica)+" <span class='cit'>("+esc(ric.data)+")</span>"+(ric.fonte_url?" \u2014 <a href='"+esc(ric.fonte_url)+"' target='_blank' rel='noopener'>fonte ("+esc(ric.lingua||'')+")</a>":"")+"</div>";
+    }
     if(p.novita){
       h+="<div class='novita2026'><b>&#9888; Novit\u00e0 2024\u20132026:</b> "+esc(p.novita.modifica)+" <span class='cit'>("+esc(p.novita.data)+")</span>"+(p.novita.fonte_url?" \u2014 <a href='"+esc(p.novita.fonte_url)+"' target='_blank' rel='noopener'>fonte ("+esc(p.novita.lingua||'')+")</a>":"")+"</div>";
     }
@@ -125,6 +130,7 @@
     if(p.vigente) c+="<h2>Legislazione vigente</h2><p>"+esc(p.vigente)+"</p>";
     if(p.storica) c+="<h2>Evoluzione storica</h2><p>"+esc(p.storica)+"</p>";
     if(p.recepimento && p.recepimento.indexOf("Non applicabile")!==0) c+="<h2>Recepimento direttiva 2008/52/CE</h2><p>"+esc(p.recepimento)+"</p>";
+    if(p.riforma_in_corso) c+="<p><b>In discussione (non ancora approvata):</b> "+esc(p.riforma_in_corso.modifica)+" ("+esc(p.riforma_in_corso.data)+") — "+esc(p.riforma_in_corso.fonte_url)+"</p>";
     if(p.novita) c+="<p><b>Novit\u00e0 2024-2026:</b> "+esc(p.novita.modifica)+" ("+esc(p.novita.data)+") — "+esc(p.novita.fonte_url)+"</p>";
     if(p.fonte) c+="<p><b>Fonte:</b> "+esc(p.fonte)+(p.testo_url?" — testo: "+esc(p.testo_url):"")+"</p>";
     if(p.commenti && p.commenti.length){ c+="<h2>Commenti e dottrina sulle riforme (lingua originale)</h2><ul>"; p.commenti.forEach(function(cc){ c+="<li>"+esc(cc.titolo)+" — "+esc(cc.fonte)+(cc.lingua?" ("+esc(cc.lingua)+")":"")+": "+esc(cc.url)+"</li>"; }); c+="</ul>"; }
