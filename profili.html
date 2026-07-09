@@ -6,6 +6,9 @@
 <title>Profili paese — mediareinformati.it</title>
 <meta name="description" content="Profili paese sulla mediazione: legislazione storica e vigente, recepimento della direttiva UE, dati statistici (Scoreboard UE e World Justice Project).">
 <link rel="stylesheet" href="assets/style.css">
+<style>.agg2026{font-size:.62em;vertical-align:middle;background:#1a7a3a;color:#fff;padding:2px 7px;border-radius:10px;font-weight:normal;letter-spacing:.3px}
+.r-fonte{font-size:.86rem;color:#555;margin:.2em 0 .6em}
+.r-commenti{margin:.3em 0 .6em}.r-commenti li{margin:.25em 0;font-size:.92rem}</style>
 </head>
 <body>
 <header class="sito">
@@ -90,10 +93,18 @@
     if(s.scoreboard) stats.push("<span class='etichetta'>EU Scoreboard 2026</span> posto <strong>"+num(s.scoreboard.posto)+"</strong>/27 · punteggio ADR <strong>"+esc(s.scoreboard.punteggio)+"</strong>/10");
     if(s.wjp) stats.push("<span class='etichetta'>World Justice Project "+esc(s.wjp.anno)+"</span> Stato di diritto <strong>"+num(s.wjp.overall)+"</strong> · ADR/giustizia civile <strong>"+num(s.wjp.adr)+"</strong>");
     if(stats.length) h+="<p class='r-meta'>"+stats.join("<br>")+"</p>";
-    if(p.vigente){ h+="<h4>Legislazione vigente</h4><p>"+esc(p.vigente)+"</p>"; }
+    if(p.vigente){
+      h+="<h4>Legislazione vigente <span class='agg2026'>aggiornato 2026</span></h4><p>"+esc(p.vigente)+"</p>";
+      if(p.fonte) h+="<p class='r-fonte'>Fonte: <a href='"+esc(p.fonte)+"' target='_blank' rel='noopener'>"+esc(p.fonte.replace(/^https?:\/\//,'').split('/')[0])+"</a>"+(p.testo_url?" \u00b7 <a href='"+esc(p.testo_url)+"' target='_blank' rel='noopener'>testo della legge</a>":"")+"</p>";
+    }
     else { h+="<h4>Legislazione vigente</h4><p><em>Scheda in aggiornamento.</em></p>"; }
     if(p.storica){ h+="<h4>Evoluzione storica</h4><p>"+esc(p.storica)+"</p>"; }
     if(p.recepimento && p.recepimento!=="Non applicabile (fuori UE)." && p.recepimento!=="Non applicabile."){ h+="<h4>Recepimento della direttiva 2008/52/CE</h4><p>"+esc(p.recepimento)+"</p>"; }
+    if(p.commenti && p.commenti.length){
+      h+="<h4>Commenti e dottrina sulle riforme <span class='cit'>(in lingua originale)</span></h4><ul class='r-commenti'>";
+      p.commenti.forEach(function(c){ h+="<li><a href='"+esc(c.url)+"' target='_blank' rel='noopener'>"+esc(c.titolo)+"</a> <span class='cit'>("+esc(c.fonte)+(c.lingua?" \u00b7 "+esc(c.lingua):"")+")</span></li>"; });
+      h+="</ul>";
+    }
     var det=DET[p.id]||"";
     if(det.search(/\[(ARCHIVIO|STUDI)/)>=0){
       h+="<details><summary class='fonti-titolo'>Dettaglio d'archivio e studio comparato d'autore</summary><div class='det-formattato'>"+fmtDet(det)+"</div></details>";
@@ -110,6 +121,8 @@
     if(p.vigente) c+="<h2>Legislazione vigente</h2><p>"+esc(p.vigente)+"</p>";
     if(p.storica) c+="<h2>Evoluzione storica</h2><p>"+esc(p.storica)+"</p>";
     if(p.recepimento && p.recepimento.indexOf("Non applicabile")!==0) c+="<h2>Recepimento direttiva 2008/52/CE</h2><p>"+esc(p.recepimento)+"</p>";
+    if(p.fonte) c+="<p><b>Fonte:</b> "+esc(p.fonte)+(p.testo_url?" — testo: "+esc(p.testo_url):"")+"</p>";
+    if(p.commenti && p.commenti.length){ c+="<h2>Commenti e dottrina sulle riforme (lingua originale)</h2><ul>"; p.commenti.forEach(function(cc){ c+="<li>"+esc(cc.titolo)+" — "+esc(cc.fonte)+(cc.lingua?" ("+esc(cc.lingua)+")":"")+": "+esc(cc.url)+"</li>"; }); c+="</ul>"; }
     if((DET[p.id]||"").search(/\[(ARCHIVIO|STUDI)/)>=0) c+="<h2>Dettaglio d'archivio e studio d'autore</h2>"+fmtDet(DET[p.id]||"");
     var html="<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'><style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.9}h1{color:#9c2b1f;font-size:20pt}h2{color:#1F3A5F;font-size:15pt;border-bottom:1px solid #ccc;margin-top:20pt}h3{color:#1F3A5F;font-size:12.5pt;margin:16pt 0 4pt}p{margin:0 0 11pt;text-align:justify;line-height:1.9}</style></head><body>"+c+"<hr><p style='font-size:9pt;color:#777'>Profilo a cura di mediareinformati.it; verificare sulle fonti ufficiali. Non costituisce parere legale.</p></body></html>";
     var blob=new Blob(["﻿"+html],{type:"application/msword"});
