@@ -22,6 +22,14 @@
 <meta name="twitter:title" content="Sistemi nazionali — mediareinformati.it">
 <meta name="twitter:description" content="Piattaforma gratuita di consultazione sulla mediazione: storia, diritto, pratica, sistemi nazionali, dati e giurisprudenza, con assistente AI.">
 <meta name="twitter:image" content="https://mediareinformati.it/assets/og-cover.png">
+<style>
+.legenda-motore{margin:14px 0 4px;padding:14px 16px;border:1px solid #e4e0d6;background:#faf9f6;border-radius:8px}
+.legenda-motore .legenda-titolo{margin:0 0 10px;font-size:.95rem;color:#4a463d}
+.legenda-paesi{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.legenda-paesi li{font-size:.85rem;padding:3px 9px;background:#fff;border:1px solid #ddd8cc;border-radius:999px;color:#3a362e}
+.legenda-nota{margin:10px 0 0;font-size:.82rem;color:#7a756a}
+.legenda-nota a{color:#8a3a34}
+</style>
 </head>
 <body>
 <header class="sito">
@@ -46,9 +54,14 @@
 </header>
 
 <main>
-  <h2 class="pagina">Sistemi nazionali</h2>
+  <h2 class="pagina">Sistemi nazionali dell’Unione europea</h2>
   <p class="sottotitolo">Fai una domanda: la risposta &egrave; un contributo comparato costruito sulle schede dei 27 Stati membri UE</p>
   <div class="intro-motore"><p>Questo motore attinge alle schede-paese del Portale europeo della giustizia elettronica e compone una trattazione comparata &mdash; requisiti dei mediatori, costi, effetti dell&rsquo;accordo &mdash; scaricabile in Word.</p></div>
+  <div class="legenda-motore">
+    <p class="legenda-titolo">Il motore d&agrave; informazioni <strong>solo sui 27 Stati membri dell&rsquo;Unione europea</strong>:</p>
+    <ul class="legenda-paesi" id="legenda-paesi"></ul>
+    <p class="legenda-nota">Per gli ordinamenti extra-UE consulta <a href="diritto.html">Diritto</a>, <a href="profili.html">Profili paese</a> e la <a href="leggi-mediazione-nel-mondo.html">mappa dei 195 ordinamenti</a>.</p>
+  </div>
 
   <div class="strumenti">
     <div class="assistente-domanda">
@@ -103,6 +116,20 @@ initConsulta({
     });
   }
 });
+</script>
+<script>
+(function(){
+  function fill(){
+    var ul=document.getElementById('legenda-paesi');
+    if(!ul||!window.DATA_SISTEMI){return;}
+    var paesi=window.DATA_SISTEMI.map(function(r){return r.paese;})
+      .sort(function(a,b){return a.localeCompare(b,'it');});
+    ul.innerHTML=paesi.map(function(p){return '<li>'+p+'</li>';}).join('');
+    var t=document.querySelector('.legenda-titolo strong');
+    if(t){t.textContent='solo sui '+paesi.length+' Stati membri dell\u2019Unione europea';}
+  }
+  if(document.readyState!=='loading'){fill();}else{document.addEventListener('DOMContentLoaded',fill);}
+})();
 </script>
 <script defer src="assets/legal.js"></script>
 </body>
