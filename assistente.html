@@ -85,7 +85,7 @@
   <div id="contenitore-risposta"></div>
 
   <div class="avviso-provvisorio" style="margin-top:30px">
-    <strong>Avvertenza.</strong> L&rsquo;assistente &egrave; uno strumento sperimentale di consultazione: la sezione documentale elenca materiali reali dell&rsquo;archivio; l&rsquo;eventuale sintesi generata dall&rsquo;intelligenza artificiale va sempre verificata sulle fonti citate e non costituisce parere legale.
+    <strong>Avvertenza.</strong> L&rsquo;assistente &egrave; uno strumento sperimentale di consultazione: la sezione documentale elenca materiali reali dell&rsquo;archivio; l&rsquo;eventuale sintesi generata dall&rsquo;intelligenza artificiale va sempre verificata sulle fonti citate e non costituisce un parere legale, psicologico, medico o terapeutico né una consulenza professionale personalizzata.
   </div>
 </main>
 
@@ -441,7 +441,7 @@
     var html = "<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'>" +
       "<style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.5}h1{color:#152a46;font-size:18pt}h4{color:#152a46;border-bottom:1px solid #ccc}em{color:#555}.cit{color:#777;font-size:10pt}</style></head><body>" +
       "<h1>" + esc(ultimaRisposta.domanda) + "</h1><p><em>mediareinformati.it — risposta dell'assistente, " + new Date().toLocaleDateString("it") + "</em></p>" +
-      corpo + "<div style='border-top:1px solid #ccc;margin:12px 0'></div><p style='font-size:9pt;color:#777'>Documento generato da mediareinformati.it: verificare sempre le fonti citate. Non costituisce parere legale.</p></body></html>";
+      corpo + "<div style='border-top:1px solid #ccc;margin:12px 0'></div><p style='font-size:9pt;color:#777'>Documento generato da mediareinformati.it: verificare sempre le fonti citate. Ha finalità informative e divulgative: non costituisce né sostituisce un parere legale, psicologico, medico o terapeutico, né consulenza professionale personalizzata, e non instaura alcun rapporto professionale. Per ogni decisione rivolgersi a un professionista qualificato. L'autore e il sito non assumono responsabilità per usi difformi.</p></body></html>";
     var blob = new Blob(["﻿" + html], { type: "application/msword" });
     var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = nomeFile("doc"); a.click();
   }
@@ -467,7 +467,7 @@
       else if (el.tagName === "UL") Array.prototype.forEach.call(el.children, function (li) { riga("•  " + li.textContent, 10.5); });
       else if (el.textContent.trim()) riga(el.textContent, 10.5);
     });
-    y += 4; riga("Generato da mediareinformati.it il " + new Date().toLocaleDateString("it") + ". Verificare sempre le fonti citate; non costituisce parere legale.", 8, "italic", [120, 120, 120]);
+    y += 4; riga("Generato da mediareinformati.it il " + new Date().toLocaleDateString("it") + ". Verificare sempre le fonti citate; non costituisce un parere legale, psicologico, medico o terapeutico né una consulenza professionale. L'autore e il sito non assumono responsabilità per usi difformi.", 8, "italic", [120, 120, 120]);
     doc.save(nomeFile("pdf"));
   }
   function esportaPptx() {
@@ -527,7 +527,7 @@
     sf.addText("Fonti e avvertenze", { x: 0.7, y: 0.5, w: 12, h: 0.8, fontSize: 26, bold: true, color: BLU, fontFace: "Georgia" });
     sf.addShape(p.ShapeType.line, { x: 0.75, y: 1.35, w: 3, h: 0, line: { color: ORO, width: 2 } });
     sf.addText([{ text: "Slide generate automaticamente da mediareinformati.it come supporto didattico.", options: { paraSpaceAfter: 14 } },
-      { text: "Verificare sempre gli estremi delle fonti primarie prima dell'uso in aula. Non costituisce parere legale.", options: { italic: true, color: GRI } }],
+      { text: "Verificare sempre gli estremi delle fonti primarie prima dell'uso in aula. Non costituisce un parere legale, psicologico, medico o terapeutico né una consulenza professionale personalizzata.", options: { italic: true, color: GRI } }],
       { x: 0.9, y: 1.7, w: 11.6, h: 4, fontSize: 15, color: "1B1B1F", fontFace: "Georgia", valign: "top" });
     p.writeFile({ fileName: nomeFile("pptx") });
   }
@@ -631,7 +631,7 @@
           "2) i MATERIALI D'ARCHIVIO pertinenti del sito (normativa, giurisprudenza, storia, dati, schede paese) — servono ad arricchire e verificare.\n" +
           "TITOLO/ARGOMENTO: " + titolo + "\n\n=== FONTE ESTERNA (da \"" + etichetta + "\") ===\n" + testoRid +
           "\n\n=== MATERIALI D'ARCHIVIO ===\n" + fontiPerPrompt(d) +
-          "\n\nREGOLE: 1) integra i due corpi in una trattazione coerente e didattica pensata per la proiezione; 2) dai priorita' ai contenuti della FONTE ESTERNA, arricchendoli con normativa, giurisprudenza, dati e contesto dell'archivio quando pertinenti; 3) scarta i materiali d'archivio non pertinenti senza citarli; 4) NON menzionare il curatore dell'archivio ne' le sue opere: valorizza le fonti primarie tra parentesi; 5) rielabora con parole tue, nessuna citazione letterale oltre 40 parole; 6) non e' un parere legale.\nREGISTRO LINGUISTICO OBBLIGATORIO: usa un italiano impeccabile, scorrevole e formale, con grammatica, concordanze verbali, preposizioni, punteggiatura e sintassi corrette e con la terminologia giuridica italiana propria della materia; evita anglicismi, calchi dall'inglese, costruzioni ambigue, ripetizioni e refusi; scrivi come un giurista italiano di madrelingua e rileggi mentalmente il testo prima di consegnarlo. " +
+          "\n\nREGOLE: 1) integra i due corpi in una trattazione coerente e didattica pensata per la proiezione; 2) dai priorita' ai contenuti della FONTE ESTERNA, arricchendoli con normativa, giurisprudenza, dati e contesto dell'archivio quando pertinenti; 3) scarta i materiali d'archivio non pertinenti senza citarli; 4) NON menzionare il curatore dell'archivio ne' le sue opere: valorizza le fonti primarie tra parentesi; 5) rielabora con parole tue, nessuna citazione letterale oltre 40 parole; 6) non e' un parere legale, psicologico o terapeutico.\nREGISTRO LINGUISTICO OBBLIGATORIO: usa un italiano impeccabile, scorrevole e formale, con grammatica, concordanze verbali, preposizioni, punteggiatura e sintassi corrette e con la terminologia giuridica italiana propria della materia; evita anglicismi, calchi dall'inglese, costruzioni ambigue, ripetizioni e refusi; scrivi come un giurista italiano di madrelingua e rileggi mentalmente il testo prima di consegnarlo. " +
           "STRUTTURA in markdown: ogni intestazione ## diventa una o piu' slide. Inizia con '## " + titolo + "' seguito da 1-2 righe di inquadramento; poi 4-7 sezioni ## con ELENCHI PUNTATI concisi (righe che iniziano con '- ', max ~14 parole a punto); chiudi con '## Dati e riferimenti' (se pertinenti) e '## Per la formazione'. Preferisci sempre elenchi puntati brevi, adatti alle slide.";
         Promise.resolve(puter.ai.chat(prompt)).then(function (r) {
           var t = (r && r.message && r.message.content) ? r.message.content : (typeof r === "string" ? r : "");
