@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Terminologia della mediazione nelle lingue del mondo — mediareinformati.it</title>
+<meta name="description" content="Database dei termini chiave della mediazione (mediazione, mediatore, conciliazione, arbitrato, negoziazione, controversia, accordo, parte, riservatezza, imparzialità) nelle lingue ufficiali dei 195 paesi.">
+<link rel="stylesheet" href="assets/style.css">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="mediareinformati.it">
+<meta property="og:locale" content="it_IT">
+<meta property="og:title" content="Terminologia della mediazione nelle lingue del mondo — mediareinformati.it">
+<meta property="og:description" content="I termini chiave della mediazione tradotti nelle lingue ufficiali dei 195 paesi.">
+<meta property="og:url" content="https://mediareinformati.it/terminologia.html">
+<meta property="og:image" content="https://mediareinformati.it/assets/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Terminologia della mediazione nelle lingue del mondo — mediareinformati.it">
+<meta name="twitter:image" content="https://mediareinformati.it/assets/og-cover.png">
+<style>
+#tm-cerca{width:100%;max-width:460px;padding:9px 12px;border:1px solid #d7deec;border-radius:8px;font-size:15px;margin:8px 0 4px}
+.tm-conta{color:#777;font-size:13px;margin:6px 0}
+.tm-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:8px;border:1px solid #eee;border-radius:8px}
+table.tm{border-collapse:collapse;font-size:13px;min-width:1100px}
+table.tm th,table.tm td{border-bottom:1px solid #eee;border-right:1px solid #f2f2f2;padding:6px 9px;text-align:left;vertical-align:top;white-space:nowrap}
+table.tm th{background:#f4f2ec;position:sticky;top:0;z-index:1}
+table.tm td.lng{white-space:normal;min-width:170px}
+table.tm td.lng b{color:#152a46}
+table.tm td.lng span{color:#888;font-size:11px;display:block}
+table.tm tr:hover td{background:#faf9f6}
+</style>
+</head>
+<body>
+<header class="sito">
+  <div class="testata"><h1><a href="index.html">mediareinformati.it</a></h1></div>
+  <nav class="principale">
+    <a href="index.html">Home</a>
+    <a href="storia.html">Storia</a>
+    <a href="pratica.html">Pratica</a>
+    <a href="diritto.html">Diritto</a>
+    <a href="sistemi.html">Sistemi nazionali (UE)</a>
+    <a href="profili.html">Profili paese</a>
+    <a href="link.html" class="attivo">Link mondiali e terminologia</a>
+    <a href="statistiche.html">Dati e statistiche</a>
+    <a href="articoli.html">Articoli</a>
+    <a href="giurisprudenza.html">Giurisprudenza</a>
+    <a href="assistente.html">Assistente</a>
+    <a href="dossier.html">Dossier</a>
+    <a href="progetto.html">Chi sono</a>
+  </nav>
+</header>
+<main>
+  <h2 class="pagina">Terminologia della mediazione nelle lingue del mondo</h2>
+  <p class="sottotitolo">I termini chiave della mediazione tradotti nelle lingue ufficiali dei 195 ordinamenti. Cerca per lingua, per paese o per termine.</p>
+  <div class="intro-motore"><p>Dieci termini fondamentali &mdash; mediazione, mediatore, conciliazione, arbitrato, negoziazione, controversia, accordo, parte, riservatezza, imparzialit&agrave; &mdash; nelle principali lingue ufficiali dei paesi del mondo, con la terminologia giuridica standard e, per gli alfabeti non latini, la traslitterazione tra parentesi.</p></div>
+  <input type="text" id="tm-cerca" placeholder="Cerca una lingua, un paese o un termine…" autocomplete="off">
+  <p class="tm-conta" id="tm-conta"></p>
+  <div class="tm-wrap">
+    <table class="tm"><thead><tr>
+      <th>Lingua / Paesi</th><th>Mediazione</th><th>Mediatore</th><th>Conciliazione</th><th>Arbitrato</th><th>Negoziazione</th><th>Controversia</th><th>Accordo</th><th>Parte</th><th>Riservatezza</th><th>Imparzialità</th>
+    </tr></thead><tbody id="tm-corpo"></tbody></table>
+  </div>
+  <div class="avviso-provvisorio" style="margin-top:22px"><strong>Avvertenza.</strong> Traduzioni indicative dei termini tecnici, verificate nella terminologia giuridica di ciascuna lingua; per gli usi ufficiali si raccomanda la verifica sulle fonti nazionali. Alcune lingue usano prestiti (loanword) dall&rsquo;inglese, francese o arabo per i termini legali. Non costituisce né sostituisce un parere legale, psicologico, medico o terapeutico, né alcuna forma di consulenza professionale personalizzata; per ogni decisione rivolgersi a un professionista qualificato.</div>
+</main>
+<footer class="sito">
+  <div class="interno">
+    <span>mediareinformati.it — piattaforma di consultazione sulla mediazione</span>
+    <span><a href="progetto.html" style="color:#d8d4cb">Chi sono e le fonti del progetto</a></span>
+  </div>
+</footer>
+<script src="data/terminologia.js"></script>
+<script>
+(function(){
+  var A=(window.DATA_TERMINOLOGIA||[]);
+  var K=["mediazione","mediatore","conciliazione","arbitrato","negoziazione","controversia","accordo","parte","riservatezza","imparzialita"];
+  var corpo=document.getElementById("tm-corpo"), conta=document.getElementById("tm-conta"), cerca=document.getElementById("tm-cerca");
+  function esc(s){return String(s||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function render(q){
+    q=(q||"").trim().toLowerCase(); var n=0,h="";
+    A.forEach(function(r){
+      var blob=(r.lingua+" "+(r.paesi||[]).join(" ")+" "+K.map(function(k){return r.termini[k]||"";}).join(" ")).toLowerCase();
+      if(q && blob.indexOf(q)<0) return;
+      n++;
+      h+="<tr><td class='lng'><b>"+esc(r.lingua)+"</b><span>"+esc((r.paesi||[]).join(", "))+"</span></td>";
+      K.forEach(function(k){ h+="<td>"+(r.termini[k]?esc(r.termini[k]):"&mdash;")+"</td>"; });
+      h+="</tr>";
+    });
+    corpo.innerHTML=h; conta.textContent=n+" lingue"+(q?" (filtrate)":"");
+  }
+  cerca.addEventListener("input",function(){render(cerca.value);});
+  render("");
+})();
+</script>
+<script defer src="assets/legal.js"></script>
+</body>
+</html>
