@@ -58,7 +58,7 @@
     </div>
   </div>
   <div id="scheda"></div>
-  <div class="avviso-provvisorio" style="margin-top:26px"><strong>Nota.</strong> La legislazione vigente e storica &egrave; a cura della redazione e va verificata sulle fonti ufficiali indicate; i paesi contrassegnati &laquo;in aggiornamento&raquo; sono in corso di completamento. Dati statistici: Commissione europea (EU Justice Scoreboard 2026) e World Justice Project. Non costituisce parere legale.</div>
+  <div class="avviso-provvisorio" style="margin-top:26px"><strong>Nota.</strong> La legislazione vigente e storica &egrave; a cura della redazione e va verificata sulle fonti ufficiali indicate; i paesi contrassegnati &laquo;in aggiornamento&raquo; sono in corso di completamento. Dati statistici: Commissione europea (EU Justice Scoreboard 2026) e World Justice Project. Non costituisce né sostituisce un parere legale, psicologico, medico o terapeutico, né alcuna forma di consulenza professionale personalizzata; per ogni decisione rivolgersi a un professionista qualificato.</div>
 </main>
 <footer class="sito"><div class="interno">
   <span>mediareinformati.it — piattaforma di consultazione sulla mediazione</span>
@@ -152,7 +152,7 @@
     if(p.fonte) c+="<p><b>Fonte:</b> "+esc(p.fonte)+(p.testo_url?" — testo: "+esc(p.testo_url):"")+"</p>";
     if(p.commenti && p.commenti.length){ c+="<h2>Commenti e dottrina sulle riforme (lingua originale)</h2><ul>"; p.commenti.forEach(function(cc){ c+="<li>"+esc(cc.titolo)+" — "+esc(cc.fonte)+(cc.lingua?" ("+esc(cc.lingua)+")":"")+": "+esc(cc.url)+"</li>"; }); c+="</ul>"; }
     if((DET[p.id]||"").search(/\[(ARCHIVIO|STUDI)/)>=0) c+="<h2>Dettaglio d'archivio e studio d'autore</h2>"+fmtDet(DET[p.id]||"");
-    var html="<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'><style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.9}h1{color:#9c2b1f;font-size:20pt}h2{color:#1F3A5F;font-size:15pt;border-bottom:1px solid #ccc;margin-top:20pt}h3{color:#1F3A5F;font-size:12.5pt;margin:16pt 0 4pt}p{margin:0 0 11pt;text-align:justify;line-height:1.9}</style></head><body>"+c+"<hr><p style='font-size:9pt;color:#777'>Profilo a cura di mediareinformati.it; verificare sulle fonti ufficiali. Non costituisce parere legale.</p></body></html>";
+    var html="<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'><style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.9}h1{color:#9c2b1f;font-size:20pt}h2{color:#1F3A5F;font-size:15pt;border-bottom:1px solid #ccc;margin-top:20pt}h3{color:#1F3A5F;font-size:12.5pt;margin:16pt 0 4pt}p{margin:0 0 11pt;text-align:justify;line-height:1.9}</style></head><body>"+c+"<hr><p style='font-size:9pt;color:#777'>Profilo a cura di mediareinformati.it; verificare sulle fonti ufficiali. Non costituisce né sostituisce un parere legale, psicologico, medico o terapeutico, né alcuna forma di consulenza professionale personalizzata; per ogni decisione rivolgersi a un professionista qualificato.</p></body></html>";
     var blob=new Blob(["﻿"+html],{type:"application/msword"});
     var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="profilo_"+normaTesto(p.paese).replace(/[^a-z0-9]+/g,"_")+".doc"; a.click();
   }
