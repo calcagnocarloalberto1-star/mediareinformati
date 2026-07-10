@@ -33,3 +33,6 @@ Il sito è gratuito, senza registrazione. Un assistente compone risposte fondate
 
 ## Autore
 - [Chi sono](https://mediareinformati.it/progetto.html): Carlo Alberto Calcagno, avvocato, mediatore e formatore; fonti del progetto.
+
+## Optional
+- [Sintesi completa (definizioni e dossier)](https://mediareinformati.it/llms-full.txt): digest esteso dei contenuti per risposte accurate.
