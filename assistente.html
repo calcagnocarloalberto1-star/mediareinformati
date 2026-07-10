@@ -656,6 +656,31 @@
   }
 
   document.getElementById("genera-slide").addEventListener("click", generaSlideDaFonte);
+
+  /* ---- modalità strumenti: risposta diretta a un profilo dai motori della Pratica ---- */
+  (function(){
+    var incoming=null;
+    try{ incoming=sessionStorage.getItem('olismo_prompt_integrato'); if(incoming) sessionStorage.removeItem('olismo_prompt_integrato'); }catch(e){}
+    if(!incoming){ var pp=new URLSearchParams(location.search).get('prompt'); if(pp) incoming=pp; }
+    if(!incoming) return;
+    function run(){
+      var cont=document.getElementById('contenitore-risposta'), stato=document.getElementById('stato');
+      var di=document.getElementById('domanda'); if(di) di.value='Lettura del profilo dagli strumenti della mediazione';
+      if(stato) stato.textContent='';
+      ultimaRisposta={domanda:'Lettura del profilo dagli strumenti della mediazione', dossier:null, ai:''};
+      cont.innerHTML="<div class='risposta'><h3 class='titolo-risposta'>Lettura integrata dagli strumenti della mediazione</h3><div id='blocco-ai'><p class='cit'>Sto elaborando il profilo con l'assistenza dell'AI…</p></div><div id='blocco-dossier' style='display:none'></div><div class='barra-export'><button class='bottone-secondario' id='ex-doc'>Scarica Word</button> <button class='bottone-secondario' id='ex-pdf'>Scarica PDF</button></div></div>";
+      var d1=document.getElementById('ex-doc'), d2=document.getElementById('ex-pdf');
+      if(d1) d1.addEventListener('click', esportaDoc);
+      if(d2) d2.addEventListener('click', esportaPdf);
+      var bAI=document.getElementById('blocco-ai');
+      var preambolo="Sei l'assistente di mediareinformati.it. L'utente ha compilato uno o piu' strumenti di lettura della persona e di mediazione (analisi transazionale, enneagramma, egogramma, profili di mediazione, empowerment, matrice di svalutazione, ecc.). Di seguito il profilo raccolto dai motori. Fornisci una LETTURA INTEGRATA orientata alla mediazione e alla relazione d'aiuto: risorse principali, nodi su cui lavorare, stile comunicativo e negoziale, rischi relazionali e suggerimenti pratici per il mediatore e per la conduzione del tavolo. Scrivi in italiano, tono professionale e didattico, in markdown con sezioni (## Sintesi, ## Lettura per la mediazione, ## Suggerimenti operativi). Non e' un parere clinico ne' legale.\n\nPROFILO RACCOLTO DAGLI STRUMENTI:\n"+incoming;
+      if(window.puter&&puter.ai&&puter.ai.chat){
+        Promise.resolve(puter.ai.chat(preambolo)).then(function(r){var t=(r&&r.message&&r.message.content)?r.message.content:(typeof r==='string'?r:''); ultimaRisposta.ai=t; bAI.innerHTML=t?("<h4>Lettura integrata (AI — da verificare)</h4>"+mdPulito(t)):"<p class='cit'>Nessuna risposta generata.</p>";}).catch(function(){bAI.innerHTML="<p class='cit'>Assistente AI non disponibile in questo momento.</p>";});
+      } else { bAI.innerHTML="<p class='cit'>Assistente AI non disponibile.</p>"; }
+    }
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', run); else run();
+  })();
+
 })();
 </script>
 <script defer src="assets/legal.js"></script>
