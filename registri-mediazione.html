@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Registri di mediazione per paese (mediatori, organismi, formazione) — mediareinformati.it</title>
+<meta name="description" content="Per ciascuno dei 195 paesi, il link al registro o elenco ufficiale dei mediatori, degli organismi di mediazione e degli enti di formazione.">
+<link rel="stylesheet" href="assets/style.css">
+<meta property="og:type" content="website"><meta property="og:site_name" content="mediareinformati.it"><meta property="og:locale" content="it_IT">
+<meta property="og:title" content="Registri di mediazione per paese — mediareinformati.it">
+<meta property="og:description" content="Il registro o elenco ufficiale dei mediatori, organismi ed enti di formazione per ciascuno dei 195 paesi.">
+<meta property="og:url" content="https://mediareinformati.it/registri-mediazione.html">
+<meta property="og:image" content="https://mediareinformati.it/assets/og-cover.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://mediareinformati.it/assets/og-cover.png">
+<style>
+#rg-cerca{width:100%;max-width:440px;padding:9px 12px;border:1px solid #d7deec;border-radius:8px;font-size:15px;margin:8px 0 4px}
+.rg-conta{color:#777;font-size:13px;margin:6px 0}
+table.rg{border-collapse:collapse;width:100%;font-size:14px;margin-top:8px}
+table.rg th,table.rg td{border-bottom:1px solid #eee;padding:7px 9px;text-align:left;vertical-align:top}
+table.rg th{background:#f4f2ec;position:sticky;top:0}
+table.rg a{color:#a93226;word-break:break-word}
+</style>
+</head>
+<body>
+<header class="sito">
+  <div class="testata"><h1><a href="index.html">mediareinformati.it</a></h1></div>
+  <nav class="principale">
+    <a href="index.html">Home</a>
+    <a href="storia.html">Storia</a>
+    <a href="pratica.html">Pratica</a>
+    <a href="diritto.html">Diritto</a>
+    <a href="sistemi.html">Sistemi nazionali (UE)</a>
+    <a href="profili.html">Profili paese</a>
+    <a href="link.html" class="attivo">Link mondiali e terminologia</a>
+    <a href="statistiche.html">Dati e statistiche</a>
+    <a href="articoli.html">Articoli</a>
+    <a href="giurisprudenza.html">Giurisprudenza</a>
+    <a href="assistente.html">Assistente</a>
+    <a href="dossier.html">Dossier</a>
+    <a href="progetto.html">Chi sono</a>
+  </nav>
+</header>
+<main>
+  <h2 class="pagina">Registri di mediazione per paese</h2>
+  <p class="sottotitolo">Per ciascuno dei 195 ordinamenti, il registro o elenco ufficiale dei mediatori, degli organismi di mediazione e degli enti di formazione, da cui risalire anche ai formatori accreditati.</p>
+  <div class="intro-motore"><p>Dove esiste una fonte ufficiale online (Ministero della Giustizia, autorit&agrave; o consiglio competente, camera arbitrale/di conciliazione) è indicato il link diretto; per il profilo e i requisiti dei mediatori vedi il <a href="background-mediatori.html">database sul background dei mediatori</a>.</p></div>
+  <input type="text" id="rg-cerca" placeholder="Cerca un paese…" autocomplete="off">
+  <p class="rg-conta" id="rg-conta"></p>
+  <table class="rg"><thead><tr><th>Paese</th><th>Registro / elenco ufficiale</th></tr></thead><tbody id="rg-corpo"></tbody></table>
+  <div class="avviso-provvisorio" style="margin-top:22px"><strong>Avvertenza.</strong> Elenco di fonti ufficiali verificate al 2026; alcuni paesi non dispongono di un registro pubblico online (la mediazione è gestita da giudici, centri privati/OHADA o meccanismi tradizionali). Non costituisce né sostituisce un parere legale, psicologico, medico o terapeutico, né alcuna forma di consulenza professionale personalizzata; per ogni decisione rivolgersi a un professionista qualificato.</div>
+</main>
+<footer class="sito">
+  <div class="interno">
+    <span>mediareinformati.it — piattaforma di consultazione sulla mediazione</span>
+    <span><a href="progetto.html" style="color:#d8d4cb">Chi sono e le fonti del progetto</a></span>
+  </div>
+</footer>
+<script src="data/registri_paesi.js"></script>
+<script>
+(function(){
+  var A=(window.DATA_REGISTRI||[]);
+  var corpo=document.getElementById("rg-corpo"),conta=document.getElementById("rg-conta"),cerca=document.getElementById("rg-cerca");
+  function esc(s){return String(s||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function host(u){try{return new URL(u).hostname.replace(/^www\./,"");}catch(e){return u;}}
+  function render(q){
+    q=(q||"").trim().toLowerCase();var n=0,h="";
+    A.forEach(function(r){
+      if(q && r.paese.toLowerCase().indexOf(q)<0) return; n++;
+      var lk=r.registro?("<a href='"+esc(r.registro)+"' target='_blank' rel='noopener'>"+esc(host(r.registro))+"</a>"):"<span style='color:#999'>non disponibile online</span>";
+      h+="<tr><td>"+esc(r.paese)+"</td><td>"+lk+"</td></tr>";
+    });
+    corpo.innerHTML=h;conta.textContent=n+" paesi"+(q?" (filtrati)":"");
+  }
+  cerca.addEventListener("input",function(){render(cerca.value);});render("");
+})();
+</script>
+<script defer src="assets/legal.js"></script>
+</body>
+</html>
