@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Banche dati giuridiche per paese (195 ordinamenti) — mediareinformati.it</title>
+<meta name="description" content="Per ciascuno dei 195 ordinamenti del mondo, la fonte legale ufficiale o il database pubblico da cui ricavare leggi e provvedimenti sulla mediazione, con gli aggregatori mondiali.">
+<link rel="stylesheet" href="assets/style.css">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="mediareinformati.it">
+<meta property="og:locale" content="it_IT">
+<meta property="og:title" content="Banche dati giuridiche per paese (195 ordinamenti) — mediareinformati.it">
+<meta property="og:description" content="Per ciascuno dei 195 ordinamenti, la fonte legale ufficiale o il database pubblico da cui ricavare leggi e provvedimenti sulla mediazione.">
+<meta property="og:url" content="https://mediareinformati.it/banche-dati-paese.html">
+<meta property="og:image" content="https://mediareinformati.it/assets/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Banche dati giuridiche per paese — mediareinformati.it">
+<meta name="twitter:image" content="https://mediareinformati.it/assets/og-cover.png">
+<style>
+.bd-tools{background:#faf9f6;border-left:4px solid #B08D3E;padding:12px 16px;margin:14px 0;line-height:1.6}
+.bd-tools a{color:#a93226}
+#bd-cerca{width:100%;max-width:420px;padding:9px 12px;border:1px solid var(--bordo,#d7deec);border-radius:8px;font-size:15px;margin:8px 0 4px}
+table.bd{border-collapse:collapse;width:100%;font-size:14px;margin-top:10px}
+table.bd th,table.bd td{border-bottom:1px solid #e6e6e6;padding:7px 9px;text-align:left;vertical-align:top}
+table.bd th{background:#f4f2ec;position:sticky;top:0}
+table.bd a{color:#a93226;word-break:break-word}
+.bd-conta{color:#777;font-size:13px;margin:6px 0}
+</style>
+</head>
+<body>
+<header class="sito">
+  <div class="testata"><h1><a href="index.html">mediareinformati.it</a></h1></div>
+  <nav class="principale">
+    <a href="index.html">Home</a>
+    <a href="storia.html">Storia</a>
+    <a href="pratica.html">Pratica</a>
+    <a href="diritto.html">Diritto</a>
+    <a href="sistemi.html">Sistemi nazionali (UE)</a>
+    <a href="profili.html">Profili paese</a>
+    <a href="link.html" class="attivo">Link mondiali</a>
+    <a href="statistiche.html">Dati e statistiche</a>
+    <a href="articoli.html">Articoli</a>
+    <a href="giurisprudenza.html">Giurisprudenza</a>
+    <a href="assistente.html">Assistente</a>
+    <a href="dossier.html">Dossier</a>
+    <a href="progetto.html">Chi sono</a>
+  </nav>
+</header>
+<main>
+  <h2 class="pagina">Banche dati giuridiche per paese</h2>
+  <p class="sottotitolo">Per ciascuno dei 195 ordinamenti, la fonte legale ufficiale o il database pubblico da cui ricavare la disciplina e i provvedimenti sulla mediazione.</p>
+  <div class="bd-tools">
+    <strong>Aggregatori mondiali</strong> (coprono tutti i paesi): <a href="https://guides.loc.gov/nations-world" target="_blank" rel="noopener">Guide to Law Online: Nations</a> &middot; <a href="https://www.nyulawglobal.org/globalex" target="_blank" rel="noopener">GlobaLex</a> &middot; <a href="http://www.worldlii.org/" target="_blank" rel="noopener">WorldLII</a> &middot; <a href="https://n-lex.europa.eu/" target="_blank" rel="noopener">N-Lex (UE)</a> &middot; <a href="https://www.wipo.int/en/web/wipolex" target="_blank" rel="noopener">WIPO Lex</a> &middot; <a href="https://vlex.com/" target="_blank" rel="noopener">vLex</a>.
+  </div>
+  <input type="text" id="bd-cerca" placeholder="Cerca un paese…" autocomplete="off">
+  <p class="bd-conta" id="bd-conta"></p>
+  <table class="bd"><thead><tr><th>Paese</th><th>Area</th><th>Fonte legale / database</th><th>Agg.</th></tr></thead><tbody id="bd-corpo"></tbody></table>
+  <div class="avviso-provvisorio" style="margin-top:24px"><strong>Avvertenza.</strong> Elenco di fonti ufficiali e pubbliche verificate al 2026, da consultare direttamente; alcuni paesi non dispongono di un database dedicato e la fonte rinvia alla legge o alla dottrina disponibile. Non costituisce né sostituisce un parere legale, psicologico, medico o terapeutico, né alcuna forma di consulenza professionale personalizzata; per ogni decisione rivolgersi a un professionista qualificato.</div>
+</main>
+<footer class="sito">
+  <div class="interno">
+    <span>mediareinformati.it — piattaforma di consultazione sulla mediazione</span>
+    <span><a href="progetto.html" style="color:#d8d4cb">Chi sono e le fonti del progetto</a></span>
+  </div>
+</footer>
+<script src="data/profili_paesi.js"></script>
+<script>
+(function(){
+  var A=(window.DATA_PROFILI||[]).slice().sort(function(a,b){return (a.paese||"").localeCompare(b.paese||"","it");});
+  var corpo=document.getElementById("bd-corpo"), conta=document.getElementById("bd-conta"), cerca=document.getElementById("bd-cerca");
+  function esc(s){return String(s||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function host(u){try{return new URL(u).hostname.replace(/^www\./,"");}catch(e){return u;}}
+  function render(q){
+    q=(q||"").trim().toLowerCase();
+    var n=0, h="";
+    A.forEach(function(r){
+      if(q && (r.paese||"").toLowerCase().indexOf(q)<0) return;
+      n++;
+      var f=r.fonte||"";
+      var link=f?("<a href='"+esc(f)+"' target='_blank' rel='noopener'>"+esc(host(f))+"</a>"):"&mdash;";
+      h+="<tr><td>"+esc(r.paese)+"</td><td>"+esc(r.gruppo||"")+"</td><td>"+link+"</td><td>"+esc(r.aggiornato||"")+"</td></tr>";
+    });
+    corpo.innerHTML=h;
+    conta.textContent=n+" paesi"+(q?" (filtrati)":"");
+  }
+  cerca.addEventListener("input",function(){render(cerca.value);});
+  render("");
+})();
+</script>
+<script defer src="assets/legal.js"></script>
+</body>
+</html>
