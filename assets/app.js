@@ -88,13 +88,13 @@
         var q = input.value.trim();
         var corpo = "<h1>" + esc(cfg.titoloDoc || document.title) + "</h1>" +
           "<p class='m'>mediareinformati.it \u2014 " + correnti.length + " risultati" +
-          (q ? " per \u00ab" + esc(q) + "\u00bb" : "") + " \u00b7 " + new Date().toLocaleDateString("it") + "</p><hr>";
+          (q ? " per \u00ab" + esc(q) + "\u00bb" : "") + " \u00b7 " + new Date().toLocaleDateString("it") + "</p><div style='border-top:1px solid #ccc;margin:12px 0'></div>";
         correnti.slice(0, 400).forEach(function (r) {
           var blocco = cfg.rendiDoc ? cfg.rendiDoc(r) : cfg.rendi(r);
           corpo += "<div>" + blocco + "</div>";
         });
         if (correnti.length > 400) corpo += "<p class='m'>\u2026 e altri " + (correnti.length - 400) + " risultati: affinare la ricerca per includerli.</p>";
-        corpo += "<hr><p class='m'>Documento generato da mediareinformati.it \u00b7 estratti a fini di consultazione; i testi integrali delle opere non sono pubblicati.</p></body></html>";
+        corpo += "<div style='border-top:1px solid #ccc;margin:12px 0'></div><p class='m'>Documento generato da mediareinformati.it \u00b7 estratti a fini di consultazione; i testi integrali delle opere non sono pubblicati.</p></body></html>";
         var blob = new Blob(["\ufeff" + testa + corpo], { type: "application/msword" });
         var a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
