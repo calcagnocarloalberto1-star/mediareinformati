@@ -138,7 +138,7 @@
       var html = "<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'>" +
         "<style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.5}h1{color:#9c2b1f;font-size:18pt}h4{color:#111;border-bottom:1px solid #ccc}.cit{color:#777;font-size:10pt}summary{font-weight:bold}</style></head><body>" +
         "<h1>" + esc(ultima.domanda) + "</h1><p><em>mediareinformati.it — " + (cfg.nomeSezione || "contributo") + ", " + new Date().toLocaleDateString("it") + "</em></p>" +
-        corpo + "<div style='border-top:1px solid #ccc;margin:12px 0'></div><p style='font-size:9pt;color:#777'>Contributo elaborato da mediareinformati.it; verificare sempre le fonti primarie citate. Non costituisce parere legale.</p></body></html>";
+        corpo + "<div style='border-top:1px solid #ccc;margin:12px 0'></div><p style='font-size:9pt;color:#777'>Contributo elaborato da mediareinformati.it; verificare sempre le fonti primarie citate. Ha finalità informative e divulgative: non costituisce né sostituisce un parere legale, psicologico, medico o terapeutico, né consulenza professionale personalizzata, e non instaura alcun rapporto professionale. Per ogni decisione rivolgersi a un professionista qualificato. L'autore e il sito non assumono responsabilità per usi difformi.</p></body></html>";
       var blob = new Blob(["﻿" + html], { type: "application/msword" });
       var a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
