@@ -1,0 +1,35 @@
+# mediareinformati.it
+
+> Piattaforma di consultazione e ricerca sulla mediazione civile e commerciale, curata da Carlo Alberto Calcagno (avvocato, mediatore e formatore). Archivio interrogabile costruito in oltre quindici anni di studio: storia, diritto italiano ed estero, giurisprudenza, pratica, dati statistici e comparazione dei 195 ordinamenti del mondo. Contenuti in italiano, con fonti pubbliche in coda a ogni trattazione.
+
+Il sito è gratuito, senza registrazione. Un assistente compone risposte fondate esclusivamente sull'archivio del sito, con citazioni delle fonti. I dati sono verificati e le affermazioni sono ancorate a provvedimenti ufficiali (gazzette, portali legislativi, banche dati).
+
+## Percorsi per pubblico
+- [Per l'avvocato](https://mediareinformati.it/percorso-avvocato.html): normativa vigente, obbligatorietà, giurisprudenza e comparazione internazionale, con fonti citabili.
+- [Per il mediatore](https://mediareinformati.it/percorso-mediatore.html): strumenti pratici per preparare e condurre il tavolo (primo incontro, costi, deontologia, telematica).
+- [Per il formatore](https://mediareinformati.it/percorso-formatore.html): materiali per l'aula pronti da esportare (dossier, dati, storia, glossario).
+
+## Diritto e comparazione
+- [Diritto della mediazione](https://mediareinformati.it/diritto.html): disciplina italiana aggiornata e griglia comparativa dei 195 ordinamenti (obbligatorietà, condizione di procedibilità, 14 tipologie A–N).
+- [Giurisprudenza](https://mediareinformati.it/giurisprudenza.html): pronunce rilevanti dal 1996 con estremi.
+- [Sistemi nazionali UE](https://mediareinformati.it/sistemi.html): la mediazione nei 27 Stati membri, a confronto.
+- [Schede paese](https://mediareinformati.it/profili.html): normativa vigente e novità per i 195 ordinamenti.
+- [Provvedimenti stranieri 2024–2026](https://mediareinformati.it/provvedimenti-stranieri-2026-it.html): riforme recenti tradotte in italiano.
+
+## Approfondimenti (dossier)
+- [La mediazione obbligatoria nel mondo](https://mediareinformati.it/dossier/obbligatoria-mondo.html): dove è imposta e con quali leggi; 123 dei 195 ordinamenti hanno almeno una forma di obbligo (preventiva 36, lavoro 46, famiglia 26, demandata dal giudice 100).
+- [Le fonti della mediazione per tipo nei paesi UE](https://mediareinformati.it/dossier/fonti-tipi-mediazione-ue.html): provvedimenti settoriali (lavoro, penale, famiglia, amministrativa) paese per paese.
+- [Quando la mediazione è obbligatoria (Italia)](https://mediareinformati.it/dossier/obbligatorieta.html): materie a condizione di procedibilità dopo la riforma Cartabia.
+- [La mediazione demandata dal giudice](https://mediareinformati.it/dossier/demandata.html)
+- [Dossier (indice completo)](https://mediareinformati.it/dossier.html): 18 monografie.
+
+## Dati e fonti
+- [Dati e statistiche](https://mediareinformati.it/statistiche.html): serie ministeriali DGSTAT, EU Justice Scoreboard, World Justice Project.
+- [Dati e fonti (gazzette, registri, terminologia, background)](https://mediareinformati.it/link.html): banche dati ufficiali per 195 paesi, terminologia in 95 lingue.
+
+## Strumenti
+- [Assistente](https://mediareinformati.it/assistente.html): interroga l'intero archivio ed esporta in Word/PDF/slide.
+- [Glossario](https://mediareinformati.it/glossario.html): lessico della mediazione e degli ADR/MASC.
+
+## Autore
+- [Chi sono](https://mediareinformati.it/progetto.html): Carlo Alberto Calcagno, avvocato, mediatore e formatore; fonti del progetto.
