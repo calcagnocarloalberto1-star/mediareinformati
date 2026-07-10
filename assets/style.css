@@ -251,3 +251,19 @@ dl dd { margin: 2px 0 0; }
 @media (max-width: 640px) {
   .tab-contributo { display: block; overflow-x: auto; white-space: nowrap; font-size: 0.8rem; }
 }
+
+/* --- Menu con sottomenu (dropdown desktop) --- */
+nav.principale .voce { position: relative; }
+nav.principale .voce > .sub {
+  display: none; position: absolute; top: 100%; left: 0;
+  background: #fff; border: 1px solid var(--border);
+  box-shadow: 0 8px 24px rgba(0,0,0,.10); border-radius: 8px;
+  padding: 6px 0; min-width: 220px; z-index: 300;
+}
+nav.principale .voce:hover > .sub, nav.principale .voce:focus-within > .sub { display: block; }
+nav.principale .sub a {
+  display: block; padding: 7px 16px; border-bottom: 0;
+  font-size: .84rem; font-weight: 500; white-space: nowrap; color: var(--inchiostro);
+}
+nav.principale .sub a:hover { background: #f5f7fa; color: var(--rosso); }
+@media (max-width: 720px){ nav.principale .voce > .sub { display: none !important; } }
