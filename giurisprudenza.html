@@ -123,7 +123,7 @@ initConsulta({
     });
     return (window.DATA_GIURISPRUDENZA || []).map(function (r) {
       var testo = CORPO_G[r.percorso] || "";
-      return { titolo: r.titolo, meta: r.anno + " · " + r.organo + (r.sede ? " " + r.sede : ""), estratto: r.massima || testo.slice(0, 200), testo: r.titolo + " " + (r.massima || "") + " " + (r.sintesi || "") + " " + (r.materia || "") + " " + testo };
+      return { titolo: r.titolo, meta: r.anno + " · " + r.organo + (r.sede ? " " + r.sede : ""), estratto: r.massima || testo.slice(0, 200), url: r.fonte || "", testo: r.titolo + " " + (r.massima || "") + " " + (r.sintesi || "") + " " + (r.materia || "") + " " + testo };
     }).concat(slide);
   }
 });
