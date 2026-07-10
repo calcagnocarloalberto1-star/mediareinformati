@@ -315,6 +315,7 @@ em{color:var(--fam3);font-style:italic}
 <script>function mdTables(text){text=String(text).replace(/\r\n/g,"\n").replace(/\r/g,"\n");var re=/(^|\n)([ \t]*\|.+\|)[ \t]*\n[ \t]*\|[\s:|-]+\|[ \t]*\n((?:[ \t]*\|.+\|[ \t]*\n?)+)/g;return text.replace(re,function(m,pre,header,body){var sr=function(row){var t=row.trim();if(t.charAt(0)==="|")t=t.slice(1);if(t.charAt(t.length-1)==="|")t=t.slice(0,-1);return t.split("|").map(function(c){return c.trim();});};var h=sr(header);var rows=body.trim().split("\n").map(sr);var cols=h.length;var norm=rows.map(function(r){if(r.length<cols)return r.concat(new Array(cols-r.length).fill(""));if(r.length>cols)return r.slice(0,cols);return r;});var tbl=pre+'<div class="ai-table-wrap"><table class="ai-table"><thead><tr>';h.forEach(function(c){tbl+="<th>"+c+"</th>";});tbl+="</tr></thead><tbody>";norm.forEach(function(row){tbl+="<tr>";row.forEach(function(c){tbl+="<td>"+c+"</td>";});tbl+="</tr>";});return tbl+"</tbody></table></div>";});}</script>
 </head>
 <body>
+<div class="mi-topbar" style="background:#152a46;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;font-size:.82rem;padding:8px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;position:relative;z-index:2000"><a href="/index.html" style="color:#fff;text-decoration:none;font-weight:700;letter-spacing:.01em">mediareinformati.it</a><a href="/pratica-strumenti.html" style="color:#fff;text-decoration:none;opacity:.9">&larr; Pratica e strumenti</a></div>
 
 <!-- ═══ TOP BAR ═══ -->
 <div class="top-bar">
