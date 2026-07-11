@@ -65,11 +65,11 @@ table.rg a{color:#a93226;word-break:break-word}
 </header>
 <main>
   <h2 class="pagina">Registri di mediazione per paese</h2>
-  <p class="sottotitolo">Per ciascuno dei 195 ordinamenti, il registro o elenco ufficiale dei mediatori, degli organismi di mediazione e degli enti di formazione, da cui risalire anche ai formatori accreditati.</p>
+  <p class="sottotitolo">Per ciascuno dei 195 ordinamenti, il registro o elenco ufficiale dei mediatori e, dove disponibile, il <strong>numero dei mediatori</strong> (ultimo dato ufficiale). Il quadro completo con densità e fonti è nel dossier <a href="dossier/ricerca-mondiale-mediazione.html">La mediazione nel mondo in numeri</a>.</p>
   <div class="intro-motore"><p>Dove esiste una fonte ufficiale online (Ministero della Giustizia, autorit&agrave; o consiglio competente, camera arbitrale/di conciliazione) è indicato il link diretto; per il profilo e i requisiti dei mediatori vedi il <a href="background-mediatori.html">database sul background dei mediatori</a>.</p></div>
   <input type="text" id="rg-cerca" placeholder="Cerca un paese…" autocomplete="off">
   <p class="rg-conta" id="rg-conta"></p>
-  <table class="rg"><thead><tr><th>Paese</th><th>Registro / elenco ufficiale</th></tr></thead><tbody id="rg-corpo"></tbody></table>
+  <table class="rg"><thead><tr><th>Paese</th><th>Registro / elenco ufficiale</th><th>N. mediatori (ultimo dato)</th></tr></thead><tbody id="rg-corpo"></tbody></table>
   <div class="avviso-provvisorio" style="margin-top:22px"><strong>Avvertenza.</strong> Elenco di fonti ufficiali verificate al 2026; alcuni paesi non dispongono di un registro pubblico online (la mediazione è gestita da giudici, centri privati/OHADA o meccanismi tradizionali). Non costituisce né sostituisce un parere legale, psicologico, medico o terapeutico, né alcuna forma di consulenza professionale personalizzata; per ogni decisione rivolgersi a un professionista qualificato.</div>
 </main>
 <footer class="sito">
@@ -79,6 +79,7 @@ table.rg a{color:#a93226;word-break:break-word}
   </div>
 </footer>
 <script src="data/registri_paesi.js"></script>
+<script src="data/mediatori_conteggi.js"></script>
 <script>
 (function(){
   var A=(window.DATA_REGISTRI||[]);
@@ -90,7 +91,9 @@ table.rg a{color:#a93226;word-break:break-word}
     A.forEach(function(r){
       if(q && r.paese.toLowerCase().indexOf(q)<0) return; n++;
       var lk=r.registro?("<a href='"+esc(r.registro)+"' target='_blank' rel='noopener'>"+esc(host(r.registro))+"</a>"):"<span style='color:#999'>non disponibile online</span>";
-      h+="<tr><td>"+esc(r.paese)+"</td><td>"+lk+"</td></tr>";
+      var med=(window.DATA_MED||{})[r.paese];
+      var mc=med?("<span>"+esc(med)+"</span>"):"<span style='color:#bbb'>N/D</span>";
+      h+="<tr><td>"+esc(r.paese)+"</td><td>"+lk+"</td><td>"+mc+"</td></tr>";
     });
     corpo.innerHTML=h;conta.textContent=n+" paesi"+(q?" (filtrati)":"");
   }
