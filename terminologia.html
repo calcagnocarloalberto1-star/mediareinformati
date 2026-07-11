@@ -74,12 +74,12 @@ table.tm tr:hover td{background:#faf9f6}
 <main>
   <h2 class="pagina">Terminologia della mediazione nelle lingue del mondo</h2>
   <p class="sottotitolo">I termini chiave della mediazione tradotti nelle lingue ufficiali dei 195 ordinamenti. Cerca per lingua, per paese o per termine.</p>
-  <div class="intro-motore"><p>Sedici termini &mdash; oltre a mediazione, mediatore, conciliazione, arbitrato, negoziazione, controversia, accordo, parte, riservatezza e imparzialit&agrave;, anche i <strong>tipi di mediazione</strong> (civile e commerciale, familiare, sociale, comunitaria, penale) e la <strong>giustizia riparativa</strong> &mdash; nelle principali lingue ufficiali dei paesi del mondo, con la terminologia giuridica standard e, per gli alfabeti non latini, la traslitterazione tra parentesi.</p></div>
+  <div class="intro-motore"><p>Ventidue termini &mdash; oltre a mediazione, mediatore, conciliazione, arbitrato, negoziazione, controversia, accordo, parte, riservatezza e imparzialit&agrave;, anche i <strong>tipi di mediazione</strong> (civile e commerciale, familiare, sociale, comunitaria, penale) la <strong>giustizia riparativa</strong> e i termini dell&rsquo;<strong>apparato giudiziario</strong> (giudice, giudizio, processo, cancellieri, panel dei mediatori, Ministero della Giustizia) &mdash; nelle principali lingue ufficiali dei paesi del mondo, con la terminologia giuridica standard e, per gli alfabeti non latini, la traslitterazione tra parentesi.</p></div>
   <input type="text" id="tm-cerca" placeholder="Cerca una lingua, un paese o un termine…" autocomplete="off">
   <p class="tm-conta" id="tm-conta"></p>
   <div class="tm-wrap">
     <table class="tm"><thead><tr>
-      <th>Lingua / Paesi</th><th>Mediazione</th><th>Mediazione civile e commerciale</th><th>Mediazione familiare</th><th>Mediazione sociale</th><th>Mediazione comunitaria</th><th>Mediazione penale</th><th>Giustizia riparativa</th><th>Mediatore</th><th>Conciliazione</th><th>Arbitrato</th><th>Negoziazione</th><th>Controversia</th><th>Accordo</th><th>Parte</th><th>Riservatezza</th><th>Imparzialità</th>
+      <th>Lingua / Paesi</th><th>Mediazione</th><th>Mediazione civile e commerciale</th><th>Mediazione familiare</th><th>Mediazione sociale</th><th>Mediazione comunitaria</th><th>Mediazione penale</th><th>Giustizia riparativa</th><th>Mediatore</th><th>Conciliazione</th><th>Arbitrato</th><th>Negoziazione</th><th>Controversia</th><th>Accordo</th><th>Parte</th><th>Riservatezza</th><th>Imparzialità</th><th>Giudice</th><th>Giudizio</th><th>Processo</th><th>Cancellieri</th><th>Panel dei mediatori</th><th>Ministero della Giustizia</th>
     </tr></thead><tbody id="tm-corpo"></tbody></table>
   </div>
   <div class="avviso-provvisorio" style="margin-top:22px"><strong>Avvertenza.</strong> Traduzioni dei termini tecnici verificate, dove disponibili, sulle <strong>fonti ufficiali nazionali</strong> (leggi sulla mediazione, ministeri della giustizia, codici, versioni linguistiche UE): es. Turchia <em>ceza uzlaştırması</em> (Codice di procedura penale), Cina 刑事和解, Malta <em>ġustizzja riparatriċi</em> (Kap. 516), Sri Lanka <em>samathakaraṇaya</em>. Dove il concetto non è normato nella lingua locale (Paesi che legiferano in altra lingua ufficiale, o istituti non codificati) la resa è costruita in modo idiomatico e resta indicativa. Alcune lingue usano prestiti (loanword) dall&rsquo;inglese, francese o arabo per i termini legali. Non costituisce né sostituisce un parere legale, psicologico, medico o terapeutico, né alcuna forma di consulenza professionale personalizzata; per ogni decisione rivolgersi a un professionista qualificato.</div>
@@ -90,11 +90,11 @@ table.tm tr:hover td{background:#faf9f6}
     <span><a href="progetto.html" style="color:#d8d4cb">Chi sono e le fonti del progetto</a></span>
   </div>
 </footer>
-<script src="data/terminologia.js?v=3"></script>
+<script src="data/terminologia.js?v=4"></script>
 <script>
 (function(){
   var A=(window.DATA_TERMINOLOGIA||[]);
-  var K=["mediazione","mediazione_civile","mediazione_familiare","mediazione_sociale","mediazione_comunitaria","mediazione_penale","giustizia_riparativa","mediatore","conciliazione","arbitrato","negoziazione","controversia","accordo","parte","riservatezza","imparzialita"];
+  var K=["mediazione","mediazione_civile","mediazione_familiare","mediazione_sociale","mediazione_comunitaria","mediazione_penale","giustizia_riparativa","mediatore","conciliazione","arbitrato","negoziazione","controversia","accordo","parte","riservatezza","imparzialita","giudice","giudizio","processo","cancellieri","panel_mediatori","ministero_giustizia"];
   var corpo=document.getElementById("tm-corpo"), conta=document.getElementById("tm-conta"), cerca=document.getElementById("tm-cerca");
   function esc(s){return String(s||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
   function render(q){
