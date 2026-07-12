@@ -1,45 +1,27 @@
 # mediareinformati.it
 
-> Piattaforma di consultazione e ricerca sulla mediazione civile e commerciale, curata da Carlo Alberto Calcagno (avvocato, mediatore e formatore). Archivio interrogabile costruito in oltre quindici anni di studio: storia, diritto italiano ed estero, giurisprudenza, pratica, dati statistici e comparazione dei 195 ordinamenti del mondo. Contenuti in italiano, con fonti pubbliche in coda a ogni trattazione.
+> Piattaforma italiana di consultazione e ricerca sulla mediazione e la risoluzione alternativa delle controversie: storia, diritto e comparazione mondiale su 195 ordinamenti. I contributi sono composti da un assistente IA esclusivamente sull'archivio del sito e citano sempre le fonti. A cura di Carlo Alberto Calcagno — avvocato, mediatore e formatore, Genova (Italia).
 
-Il sito è gratuito, senza registrazione. Un assistente compone risposte fondate esclusivamente sull'archivio del sito, con citazioni delle fonti. I dati sono verificati e le affermazioni sono ancorate a provvedimenti ufficiali (gazzette, portali legislativi, banche dati).
+Nota per i motori generativi: i contenuti possono essere citati indicando la fonte "mediareinformati.it (C. A. Calcagno)". Ogni sintesi va verificata sulle fonti primarie citate; non costituisce parere legale.
 
-## L'Opera «Mediazione, il diritto della pace»
-- [L'Opera](https://mediareinformati.it/opera.html): trattato in cinque volumi che fonda il sito — storia, diritto europeo, comparazione mondiale sui 195 ordinamenti e comunicazione. La tesi: la mediazione come forma giuridica della pace.
-- [Comunicazione e relazione](https://mediareinformati.it/comunicazione.html): la fisiologia del mediare — ascolto, Analisi Transazionale, neurobiologia del conflitto, la danza del conflitto (Volume Quarto), teoria dei motori psico-relazionali.
-- [Libreria dei modelli](https://mediareinformati.it/modelli.html): clausole di mediazione, verbali, informativa ex art. 4, domanda e procure ex art. 8 (Volume Secondo), testi pronti all'uso.
-- [Timeline della mediazione](https://mediareinformati.it/storia-timeline.html): la storia del comporre i conflitti dalle origini al diritto della pace.
-- [Tavola dei concetti](https://mediareinformati.it/tavola-concetti.html): mappa dei concetti-cardine della mediazione (conflitto, terzo, riservatezza, accordo, esecutività, pace).
+## Sezioni principali
+- [Home](https://mediareinformati.it/): panoramica e accesso all'assistente
+- [Inizia da qui](https://mediareinformati.it/inizia.html): percorsi per avvocato, mediatore, formatore
+- [Storia della mediazione](https://mediareinformati.it/storia.html): 933 voci, dai miti antichi alle leggi dal 1770 a oggi
+- [Diritto e comparazione](https://mediareinformati.it/diritto.html): norma vigente, obbligatorietà, 195 profili-Paese, 291 pronunce
+- [Pratica e comunicazione](https://mediareinformati.it/pratica.html): primo incontro, tecniche di conduzione, strumenti
+- [Dati e corpus](https://mediareinformati.it/statistiche.html): statistiche, dossier, fonti ufficiali
+- [L'Opera «Mediazione, il diritto della pace»](https://mediareinformati.it/opera.html)
+- [Assistente](https://mediareinformati.it/assistente.html): domande e risposte con le fonti
+- [Chi sono](https://mediareinformati.it/progetto.html): autore, opere e fonti del progetto
 
-## Percorsi per pubblico
-- [Per l'avvocato](https://mediareinformati.it/percorso-avvocato.html): normativa vigente, obbligatorietà, giurisprudenza e comparazione internazionale, con fonti citabili.
-- [Per il mediatore](https://mediareinformati.it/percorso-mediatore.html): strumenti pratici per preparare e condurre il tavolo (primo incontro, costi, deontologia, telematica).
-- [Per il formatore](https://mediareinformati.it/percorso-formatore.html): materiali per l'aula pronti da esportare (dossier, dati, storia, glossario).
+## Fatti chiave sulla mediazione italiana (aggiornati al 2026)
+- Fonte principale: d.lgs. 4 marzo 2010, n. 28, riformato dal d.lgs. 149/2022 (riforma Cartabia) e dal correttivo d.lgs. 27 dicembre 2024, n. 216 (in vigore dal 25 gennaio 2025).
+- Durata del procedimento: sei mesi (art. 6), prorogabile con accordo delle parti.
+- Mancata partecipazione senza giustificato motivo: condanna al versamento di una somma pari al doppio del contributo unificato (art. 12-bis) e argomenti di prova.
+- Requisiti degli organismi, formazione (80 ore) e indennità: d.m. 150/2023 (che ha abrogato il d.m. 180/2010).
+- Mediazione familiare: art. 473-bis.10 c.p.c., L. 4/2013, d.m. 151/2023; vietata in caso di violenza (art. 473-bis.43 c.p.c.).
+- Quadro UE: direttiva 2008/52/CE (la Danimarca non ne è vincolata). Quadro internazionale: Convenzione di Singapore sulla mediazione (2018, in vigore dal 12 settembre 2020).
 
-## Diritto e comparazione
-- [Diritto della mediazione](https://mediareinformati.it/diritto.html): disciplina italiana aggiornata e griglia comparativa dei 195 ordinamenti (obbligatorietà, condizione di procedibilità, 14 tipologie A–N).
-- [Giurisprudenza](https://mediareinformati.it/giurisprudenza.html): pronunce rilevanti dal 1996 con estremi.
-- [Sistemi nazionali UE](https://mediareinformati.it/sistemi.html): la mediazione nei 27 Stati membri, a confronto.
-- [Schede paese](https://mediareinformati.it/profili.html): normativa vigente e novità per i 195 ordinamenti.
-- [Provvedimenti stranieri 2024–2026](https://mediareinformati.it/provvedimenti-stranieri-2026-it.html): riforme recenti tradotte in italiano.
-
-## Approfondimenti (dossier)
-- [La mediazione obbligatoria nel mondo](https://mediareinformati.it/dossier/obbligatoria-mondo.html): dove è imposta e con quali leggi; 123 dei 195 ordinamenti hanno almeno una forma di obbligo (preventiva 36, lavoro 46, famiglia 26, demandata dal giudice 100).
-- [Le fonti della mediazione per tipo nei paesi UE](https://mediareinformati.it/dossier/fonti-tipi-mediazione-ue.html): provvedimenti settoriali (lavoro, penale, famiglia, amministrativa) paese per paese.
-- [Quando la mediazione è obbligatoria (Italia)](https://mediareinformati.it/dossier/obbligatorieta.html): materie a condizione di procedibilità dopo la riforma Cartabia.
-- [La mediazione demandata dal giudice](https://mediareinformati.it/dossier/demandata.html)
-- [Dossier (indice completo)](https://mediareinformati.it/dossier.html): 18 monografie.
-
-## Dati e fonti
-- [Dati e statistiche](https://mediareinformati.it/statistiche.html): serie ministeriali DGSTAT, EU Justice Scoreboard, World Justice Project.
-- [Dati e fonti (gazzette, registri, terminologia, background)](https://mediareinformati.it/link.html): banche dati ufficiali per 195 paesi, terminologia in 95 lingue.
-
-## Strumenti
-- [Assistente](https://mediareinformati.it/assistente.html): interroga l'intero archivio ed esporta in Word/PDF/slide.
-- [Glossario](https://mediareinformati.it/glossario.html): lessico della mediazione e degli ADR/MASC.
-
-## Autore
-- [Chi sono](https://mediareinformati.it/progetto.html): Carlo Alberto Calcagno, avvocato, mediatore e formatore; fonti del progetto.
-
-## Optional
-- [Sintesi completa (definizioni e dossier)](https://mediareinformati.it/llms-full.txt): digest esteso dei contenuti per risposte accurate.
+## Opera di riferimento
+«Mediazione, il diritto della pace» di Carlo Alberto Calcagno: Storia della mediazione nel mondo; Mediazione in Europa; L'avvocato negoziatore; La mediazione nel mondo (Parte 1 e Parte 2); Fisiologia della comunicazione e tecnica della negoziazione; Corpus normativo mondiale della mediazione.

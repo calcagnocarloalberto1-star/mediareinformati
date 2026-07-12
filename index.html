@@ -2,240 +2,457 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>mediareinformati.it — Piattaforma di consultazione e ricerca sulla mediazione</title>
-<meta name="description" content="Piattaforma di consultazione sulla mediazione: fai una domanda e ottieni un contributo organico fondato su un archivio di 15 anni di studio — storia, diritto, pratica, sistemi nazionali, statistiche, giurisprudenza.">
-<link rel="stylesheet" href="assets/style.css">
-
-<!-- Open Graph / social preview -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mediazione, il diritto della pace — mediareinformati.it</title>
+<meta name="description" content="Archivio ragionato e interrogabile sulla mediazione: storia, diritto e comparazione mondiale su 195 ordinamenti, fondati su una vasta opera. Gratis, con le fonti pubbliche in coda.">
+<link rel="canonical" href="https://mediareinformati.it/">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Carlo Alberto Calcagno">
+<meta name="theme-color" content="#A93226">
+<link rel="alternate" hreflang="it" href="https://mediareinformati.it/">
+<link rel="alternate" hreflang="x-default" href="https://mediareinformati.it/">
+<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="mediareinformati.it">
 <meta property="og:locale" content="it_IT">
-<meta property="og:title" content="mediareinformati.it — Piattaforma di consultazione e ricerca sulla mediazione">
-<meta property="og:description" content="Piattaforma di consultazione sulla mediazione: fai una domanda e ottieni un contributo organico fondato su un archivio di 15 anni di studio — storia, diritto, pratica, sistemi nazionali, statistiche, giurisprudenza.">
-<meta property="og:url" content="https://mediareinformati.it/index.html">
-<meta property="og:image" content="https://mediareinformati.it/assets/og-cover.png">
-<meta property="og:image:secure_url" content="https://mediareinformati.it/assets/og-cover.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="mediareinformati.it — il sapere della mediazione, interrogabile">
+<meta property="og:title" content="Mediazione, il diritto della pace — mediareinformati.it">
+<meta property="og:description" content="Il sapere della mediazione, interrogabile: storia, diritto e comparazione mondiale su 195 ordinamenti. Gratis, con le fonti pubbliche in coda.">
+<meta property="og:url" content="https://mediareinformati.it/">
+<meta property="og:image" content="https://mediareinformati.it/og-cover.png">
+<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="mediareinformati.it — Piattaforma di consultazione e ricerca sulla mediazione">
-<meta name="twitter:description" content="Piattaforma di consultazione sulla mediazione: fai una domanda e ottieni un contributo organico fondato su un archivio di 15 anni di studio — storia, diritto, pratica, sistemi nazionali, statistiche, giurisprudenza.">
-<meta name="twitter:image" content="https://mediareinformati.it/assets/og-cover.png">
+<meta name="twitter:title" content="Mediazione, il diritto della pace — mediareinformati.it">
+<meta name="twitter:description" content="Archivio interrogabile sulla mediazione: storia, diritto e comparazione su 195 ordinamenti. Con le fonti pubbliche in coda.">
+<meta name="twitter:image" content="https://mediareinformati.it/og-cover.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
-.eroe .firma-autore{font-size:.95rem;color:var(--grigio);margin:-14px auto 24px;max-width:720px}
-.eroe .firma-autore a{color:var(--rosso)}
-.eroe .fiducia{font-size:.86rem;color:var(--grigio);max-width:700px;margin:6px auto 0}
-.eroe .fiducia strong{color:var(--inchiostro)}
-.casi-uso{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin:0 0 8px}
-.casi-uso div{background:var(--bianco);border:2px solid var(--bordo);padding:16px 18px}
-.casi-uso b{display:block;color:var(--rosso);margin-bottom:6px;font-size:.98rem}
-.casi-uso p{margin:0;font-size:.9rem;color:var(--grigio)}
-.percorsi{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
-.percorso{display:block;background:var(--crema);border:2px solid var(--bordo);box-shadow:var(--ombra-s);padding:16px 18px;text-decoration:none;color:var(--inchiostro)}
-.percorso:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 #141414}
-.percorso b{display:block;font-size:1.02rem;margin-bottom:6px}
-.percorso span{font-size:.88rem;color:var(--grigio)}
-.macro-titolo{font-size:1.12rem;font-weight:800;margin:26px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--bordo)}
+  :root{
+    --crema:#F4F1EA; --carta:#FFFFFF; --ink:#141414; --corallo:#A93226; --corallo2:#8A281D; --acc:#A93226;
+    --grigio:#5b574f; --linea:#d9d4c8; --ombra:6px 6px 0 var(--ink);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--crema);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;line-height:1.5}
+  a{color:inherit}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+
+  /* NAV */
+  header.nav{position:sticky;top:0;z-index:20;background:var(--crema);border-bottom:2px solid var(--ink)}
+  .nav .wrap{display:flex;align-items:center;gap:18px;height:60px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;text-decoration:none;white-space:nowrap}
+  .brand .logo{background:var(--corallo);color:#fff;font-weight:800;padding:4px 8px;border:2px solid var(--ink)}
+  nav.links{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;font-weight:600;margin-left:auto}
+  nav.links a{text-decoration:none;color:var(--grigio);padding:4px 2px;border-bottom:2px solid transparent}
+  nav.links a:hover{color:var(--ink);border-bottom-color:var(--corallo)}
+
+  /* generic */
+  section{padding:56px 0;border-bottom:2px solid var(--linea)}
+  .kicker{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+    background:var(--acc);color:#fff;padding:4px 10px;margin-bottom:14px}
+  h1{font-size:clamp(40px,6.5vw,68px);line-height:1.02;margin:.1em 0;font-weight:800;letter-spacing:-.02em}
+  h1 .red{color:var(--acc)}
+  h2{font-size:clamp(26px,3.4vw,34px);font-weight:800;letter-spacing:-.01em;margin:0 0 8px}
+  h2 .red{color:var(--acc)}
+  .sub{color:var(--grigio);font-size:17px;max-width:65ch;margin:0 0 26px}
+  .btn{font-family:inherit;font-weight:800;cursor:pointer;border:2px solid var(--ink);
+    box-shadow:3px 3px 0 var(--ink);transition:transform .06s,box-shadow .06s;text-decoration:none;
+    display:inline-flex;align-items:center;gap:8px;justify-content:center}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+  .btn:active{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink)}
+  .btn-primary{background:var(--acc);color:#fff;font-size:15px;padding:13px 22px}
+  .btn-ghost{background:var(--carta);color:var(--ink);font-size:14px;padding:12px 18px}
+  .btn-sm{padding:10px 16px;font-size:14px}
+
+  /* ENGINE (l'azione: fai una domanda) */
+  .engine{background:var(--carta);border:2px solid var(--ink);box-shadow:var(--ombra);padding:22px}
+  .engine h3{margin:0 0 4px;font-size:20px}
+  .engine p.hint{margin:0 0 14px;color:var(--grigio);font-size:14.5px}
+  .searchrow{display:flex;gap:12px}
+  .searchrow input{flex:1;min-width:0;font-size:16px;padding:15px;border:2px solid var(--ink);background:var(--crema)}
+  .searchrow input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--acc)}
+  .micro{margin:12px 2px 0;font-size:13px;color:var(--grigio)}
+  .micro b{color:var(--ink)}
+
+  /* CARDS */
+  .grid{display:grid;gap:20px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--carta);border:2px solid var(--ink);box-shadow:var(--ombra);padding:22px;
+    display:flex;flex-direction:column;transition:transform .08s,box-shadow .08s}
+  .card:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--ink)}
+  .ic{width:44px;height:44px;border:2px solid var(--ink);border-radius:50%;display:flex;align-items:center;
+    justify-content:center;margin-bottom:12px;background:var(--crema)}
+  .ic svg{width:23px;height:23px;stroke:var(--ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .card h3{margin:0 0 6px;font-size:19px}
+  .card .d{color:var(--grigio);font-size:14.5px;margin:0 0 16px;flex:1}
+  .badge{align-self:flex-start;font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--acc);
+    border:2px solid var(--acc);padding:2px 8px;border-radius:20px;margin-bottom:10px;text-transform:uppercase}
+
+  /* clickable question list (sostituisce le “strisce”) */
+  .qlist{display:flex;flex-direction:column;gap:10px;margin:0 0 16px}
+  .q{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:2px solid var(--ink);background:var(--crema);
+    text-decoration:none;transition:background .08s,transform .06s}
+  .q:hover{background:#fff;transform:translateX(3px)}
+  .q .arw{color:var(--acc);font-weight:800;margin-left:auto}
+  .q b{font-size:14.5px}
+  .q span{display:block;color:var(--grigio);font-size:13px;margin-top:2px}
+
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;text-align:center}
+  .stat .n{font-size:30px;font-weight:800;color:var(--acc)}
+  .stat .l{font-size:12.5px;color:var(--grigio);line-height:1.3;margin-top:2px}
+
+  /* steps */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;counter-reset:s}
+  .step{background:var(--carta);border:2px solid var(--ink);box-shadow:var(--ombra);padding:20px}
+  .step .num{display:inline-flex;width:34px;height:34px;background:var(--ink);color:var(--crema);font-weight:800;
+    align-items:center;justify-content:center;margin-bottom:10px}
+  .step h4{margin:0 0 4px;font-size:17px}
+  .step p{margin:0;color:var(--grigio);font-size:14px}
+
+  .note{margin-top:26px;padding-left:16px;border-left:4px solid var(--linea);color:var(--grigio);font-size:13.5px;max-width:78ch}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+  .lead-actions{display:flex;gap:14px;flex-wrap:wrap;margin:22px 0 10px}
+  .btn-hero{font-size:16px;padding:15px 26px}
+
+  footer{padding:34px 0;color:var(--grigio);font-size:13px}
+
+  @media(max-width:900px){ .g3,.steps{grid-template-columns:1fr 1fr} .stats{grid-template-columns:repeat(3,1fr)} nav.links{display:none} }
+  @media(max-width:640px){ .g2,.g3,.steps{grid-template-columns:1fr} .stats{grid-template-columns:repeat(2,1fr)} .searchrow{flex-direction:column} }
+
+  .s-home{--acc:#A93226}
+  .s-inizia{--acc:#2E6E4E;background:#EAF1EC}
+  .s-sezioni{--acc:#1F5D7A;background:#E9EFF3}
+  .s-stats{--acc:#E8B04B}
+  .s-assist{--acc:#5A3E85;background:#EEEAF4}
+  .s-come{--acc:#9A5B00;background:#F5EFE3}
+  .s-opera{--acc:#7A4E2D;background:#F1EAE2}
+  .s-chi{--acc:#2F5D7C;background:#E8EEF2}
+  .s-faq{--acc:#2E6E4E;background:#EAF1EC}
+  #diritto{--acc:#1F5D7A} #storia{--acc:#8A5A2B} #pratica{--acc:#A93226} #dati{--acc:#2E6E4E}
 </style>
-<link rel="canonical" href="https://mediareinformati.it/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://mediareinformati.it/#website", "name": "mediareinformati.it", "url": "https://mediareinformati.it/", "inLanguage": "it", "description": "Piattaforma di consultazione e ricerca sulla mediazione civile e commerciale: diritto, giurisprudenza, pratica, storia, dati e comparazione dei 195 ordinamenti.", "publisher": {"@id": "https://mediareinformati.it/#person"}, "potentialAction": {"@type": "SearchAction", "target": {"@type": "EntryPoint", "urlTemplate": "https://mediareinformati.it/assistente.html?q={search_term_string}"}, "query-input": "required name=search_term_string"}}, {"@type": "Person", "@id": "https://mediareinformati.it/#person", "name": "Carlo Alberto Calcagno", "jobTitle": "Avvocato, mediatore e formatore", "url": "https://mediareinformati.it/progetto.html", "knowsAbout": ["mediazione civile", "ADR", "conciliazione", "diritto comparato della mediazione"], "sameAs": ["https://mediaresenzaconfini.org/", "https://calcolomediazione.it", "https://olismo-integrato.it", "https://enneagrammaevolutivo.it"], "worksFor": {"@type": "Organization", "name": "mediareinformati.it", "url": "https://mediareinformati.it/"}}, {"@type": "Organization", "@id": "https://mediareinformati.it/#org", "name": "mediareinformati.it", "url": "https://mediareinformati.it/", "founder": {"@id": "https://mediareinformati.it/#person"}, "description": "Piattaforma di consultazione e ricerca sulla mediazione civile e commerciale."}]}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Book", "name": "Mediazione, il diritto della pace", "author": {"@type": "Person", "name": "Carlo Alberto Calcagno", "url": "https://mediareinformati.it/progetto.html"}, "inLanguage": "it", "numberOfPages": 2199, "url": "https://mediareinformati.it/opera.html", "about": ["mediazione civile", "ADR", "diritto comparato della mediazione", "storia della mediazione", "comunicazione nel conflitto"], "description": "Trattato in cinque volumi: storia della mediazione, diritto europeo, comparazione mondiale sui 195 ordinamenti e fisiologia della comunicazione. La mediazione come forma giuridica della pace.", "hasPart": [{"@type": "Book", "name": "Volume Primo — Mediazione in Europa"}, {"@type": "Book", "name": "Volume Secondo — L'avvocato negoziatore"}, {"@type": "Book", "name": "Volume Terzo — Mediazione nel mondo"}, {"@type": "Book", "name": "Volume Quarto — Fisiologia della comunicazione"}, {"@type": "Book", "name": "Volume Quinto — Storia della mediazione e corpus normativo"}]}</script>
 </head>
 <body>
-<header class="sito">
-  <div class="testata">
-    <h1><a href="index.html">mediareinformati.it</a></h1>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#home"><span class="logo">Mi</span> mediareinformati.it</a>
+    <nav class="links">
+      <a href="#inizia">Inizia</a>
+      <a href="#sezioni">Sezioni</a>
+      <a href="#assistente">Assistente</a>
+      <a href="#opera">L'Opera</a>
+      <a href="#chisono">Chi sono</a>
+      <a href="mappa.html">Mappa</a>
+    </nav>
   </div>
-  <nav class="principale">
-    <a href="index.html" class="attivo">Home</a>
-    <span class="voce"><a href="inizia.html">Inizia da qui</a><div class="sub">
-      <a href="percorso-avvocato.html">Per l'avvocato</a>
-      <a href="percorso-mediatore.html">Per il mediatore</a>
-      <a href="percorso-formatore.html">Per il formatore</a>
-      <a href="come-si-usa.html">Come si usa</a>
-    </div></span>
-    <span class="voce"><a href="storia.html">Storia</a><div class="sub">
-      <a href="storia.html">Introduzione alla storia</a>
-      <a href="storia-timeline.html">Timeline della mediazione</a>
-    </div></span>
-    <span class="voce"><a href="diritto.html">Diritto e comparazione</a><div class="sub">
-      <a href="sistemi.html">Sistemi UE</a>
-      <a href="profili.html">Schede paese</a>
-      <a href="diritto.html">Griglia 195 ordinamenti</a>
-      <a href="leggi-mediazione-nel-mondo.html">Leggi nel mondo</a>
-      <a href="leggi-mediazione-tradotte.html">Leggi tradotte</a>
-      <a href="provvedimenti-stranieri-2026-it.html">Provvedimenti 2024–2026</a>
-      <a href="giurisprudenza.html">Giurisprudenza</a>
-      <a href="dossier.html">Dossier tematici</a>
-    </div></span>
-    <span class="voce"><a href="pratica.html">Pratica e comunicazione</a><div class="sub">
-      <a href="comunicazione.html">Comunicazione e relazione</a>
-      <a href="modelli.html">Modelli e clausole</a>
-      <a href="pratica.html">Pratica della mediazione</a>
-      <a href="pratica-strumenti.html">Strumenti operativi</a>
-      <a href="pratica-strumenti.html">Motori psico-relazionali</a>
-      <a href="background-mediatori.html">Background dei mediatori</a>
-    </div></span>
-    <span class="voce"><a href="statistiche.html">Dati e corpus</a><div class="sub">
-      <a href="statistiche.html">Dati e statistiche</a>
-      <a href="registri-mediazione.html">Registri</a>
-      <a href="avvocati-nel-mondo.html">Avvocati nel mondo</a>
-      <a href="giudici-nel-mondo.html">Giudici nel mondo</a>
-      <a href="terminologia.html">Terminologia (95 lingue)</a>
-      <a href="leggi-mediazione-catalogo.html">Repertorio delle leggi</a>
-      <a href="banche-dati-paese.html">Gazzette e banche dati</a>
-      <a href="glossario.html">Glossario</a>
-    </div></span>
-    <span class="voce"><a href="opera.html">L'Opera</a><div class="sub">
-      <a href="opera.html">Il diritto della pace</a>
-      <a href="opera.html#volumi">I cinque volumi</a>
-      <a href="opera.html#metodo">Metodo e archivio</a>
-      <a href="tavola-concetti.html">Tavola dei concetti</a>
-    </div></span>
-    <a href="assistente.html">Assistente</a>
-    <a href="progetto.html">Chi sono</a>
-  </nav>
 </header>
 
-<main>
-  <div class="eroe">
-    <span class="distintivo">Piattaforma di consultazione sulla mediazione</span>
-    <h2>Mediazione, <em>il diritto della pace</em></h2>
-    <p class="sotto">Il sapere della mediazione, <strong>interrogabile</strong>. L&rsquo;archivio ragionato del comporre i conflitti &mdash; storia, diritto, comparazione mondiale sui <strong>195 ordinamenti</strong> e comunicazione &mdash; fondato su un&rsquo;opera in cinque volumi e su oltre quindici anni di studio, pratica e insegnamento. Da <strong>leggere</strong> come trattato, da <strong>interrogare</strong> come banca dati, con le fonti pubbliche in coda.</p>
-    <p class="firma-autore">A cura di <strong>Carlo Alberto Calcagno</strong>, mediatore e formatore &middot; <a href="progetto.html">chi sono e le fonti del progetto</a></p>
-    <div class="azioni">
-      <a class="bottone-primario" href="assistente.html" style="text-decoration:none">Interroga l&rsquo;assistente &rarr;</a>
-      <a class="bottone-secondario" href="opera.html" style="text-decoration:none;padding:14px 26px;font-size:1rem">Leggi l&rsquo;opera &rarr;</a>
+<!-- HERO -->
+<section id="home" class="s-home" style="border-bottom:2px solid var(--ink)">
+  <div class="wrap">
+    <span class="kicker">Piattaforma di consultazione sulla mediazione</span>
+    <h1>Mediazione, <span class="red">il diritto della pace</span></h1>
+    <p class="sub">Il sapere della mediazione, <b>interrogabile</b>: storia, diritto e comparazione mondiale sui 195 ordinamenti, fondati su una vasta opera e oltre quindici anni di studio. Da leggere come trattato, da interrogare come banca dati.</p>
+    <div class="lead-actions">
+      <a class="btn btn-primary btn-hero" href="#assistente">Interroga l'assistente →</a>
+      <a class="btn btn-ghost btn-hero" href="#opera">Leggi l'opera →</a>
     </div>
-    <p class="fiducia">Gratis &middot; senza registrazione &middot; il contributo &egrave; composto dall&rsquo;IA <strong>solo sull&rsquo;archivio del sito</strong>, con le <strong>fonti pubbliche in coda</strong>: nessun dato inventato.</p>
+    <p class="micro">Gratis · senza registrazione · il contributo è composto dall'IA <b>solo sull'archivio del sito</b>, con le fonti pubbliche in coda: nessun dato inventato.</p>
   </div>
+</section>
 
-  <h2 class="sezione-home">Scegli il tuo percorso</h2>
-  <p class="sotto-sezione">Tre porte d&rsquo;ingresso: ti portiamo dritto a ci&ograve; che ti serve.</p>
-  <div class="percorsi">
-    <a class="percorso" href="percorso-avvocato.html"><b>Sono un avvocato</b><span>Norma vigente, obbligatoriet&agrave;, giurisprudenza e comparazione &rarr; il tuo percorso</span></a>
-    <a class="percorso" href="percorso-mediatore.html"><b>Sono un mediatore</b><span>Primo incontro, costi, deontologia e strumenti del tavolo &rarr; il tuo percorso</span></a>
-    <a class="percorso" href="percorso-formatore.html"><b>Sono un formatore</b><span>Dossier, dati, storia e materiali per l&rsquo;aula &rarr; il tuo percorso</span></a>
+<!-- INIZIA: tre profili -->
+<section id="inizia" class="s-inizia">
+  <div class="wrap">
+    <h2>Scegli il tuo percorso</h2>
+    <p class="sub">Tre porte d'ingresso: ti portiamo dritto a ciò che ti serve.</p>
+    <div class="grid g3">
+      <article class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M6 7l-2 6a4 4 0 0 0 8 0L6 7zm12 0l-2 6a4 4 0 0 0 8 0l-2-6"/></svg></div>
+        <h3>Sono un avvocato</h3>
+        <p class="d">Norma vigente, obbligatorietà, giurisprudenza e comparazione: dove trovarle e come citarle.</p>
+        <a class="btn btn-primary btn-sm" href="#sezioni">Il tuo percorso →</a>
+      </article>
+      <article class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0-9-9M12 7v5l3 2"/></svg></div>
+        <h3>Sono un mediatore</h3>
+        <p class="d">Primo incontro, costi, deontologia, telematica e strumenti del tavolo.</p>
+        <a class="btn btn-primary btn-sm" href="#pratica">Il tuo percorso →</a>
+      </article>
+      <article class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 5h18M3 5v14h18V5M8 9h8M8 13h5"/></svg></div>
+        <h3>Sono un formatore</h3>
+        <p class="d">Dossier, dati e grafici, storia, glossario ed esercitazioni, pronti per l'aula ed esportabili.</p>
+        <a class="btn btn-primary btn-sm" href="#dati">Il tuo percorso →</a>
+      </article>
+    </div>
   </div>
-  
-  <div class="numeri-archivio">
-    <div><b>933</b><span>voci di storia della mediazione</span></div>
-    <div><b>783</b><span>atti normativi</span></div>
-    <div><b>537</b><span>articoli d&rsquo;autore</span></div>
-    <div><b>291</b><span>pronunce giurisprudenziali</span></div>
-    <div><b>195</b><span>ordinamenti a confronto</span></div>
-    <div><b>143</b><span>paesi nelle serie statistiche</span></div>
-  </div>
+</section>
 
-  <h2 class="sezione-home">A che cosa serve</h2>
-  <p class="sotto-sezione">Tre esempi concreti fra i molti: poni la domanda e ottieni una trattazione con le fonti.</p>
-  <div class="casi-uso">
-    <div><b>Per l&rsquo;avvocato</b><p>Verifica se la materia &egrave; a mediazione obbligatoria e qual &egrave; la norma vigente al 2026.</p></div>
-    <div><b>Per il mediatore</b><p>Prepara il primo incontro e la conduzione, dai manuali operativi e dalle tecniche d&rsquo;archivio.</p></div>
-    <div><b>Per chi guarda oltre confine</b><p>Scopri come funziona la mediazione in un Paese straniero, fra 195 ordinamenti a confronto.</p></div>
+<!-- STATS -->
+<section class="s-stats" style="background:var(--ink);border:0">
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><div class="n">933</div><div class="l" style="color:#cfc9bd">voci di storia</div></div>
+      <div class="stat"><div class="n">783</div><div class="l" style="color:#cfc9bd">atti normativi</div></div>
+      <div class="stat"><div class="n">537</div><div class="l" style="color:#cfc9bd">articoli d'autore</div></div>
+      <div class="stat"><div class="n">291</div><div class="l" style="color:#cfc9bd">pronunce</div></div>
+      <div class="stat"><div class="n">195</div><div class="l" style="color:#cfc9bd">ordinamenti</div></div>
+      <div class="stat"><div class="n">143</div><div class="l" style="color:#cfc9bd">paesi con serie dati</div></div>
+    </div>
   </div>
+</section>
 
-  <h2 class="sezione-home">Le sezioni di consultazione</h2>
-  <p class="sotto-sezione">Ogni sezione &egrave; un motore autonomo: domanda libera, contributo composto sull&rsquo;archivio, esportazione in Word con le fonti pubbliche in coda.</p>
+<!-- SEZIONI DI CONSULTAZIONE: 4 motori come card, con domande cliccabili -->
+<section id="sezioni" class="s-sezioni">
+  <div class="wrap">
+    <h2>Le sezioni di consultazione</h2>
+    <p class="sub">Ogni sezione è un motore autonomo: poni una domanda, ricevi una trattazione composta sull'archivio, la esporti in Word con le fonti in coda. Qui sotto, esempi di ciò che puoi chiedere in ciascuna.</p>
 
-  <h3 class="macro-titolo">Diritto e comparazione</h3>
-  <div class="motori-elenco">
-    <a class="motore-voce" href="diritto.html">
-      <h3><span class="dot">&#9632;</span>La tua materia &egrave; a mediazione obbligatoria?</h3>
-      <p>Qual &egrave; la norma in vigore <em>oggi</em>? Interroga 783 atti italiani, europei e stranieri &mdash; dal d.lgs. 28/2010 alla riforma Cartabia &mdash; e ricevi un inquadramento gi&agrave; scritto, con le fonti in coda.</p>
-    </a>
-    <a class="motore-voce" href="sistemi.html">
-      <h3><span class="dot">&#9632;</span>Come funziona negli altri Paesi UE?</h3>
-      <p>Obbligatoriet&agrave;, requisiti, costi ed effetti dell&rsquo;accordo nei 27 Stati membri, in schede che metti a confronto in un colpo d&rsquo;occhio.</p>
-    </a>
-    <a class="motore-voce" href="profili.html">
-      <h3><span class="dot">&#9632;</span>Ti serve la legge di un Paese preciso?</h3>
-      <p>195 profili aggiornati al 2026 &mdash; legge vigente, obbligatoriet&agrave;, esecutivit&agrave;, riforme recenti &mdash; uno per ogni ordinamento del mondo.</p>
-    </a>
-    <a class="motore-voce" href="giurisprudenza.html">
-      <h3><span class="dot">&#9632;</span>Quale pronuncia regge la tua tesi?</h3>
-      <p>291 provvedimenti dal 1996 &mdash; Cassazione, Consulta, corti UE e merito &mdash; con gli estremi pronti da citare.</p>
-    </a>
+    <div class="grid g2">
+
+      <!-- Diritto -->
+      <article class="card" id="diritto">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M6 7l-2 6a4 4 0 0 0 8 0L6 7zm12 0l-2 6a4 4 0 0 0 8 0l-2-6"/></svg></div>
+        <h3>Diritto e comparazione</h3>
+        <div class="qlist">
+          <a class="q" href="#"><span><b>La tua materia è a mediazione obbligatoria?</b><span>La norma in vigore oggi, dal d.lgs. 28/2010 alla Cartabia.</span></span><span class="arw">→</span></a>
+          <a class="q" href="#"><span><b>Come funziona negli altri Paesi UE?</b><span>Obbligatorietà, costi ed effetti nei 27 Stati, a confronto.</span></span><span class="arw">→</span></a>
+          <a class="q" href="#"><span><b>Ti serve la legge di un Paese preciso?</b><span>195 profili aggiornati al 2026, uno per ordinamento.</span></span><span class="arw">→</span></a>
+          <a class="q" href="#"><span><b>Quale pronuncia regge la tua tesi?</b><span>291 provvedimenti dal 1996, estremi pronti da citare.</span></span><span class="arw">→</span></a>
+        </div>
+        <a class="btn btn-primary btn-sm" href="#">Apri Diritto e comparazione →</a>
+      </article>
+
+      <!-- Storia -->
+      <article class="card" id="storia">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H19v15H5.5A1.5 1.5 0 0 0 4 20.5zM19 19v2H6.5A2.5 2.5 0 0 1 4 18.5"/></svg></div>
+        <h3>Storia della mediazione</h3>
+        <div class="qlist">
+          <a class="q" href="#"><span><b>Da dove nasce la mediazione?</b><span>933 voci, dai miti mesopotamici alle leggi dal 1770 a oggi.</span></span><span class="arw">→</span></a>
+          <a class="q" href="#"><span><b>Come si conciliava presso Greci e Romani?</b><span>Radici antiche del comporre, con le fonti.</span></span><span class="arw">→</span></a>
+          <a class="q" href="#"><span><b>Chi era il conciliatore dell'Ottocento?</b><span>Dalle Regie Costituzioni al codice di rito del 1865.</span></span><span class="arw">→</span></a>
+        </div>
+        <a class="btn btn-primary btn-sm" href="#">Apri Storia →</a>
+      </article>
+
+      <!-- Pratica -->
+      <article class="card" id="pratica">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4l-6 6 2.9 2.9 6-6a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.1-.4-.4-2.1z"/></svg></div>
+        <h3>Pratica e comunicazione</h3>
+        <div class="qlist">
+          <a class="q" href="#"><span><b>Domani conduci un primo incontro?</b><span>Dispense e manuali operativi dell'autore: arrivi preparato.</span></span><span class="arw">→</span></a>
+          <a class="q" href="#"><span><b>Vuoi un taglio d'autore sul tuo tema?</b><span>537 contributi fusi in un'unica trattazione ragionata.</span></span><span class="arw">→</span></a>
+        </div>
+        <div class="cta-row">
+          <a class="btn btn-primary btn-sm" href="#">Apri Pratica →</a>
+          <a class="btn btn-ghost btn-sm" href="#">22 strumenti interattivi</a>
+        </div>
+      </article>
+
+      <!-- Dati -->
+      <article class="card" id="dati">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M8 20v-6M12 20V9M16 20v-9"/></svg></div>
+        <h3>Dati e corpus</h3>
+        <div class="qlist">
+          <a class="q" href="#"><span><b>Quanti mediatori ci sono nel mondo?</b><span>242.000+ in 103 ordinamenti, con densità e tabelle Excel.</span></span><span class="arw">→</span></a>
+          <a class="q" href="#"><span><b>La mediazione in cifre</b><span>Serie DGSTAT 2011–2025, Scoreboard UE, World Justice Project.</span></span><span class="arw">→</span></a>
+          <a class="q" href="#"><span><b>Poco tempo? Parti da un dossier</b><span>Venti monografie pronte da leggere, stampare e citare.</span></span><span class="arw">→</span></a>
+          <a class="q" href="#"><span><b>Devi risalire alla fonte ufficiale?</b><span>Gazzette, registri, terminologia in 95 lingue per 195 Paesi.</span></span><span class="arw">→</span></a>
+        </div>
+        <a class="btn btn-primary btn-sm" href="#">Apri Dati e corpus →</a>
+      </article>
+
+    </div>
   </div>
+</section>
 
-  <h3 class="macro-titolo">Pratica e strumenti &middot; Approfondimenti</h3>
-  <div class="motori-elenco">
-    <a class="motore-voce" href="pratica.html">
-      <h3><span class="dot">&#9632;</span>Domani conduci un primo incontro?</h3>
-      <p>Dispense dei corsi, manuali operativi e tecniche di conduzione dell&rsquo;autore: arrivi al tavolo preparato, non improvvisi.</p>
-    </a>
-    <a class="motore-voce" href="storia.html">
-      <h3><span class="dot">&#9632;</span>Da dove nasce la mediazione?</h3>
-      <p>933 voci dai miti mesopotamici alle leggi dal 1770 a oggi: d&agrave; radici e profondit&agrave; a una relazione, a un articolo o a una lezione.</p>
-    </a>
-    <a class="motore-voce" href="articoli.html">
-      <h3><span class="dot">&#9632;</span>Vuoi un taglio d&rsquo;autore sul tuo tema?</h3>
-      <p>537 contributi pubblicati dal 2011 si fondono in un&rsquo;unica trattazione ragionata sulla tua domanda &mdash; non un elenco di link.</p>
-    </a>
+<!-- ASSISTENTE -->
+<section id="assistente" class="s-assist">
+  <div class="wrap">
+    <h2>Interroga tutto l'archivio</h2>
+    <p class="sub">Una domanda che tocca più campi? Il motore generale interroga in una volta norme, giurisprudenza, articoli, schede paese e statistiche — ed esporta in Word, PDF e slide.</p>
+    <div class="engine">
+      <span class="kicker">Assistente</span>
+      <h3>Che cosa vuoi sapere?</h3>
+      <p class="hint">Risponde attingendo all'intero archivio e cita sempre le fonti.</p>
+      <div class="searchrow">
+        <input placeholder="Es. Quando la mediazione è obbligatoria?" aria-label="La tua domanda">
+        <button class="btn btn-primary">Chiedi →</button>
+      </div>
+      <div class="qlist" style="margin-top:16px">
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="q" style="flex:0 0 auto;padding:8px 12px" href="#"><b>Mediazione demandata dal giudice?</b></a>
+          <a class="q" style="flex:0 0 auto;padding:8px 12px" href="#"><b>Quanto dura e quanto costa?</b></a>
+          <a class="q" style="flex:0 0 auto;padding:8px 12px" href="#"><b>Cosa prevede la riforma Cartabia?</b></a>
+          <a class="q" style="flex:0 0 auto;padding:8px 12px" href="#"><b>Come funziona in Francia?</b></a>
+        </div>
+      </div>
+      <p class="micro">Risultato scaricabile in <b>Word e PDF</b> · per i formatori anche <b>slide PowerPoint</b>. Da verificare sempre sulle fonti citate; non è un parere professionale.</p>
+    </div>
   </div>
+</section>
 
-  <h3 class="macro-titolo">Dati e fonti &middot; Dossier</h3>
-  <div class="motori-elenco">
-    <a class="motore-voce" href="dossier/ricerca-mondiale-mediazione.html">
-      <h3><span class="dot">&#9632;</span>Quanti mediatori ci sono nel mondo?</h3>
-      <p>Il conteggio Paese per Paese &mdash; oltre <strong>242.000</strong> mediatori professionali in 103 ordinamenti, con densit&agrave; e fonti &mdash; e le tabelle Excel da scaricare.</p>
-    </a>
-    <a class="motore-voce" href="statistiche.html">
-      <h3><span class="dot">&#9632;</span>La mediazione in cifre</h3>
-      <p>Quante mediazioni, con quali esiti? Serie DGSTAT 2011&ndash;2025, Scoreboard UE 2026 e World Justice Project, pronti da citare.</p>
-    </a>
-    <a class="motore-voce" href="dossier.html">
-      <h3><span class="dot">&#9632;</span>Poco tempo? Parti da un dossier</h3>
-      <p>Venti monografie gi&agrave; pronte da leggere, stampare e citare &mdash; obbligatoriet&agrave;, Cartabia, costi, mediazione nel mondo &mdash; ognuna &egrave; una sintesi immediata.</p>
-    </a>
-    <a class="motore-voce" href="link.html">
-      <h3><span class="dot">&#9632;</span>Devi risalire alla fonte ufficiale?</h3>
-      <p>Gazzette, registri, banche dati, terminologia in 95 lingue e background dei mediatori per 195 Paesi: la cassetta degli attrezzi documentali.</p>
-    </a>
+<!-- COME FUNZIONA -->
+<section class="s-come">
+  <div class="wrap">
+    <h2>Come funziona</h2>
+    <p class="sub">Tre passi, dallo stesso archivio.</p>
+    <div class="steps">
+      <div class="step"><span class="num">1</span><h4>Fai una domanda</h4><p>Anche lunga e articolata: il motore la interpreta e seleziona i materiali pertinenti.</p></div>
+      <div class="step"><span class="num">2</span><h4>Leggi il contributo</h4><p>L'IA compone una trattazione continua sulle fonti selezionate, con citazioni tra parentesi.</p></div>
+      <div class="step"><span class="num">3</span><h4>Scarica e usa</h4><p>Esporti in Word con le fonti in coda; dall'assistente anche PDF e slide.</p></div>
+    </div>
   </div>
+</section>
 
-  <h3 class="macro-titolo">Interrogare tutto l&rsquo;archivio</h3>
-  <div class="motori-elenco">
-    <a class="motore-voce" href="assistente.html">
-      <h3><span class="dot">&#9632;</span>Una domanda che tocca pi&ugrave; campi?</h3>
-      <p>Interroga in una volta l&rsquo;intero archivio &mdash; norme, giurisprudenza, articoli, schede paese, statistiche &mdash; ed esporta in Word, PDF e slide.</p>
-    </a>
+<!-- L'OPERA -->
+<section id="opera" class="s-opera">
+  <div class="wrap">
+    <h2>L'Opera</h2>
+    <p class="sub">«Mediazione, il diritto della pace». L'archivio compone i contributi; i volumi si leggono e si scaricano.</p>
+    <div class="grid g3">
+      <article class="card"><span class="badge">Volume I</span><h3>Storia della mediazione nel mondo</h3><p class="d">Dalle origini mitiche alla giustizia consensuale contemporanea, in oltre cento ordinamenti.</p><a class="btn btn-ghost btn-sm" href="#">Scheda e PDF →</a></article>
+      <article class="card"><span class="badge">Volume II</span><h3>Mediazione in Europa</h3><p class="d">Direttiva 2008/52/CE, i 27 ordinamenti e il Regno Unito, dalla Cartabia allo Scoreboard 2026.</p><a class="btn btn-ghost btn-sm" href="#">Scheda e PDF →</a></article>
+      <article class="card"><span class="badge">Volume III</span><h3>L'avvocato negoziatore</h3><p class="d">Deontologia, tecniche e responsabilità nella mediazione e nell'ADR.</p><a class="btn btn-ghost btn-sm" href="#">Scheda e PDF →</a></article>
+      <article class="card"><span class="badge">Volume IV–V</span><h3>La mediazione nel mondo</h3><p class="d">Parte 1 (Americhe, Europa extra-UE, Balcani, Caucaso) e Parte 2 (Asia, Medio Oriente, Africa, Oceania).</p><a class="btn btn-ghost btn-sm" href="#">Schede e PDF →</a></article>
+      <article class="card"><span class="badge">Volume VI</span><h3>Fisiologia della comunicazione</h3><p class="d">Al tavolo del conflitto: enneagramma, Analisi Transazionale, teoria polivagale, deontologia.</p><a class="btn btn-ghost btn-sm" href="#">Scheda e PDF →</a></article>
+      <article class="card"><span class="badge">Volume VII</span><h3>Corpus normativo mondiale</h3><p class="d">Le fonti primarie della mediazione, ordinamento per ordinamento: 195 Paesi.</p><a class="btn btn-ghost btn-sm" href="#">Scheda e PDF →</a></article>
+    </div>
   </div>
+</section>
 
-  <h2 class="sezione-home">Come funziona</h2>
-  <div class="passi">
-    <div class="passo"><b>01</b><h3>Fai una domanda</h3><p>Anche lunga e articolata: il motore la interpreta e seleziona i materiali pertinenti dall&rsquo;archivio.</p></div>
-    <div class="passo"><b>02</b><h3>Leggi il contributo</h3><p>L&rsquo;AI compone una trattazione continua e armonica sulle fonti selezionate, con citazioni tra parentesi.</p></div>
-    <div class="passo"><b>03</b><h3>Scarica e usa</h3><p>Esporti in Word con le fonti pubbliche in coda; dall&rsquo;assistente generale anche PDF e slide per formatori.</p></div>
-  </div>
-  <h2 class="sezione-home">La rete del progetto</h2>
-  <p class="sotto-sezione">mediareinformati.it fa parte di un ecosistema di strumenti dell&rsquo;autore: stessa base di conoscenza, funzioni complementari.</p>
-  <div class="motori-elenco">
-    <a class="motore-voce" href="https://calcolomediazione.it" target="_blank" rel="noopener">
-      <h3><span class="dot">&#9632;</span>CalcoloMediazione.it</h3>
-      <p>Calcolatore delle indennit&agrave; (d.m. 150/2023), confronto costi mediazione/processo, credito d&rsquo;imposta, generatore procura, antiriciclaggio con modelli del fascicolo.</p>
-    </a>
-    <a class="motore-voce" href="https://olismo-integrato.it" target="_blank" rel="noopener">
-      <h3><span class="dot">&#9632;</span>Olismo Integrato</h3>
-      <p>Leggere la persona, accompagnare il conflitto: mediazione integrata, danza del conflitto, limite deontologico sulla violenza, manuale di 584 pagine.</p>
-    </a>
-    <a class="motore-voce" href="https://enneagrammaevolutivo.it" target="_blank" rel="noopener">
-      <h3><span class="dot">&#9632;</span>Enneagramma Evolutivo</h3>
-      <p>Il test dei 9 Frutti dell&rsquo;Albero della Vita: enneatipo, compatibilit&agrave; di coppia e famiglia, percorsi di vita applicati alla mediazione.</p>
-    </a>
-  </div>
+<!-- CHI SONO + RETE -->
+<section id="chisono" class="s-chi">
+  <div class="wrap">
+    <h2>Chi sono</h2>
+    <p class="sub"><b>Carlo Alberto Calcagno</b> — avvocato, mediatore e formatore. Dal 2011 studia, pratica e insegna la mediazione in Italia e nel mondo. mediareinformati.it nasce da questo archivio di studio: i contributi sono ricostruzioni autonome, fondate sulle fonti primarie e sempre da verificare su di esse.</p>
 
-  
-</main>
+    <h2 style="font-size:22px;margin-top:8px">La rete del progetto</h2>
+    <p class="sub">Un ecosistema con base di conoscenza comune e funzioni complementari.</p>
+    <div class="grid g3">
+      <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h4"/></svg></div><h3>CalcoloMediazione.it</h3><p class="d">Indennità (d.m. 150/2023), confronto costi mediazione/processo, credito d'imposta, procura, antiriciclaggio.</p><a class="btn btn-ghost btn-sm" href="#">Apri →</a></article>
+      <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.5-7 10-7 10z"/></svg></div><h3>Olismo Integrato</h3><p class="d"><i>Leggere la persona, accompagnare il conflitto</i>: mediazione integrata, manuale di 584 pagine.</p><a class="btn btn-ghost btn-sm" href="#">Apri →</a></article>
+      <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l3 6 6 .5-4.5 4 1.5 6-6-3.5-6 3.5 1.5-6L3 9.5 9 9z"/></svg></div><h3>Enneagramma Evolutivo</h3><p class="d">Il test dei 9 Frutti dell'Albero della Vita: enneatipo, compatibilità, percorsi applicati alla mediazione.</p><a class="btn btn-ghost btn-sm" href="#">Apri →</a></article>
+    </div>
 
-<footer class="sito">
-  <div class="interno">
-    <span>mediareinformati.it — piattaforma di consultazione sulla mediazione</span>
-    <span><a href="progetto.html" style="color:#d8d4cb">Chi sono e le fonti del progetto</a></span>
+    <p class="note"><b>Regola editoriale.</b> Le opere edite non sono pubblicate sul sito in versione integrale: l'archivio serve solo a comporre i contributi, che citano le fonti primarie. Ogni contributo va sempre verificato sulle fonti e non costituisce parere legale.</p>
   </div>
+</section>
+
+
+<!-- DOMANDE FREQUENTI (visibili + schema FAQPage) -->
+<section id="faq" class="s-faq">
+  <div class="wrap">
+    <h2>Domande frequenti sulla mediazione</h2>
+    <p class="sub">Risposte sintetiche e verificabili; ogni voce rimanda all'assistente per l'approfondimento con le fonti.</p>
+    <div class="qlist" style="max-width:900px">
+      <details class="q" style="display:block"><summary style="cursor:pointer;font-weight:800">Quando la mediazione è obbligatoria in Italia?</summary>
+        <p style="color:var(--grigio);margin:10px 0 0;font-size:14.5px">È condizione di procedibilità nelle materie elencate dall'art. 5 del d.lgs. 28/2010 (riformato dal d.lgs. 149/2022 e dal correttivo d.lgs. 216/2024): tra le altre condominio, diritti reali, divisione, successioni ereditarie, patti di famiglia, locazione, comodato, affitto d'azienda, responsabilità medica e sanitaria, diffamazione a mezzo stampa, contratti assicurativi, bancari e finanziari, associazione in partecipazione, consorzio, franchising, rete, somministrazione, società di persone e subfornitura.</p></details>
+      <details class="q" style="display:block"><summary style="cursor:pointer;font-weight:800">Quanto dura il procedimento di mediazione?</summary>
+        <p style="color:var(--grigio);margin:10px 0 0;font-size:14.5px">Dopo il correttivo (d.lgs. 216/2024) la durata è di sei mesi (art. 6 del d.lgs. 28/2010), prorogabile con accordo delle parti.</p></details>
+      <details class="q" style="display:block"><summary style="cursor:pointer;font-weight:800">Cosa si rischia se non si partecipa?</summary>
+        <p style="color:var(--grigio);margin:10px 0 0;font-size:14.5px">Il giudice condanna la parte che, senza giustificato motivo, non ha partecipato al procedimento al versamento di una somma pari al doppio del contributo unificato (art. 12-bis), e può desumerne argomenti di prova.</p></details>
+      <details class="q" style="display:block"><summary style="cursor:pointer;font-weight:800">Che cos'è la mediazione demandata dal giudice?</summary>
+        <p style="color:var(--grigio);margin:10px 0 0;font-size:14.5px">È la mediazione disposta dal giudice, anche in appello, valutata la natura della causa, lo stato dell'istruzione e il comportamento delle parti (art. 5-quater d.lgs. 28/2010); il suo esperimento è condizione di procedibilità.</p></details>
+      <details class="q" style="display:block"><summary style="cursor:pointer;font-weight:800">Quanto costa e c'è un credito d'imposta?</summary>
+        <p style="color:var(--grigio);margin:10px 0 0;font-size:14.5px">Le indennità seguono la Tabella A del d.m. 150/2023. È previsto un credito d'imposta per le spese di mediazione e per il compenso dell'avvocato, ridotto in caso di mancato accordo; le domande si presentano sul portale del Ministero della Giustizia.</p></details>
+      <details class="q" style="display:block"><summary style="cursor:pointer;font-weight:800">La mediazione è riconosciuta a livello internazionale?</summary>
+        <p style="color:var(--grigio);margin:10px 0 0;font-size:14.5px">Nell'UE la direttiva 2008/52/CE disciplina la mediazione civile e commerciale (la Danimarca non ne è vincolata). Sul piano globale la Convenzione di Singapore (2018, in vigore dal 12 settembre 2020) rende direttamente eseguibili all'estero gli accordi commerciali internazionali frutto di mediazione.</p></details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">mediareinformati.it — a cura di Carlo Alberto Calcagno · mediatore e formatore · Genova, 2026 · Licenza CC BY-NC-ND 4.0</div>
 </footer>
-<script defer src="assets/legal.js"></script>
+
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebSite",
+      "@id":"https://mediareinformati.it/#website",
+      "url":"https://mediareinformati.it/",
+      "name":"mediareinformati.it",
+      "description":"Piattaforma di consultazione e ricerca sulla mediazione: storia, diritto e comparazione mondiale su 195 ordinamenti.",
+      "inLanguage":"it-IT",
+      "publisher":{"@id":"https://mediareinformati.it/#person"},
+      "potentialAction":{
+        "@type":"SearchAction",
+        "target":{"@type":"EntryPoint","urlTemplate":"https://mediareinformati.it/assistente.html?q={search_term_string}"},
+        "query-input":"required name=search_term_string"
+      }
+    },
+    {
+      "@type":"Person",
+      "@id":"https://mediareinformati.it/#person",
+      "name":"Carlo Alberto Calcagno",
+      "jobTitle":["Avvocato","Mediatore","Formatore"],
+      "url":"https://mediareinformati.it/progetto.html",
+      "address":{"@type":"PostalAddress","addressLocality":"Genova","addressCountry":"IT"},
+      "knowsAbout":["Mediazione civile e commerciale","Risoluzione alternativa delle controversie","Negoziazione assistita","Storia della composizione dei conflitti","Diritto comparato della mediazione"],
+      "sameAs":[
+        "https://www.mediaresenzaconfini.org",
+        "https://www.calcolomediazione.it",
+        "https://www.olismo-integrato.it",
+        "https://www.enneagrammaevolutivo.it"
+      ]
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://mediareinformati.it/#webpage",
+      "url":"https://mediareinformati.it/",
+      "name":"Mediazione, il diritto della pace — mediareinformati.it",
+      "isPartOf":{"@id":"https://mediareinformati.it/#website"},
+      "about":{"@id":"https://mediareinformati.it/#person"},
+      "inLanguage":"it-IT",
+      "breadcrumb":{"@id":"https://mediareinformati.it/#breadcrumb"}
+    },
+    {
+      "@type":"BreadcrumbList",
+      "@id":"https://mediareinformati.it/#breadcrumb",
+      "itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mediareinformati.it/"}]
+    },
+    {
+      "@type":"Book",
+      "name":"Mediazione, il diritto della pace",
+      "author":{"@id":"https://mediareinformati.it/#person"},
+      "inLanguage":"it",
+      "numberOfPages":null,
+      "bookFormat":"https://schema.org/EBook",
+      "url":"https://mediareinformati.it/opera.html",
+      "hasPart":[
+        {"@type":"Book","name":"Volume I — Storia della mediazione nel mondo","position":1},
+        {"@type":"Book","name":"Volume II — Mediazione in Europa","position":2},
+        {"@type":"Book","name":"Volume III — L'avvocato negoziatore","position":3},
+        {"@type":"Book","name":"Volume IV — La mediazione nel mondo, Parte 1","position":4},
+        {"@type":"Book","name":"Volume V — La mediazione nel mondo, Parte 2","position":5},
+        {"@type":"Book","name":"Volume VI — Fisiologia della comunicazione e tecnica della negoziazione","position":6},
+        {"@type":"Book","name":"Volume VII — Corpus normativo mondiale della mediazione","position":7}
+      ]
+    },
+    {
+      "@type":"FAQPage",
+      "@id":"https://mediareinformati.it/#faq",
+      "mainEntity":[
+        {"@type":"Question","name":"Quando la mediazione è obbligatoria in Italia?","acceptedAnswer":{"@type":"Answer","text":"È condizione di procedibilità nelle materie elencate dall'art. 5 del d.lgs. 28/2010 (riformato dal d.lgs. 149/2022 e dal correttivo d.lgs. 216/2024): tra le altre condominio, diritti reali, divisione, successioni ereditarie, patti di famiglia, locazione, comodato, affitto d'azienda, responsabilità medica e sanitaria, diffamazione a mezzo stampa, contratti assicurativi, bancari e finanziari, associazione in partecipazione, consorzio, franchising, rete, somministrazione, società di persone e subfornitura."}},
+        {"@type":"Question","name":"Quanto dura il procedimento di mediazione?","acceptedAnswer":{"@type":"Answer","text":"Dopo il correttivo (d.lgs. 216/2024) la durata è di sei mesi (art. 6 del d.lgs. 28/2010), prorogabile con accordo delle parti."}},
+        {"@type":"Question","name":"Cosa si rischia se non si partecipa alla mediazione?","acceptedAnswer":{"@type":"Answer","text":"Il giudice condanna la parte che, senza giustificato motivo, non ha partecipato al procedimento al versamento di una somma pari al doppio del contributo unificato (art. 12-bis), e può desumerne argomenti di prova."}},
+        {"@type":"Question","name":"Che cos'è la mediazione demandata dal giudice?","acceptedAnswer":{"@type":"Answer","text":"È la mediazione disposta dal giudice, anche in appello, valutata la natura della causa, lo stato dell'istruzione e il comportamento delle parti (art. 5-quater d.lgs. 28/2010); il suo esperimento è condizione di procedibilità."}},
+        {"@type":"Question","name":"Quanto costa la mediazione e c'è un credito d'imposta?","acceptedAnswer":{"@type":"Answer","text":"Le indennità seguono la Tabella A del d.m. 150/2023. È previsto un credito d'imposta per le spese di mediazione e per il compenso dell'avvocato, ridotto in caso di mancato accordo; le domande si presentano sul portale del Ministero della Giustizia."}},
+        {"@type":"Question","name":"La mediazione è riconosciuta a livello internazionale?","acceptedAnswer":{"@type":"Answer","text":"Nell'UE la direttiva 2008/52/CE disciplina la mediazione civile e commerciale (la Danimarca non ne è vincolata). La Convenzione di Singapore (2018, in vigore dal 12 settembre 2020) rende direttamente eseguibili all'estero gli accordi commerciali internazionali frutto di mediazione."}}
+      ]
+    }
+  ]
+}
+</script>
+
 </body>
 </html>

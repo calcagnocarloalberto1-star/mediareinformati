@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mappa del sito — mediareinformati.it</title>
+<meta name="description" content="Mappa mentale interattiva di mediareinformati.it: esplora per rami storia, diritto, pratica, dati, opera e assistente; ogni argomento è cliccabile.">
+<link rel="canonical" href="https://mediareinformati.it/mappa.html">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Mappa del sito — mediareinformati.it">
+<meta property="og:description" content="Mappa mentale interattiva della piattaforma: esplora per rami e clicca ogni argomento.">
+<meta property="og:image" content="https://mediareinformati.it/og-cover.png">
+<style>
+  :root{--crema:#F4F1EA;--ink:#141414;--corallo:#A93226;--grigio:#5b574f;--linea:#d9d4c8}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--crema);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  a{color:inherit}
+  header.nav{position:sticky;top:0;z-index:30;background:var(--crema);border-bottom:2px solid var(--ink)}
+  .navwrap{max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:16px;height:58px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;text-decoration:none}
+  .brand .logo{background:var(--corallo);color:#fff;padding:4px 8px;border:2px solid var(--ink)}
+  nav{margin-left:auto}
+  nav a{margin-left:16px;text-decoration:none;color:var(--grigio);font-weight:600;font-size:14px}
+  nav a.on,nav a:hover{color:var(--ink);border-bottom:2px solid var(--corallo)}
+  .head{max-width:1280px;margin:0 auto;padding:26px 20px 4px}
+  h1{font-size:clamp(30px,4vw,44px);font-weight:800;letter-spacing:-.02em;margin:0}
+  h1 .red{color:var(--corallo)}
+  .sub{color:var(--grigio);font-size:16px;margin:8px 0 0;max-width:75ch}
+  .tools{max-width:1280px;margin:12px auto 0;padding:0 20px;display:flex;gap:10px;flex-wrap:wrap}
+  .btn{font-family:inherit;font-weight:800;cursor:pointer;border:2px solid var(--ink);background:#fff;color:var(--ink);
+    box-shadow:3px 3px 0 var(--ink);padding:8px 14px;font-size:13px;transition:transform .06s,box-shadow .06s}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+
+  .mapwrap{max-width:1280px;margin:16px auto 30px;padding:0 20px}
+  .frame{position:relative;background:#fff;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);
+    padding:28px;overflow:auto}
+  #map{position:relative;display:flex;align-items:center;gap:0;min-width:960px}
+  #wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+  .col{position:relative;z-index:2}
+  .col-root{flex:0 0 auto;padding-right:46px}
+  .root{background:var(--ink);color:var(--crema);font-weight:800;font-size:18px;padding:16px 20px;
+    border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(0,0,0,.25);white-space:nowrap}
+  .branches{display:flex;flex-direction:column;gap:14px;flex:1 1 auto}
+  .branch{display:flex;align-items:center;gap:40px}
+  .bnode{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+  .bnode a.blabel{--c:#333;background:#fff;border:2px solid var(--c);color:var(--c);font-weight:800;font-size:15px;
+    padding:9px 14px;text-decoration:none;box-shadow:3px 3px 0 var(--c);white-space:nowrap;transition:transform .06s,box-shadow .06s}
+  .bnode a.blabel:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--c)}
+  .toggle{width:26px;height:26px;border:2px solid var(--ink);background:var(--crema);cursor:pointer;font-weight:800;
+    display:flex;align-items:center;justify-content:center;padding:0;line-height:1;flex:0 0 auto}
+  .leaves{display:flex;flex-direction:column;gap:7px}
+  .leaf{--c:#333;background:#fff;border:2px solid var(--c);border-left-width:6px;color:var(--ink);text-decoration:none;
+    font-size:13.5px;padding:7px 12px;white-space:nowrap;transition:background .08s,transform .06s}
+  .leaf:hover{background:#faf7f0;transform:translateX(3px)}
+  .leaf .arw{color:var(--c);font-weight:800;margin-left:8px}
+  .branch.collapsed .leaves{display:none}
+
+  .hint{max-width:1280px;margin:0 auto 46px;padding:0 20px;color:var(--grigio);font-size:13px}
+  @media(max-width:820px){
+    .frame{padding:16px}
+    #wires{display:none}
+    #map{flex-direction:column;align-items:stretch;min-width:0;gap:14px}
+    .col-root{padding-right:0}
+    .branch{flex-direction:column;align-items:stretch;gap:8px}
+    .leaves{padding-left:16px;border-left:3px solid var(--linea)}
+    .leaf{white-space:normal}
+  }
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="navwrap">
+    <a class="brand" href="index.html"><span class="logo">Mi</span> mediareinformati.it</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="assistente.html">Assistente</a>
+      <a href="mappa.html" class="on">Mappa</a>
+    </nav>
+  </div>
+</header>
+
+<div class="head">
+  <h1>Mappa del sito</h1>
+  <p class="sub">Esplora la piattaforma per rami. Clicca il nome di un ramo per aprirne la pagina, il quadratino <b>–/+</b> per chiuderlo o aprirlo, e un argomento per andare dritto al tema.</p>
+</div>
+<div class="tools">
+  <button class="btn" onclick="setAll(false)">Espandi tutto</button>
+  <button class="btn" onclick="setAll(true)">Comprimi rami</button>
+</div>
+
+<div class="mapwrap">
+  <div class="frame">
+    <div id="map">
+      <div class="col col-root"><div class="root" id="root">mediareinformati<span style="color:var(--corallo)">.it</span></div></div>
+      <div class="col branches" id="branches"></div>
+      <svg id="wires"></svg>
+    </div>
+  </div>
+</div>
+<p class="hint">Mappa autonoma: funziona anche offline, senza librerie esterne.</p>
+
+<script>
+const DATA = [
+  {name:"Inizia da qui", url:"inizia.html", color:"#2E6E4E", leaves:[
+    ["Sono un avvocato","inizia.html"],["Sono un mediatore","inizia.html"],["Sono un formatore","inizia.html"],["Come funziona in 3 passi","inizia.html"]]},
+  {name:"Storia della mediazione", url:"storia.html", color:"#8A5A2B", leaves:[
+    ["Da dove nasce la mediazione","storia.html"],["Greci e Romani","storia.html"],["Il conciliatore dell'Ottocento","storia.html"],["Miti e archetipi del comporre","storia.html"]]},
+  {name:"Diritto e comparazione", url:"diritto.html", color:"#1F5D7A", leaves:[
+    ["È a mediazione obbligatoria?","diritto.html"],["Negli altri Paesi UE","diritto.html"],["La legge di un Paese (195 profili)","diritto.html"],["Giurisprudenza (291 pronunce)","diritto.html"],["Riforma Cartabia e correttivo","diritto.html"]]},
+  {name:"Pratica e comunicazione", url:"pratica.html", color:"#A93226", leaves:[
+    ["Preparare il primo incontro","pratica.html"],["Tecniche di conduzione","pratica.html"],["Taglio d'autore sugli articoli","pratica.html"],["22 strumenti interattivi","pratica.html"],["Manuale integrale (584 pp.)","pratica.html"]]},
+  {name:"Dati e corpus", url:"statistiche.html", color:"#2E6E4E", leaves:[
+    ["Quanti mediatori nel mondo","statistiche.html"],["La mediazione in cifre","statistiche.html"],["Dossier tematici","statistiche.html"],["Fonti ufficiali e registri","statistiche.html"]]},
+  {name:"L'Opera", url:"opera.html", color:"#7A4E2D", leaves:[
+    ["Storia della mediazione nel mondo","opera.html"],["Mediazione in Europa","opera.html"],["L'avvocato negoziatore","opera.html"],["La mediazione nel mondo — P.1","opera.html"],["La mediazione nel mondo — P.2","opera.html"],["Fisiologia della comunicazione","opera.html"],["Corpus normativo mondiale","opera.html"]]},
+  {name:"Assistente", url:"assistente.html", color:"#5A3E85", leaves:[
+    ["Interroga tutto l'archivio","assistente.html"],["Esporta in Word e PDF","assistente.html"],["Genera slide per formatori","assistente.html"]]},
+  {name:"Chi sono", url:"progetto.html", color:"#2F5D7C", leaves:[
+    ["Carlo Alberto Calcagno","progetto.html"],["Le opere di studio ed edite","progetto.html"],["Le fonti del progetto","progetto.html"],["La rete di strumenti","progetto.html"]]}
+];
+
+const branchesEl = document.getElementById('branches');
+DATA.forEach((b,i)=>{
+  const br=document.createElement('div'); br.className='branch'; br.dataset.i=i;
+  const bn=document.createElement('div'); bn.className='bnode';
+  const tg=document.createElement('button'); tg.className='toggle'; tg.textContent='–';
+  tg.setAttribute('aria-label','apri o chiudi ramo');
+  tg.onclick=()=>{ br.classList.toggle('collapsed'); tg.textContent=br.classList.contains('collapsed')?'+':'–'; draw(); };
+  const la=document.createElement('a'); la.className='blabel'; la.href=b.url; la.textContent=b.name; la.style.setProperty('--c',b.color);
+  bn.appendChild(tg); bn.appendChild(la);
+  const lv=document.createElement('div'); lv.className='leaves';
+  b.leaves.forEach(([t,u])=>{ const a=document.createElement('a'); a.className='leaf'; a.href=u; a.style.setProperty('--c',b.color);
+    a.innerHTML=t.replace(/&/g,'&amp;')+' <span class="arw">→</span>'; lv.appendChild(a); });
+  br.appendChild(bn); br.appendChild(lv);
+  branchesEl.appendChild(br);
+});
+
+const svg=document.getElementById('wires');
+const mapEl=document.getElementById('map');
+function P(el){ const r=el.getBoundingClientRect(), m=mapEl.getBoundingClientRect(); return {r,m}; }
+function draw(){
+  const m=mapEl.getBoundingClientRect();
+  svg.setAttribute('width',mapEl.scrollWidth); svg.setAttribute('height',mapEl.scrollHeight);
+  svg.setAttribute('viewBox',`0 0 ${mapEl.scrollWidth} ${mapEl.scrollHeight}`);
+  let s='';
+  const root=document.getElementById('root').getBoundingClientRect();
+  const rx=root.right-m.left, ry=root.top-m.top+root.height/2;
+  document.querySelectorAll('.branch').forEach(br=>{
+    const c=DATA[br.dataset.i].color;
+    const la=br.querySelector('.blabel').getBoundingClientRect();
+    const bx=la.left-m.left, by=la.top-m.top+la.height/2;
+    const mx=(rx+bx)/2;
+    s+=`<path d="M ${rx} ${ry} C ${mx} ${ry}, ${mx} ${by}, ${bx} ${by}" fill="none" stroke="${c}" stroke-width="2.5" opacity=".85"/>`;
+    if(!br.classList.contains('collapsed')){
+      const bxr=la.right-m.left, byr=la.top-m.top+la.height/2;
+      br.querySelectorAll('.leaf').forEach(lf=>{
+        const q=lf.getBoundingClientRect(); const lx=q.left-m.left, ly=q.top-m.top+q.height/2;
+        const midx=(bxr+lx)/2;
+        s+=`<path d="M ${bxr} ${byr} C ${midx} ${byr}, ${midx} ${ly}, ${lx} ${ly}" fill="none" stroke="${c}" stroke-width="1.6" opacity=".55"/>`;
+      });
+    }
+  });
+  svg.innerHTML=s;
+}
+function setAll(collapsed){
+  document.querySelectorAll('.branch').forEach(br=>{
+    br.classList.toggle('collapsed',collapsed);
+    br.querySelector('.toggle').textContent=collapsed?'+':'–';
+  });
+  draw();
+}
+window.addEventListener('load',()=>{ draw(); });
+window.addEventListener('resize',draw);
+document.querySelector('.frame').addEventListener('scroll',draw);
+</script>
+</body>
+</html>
