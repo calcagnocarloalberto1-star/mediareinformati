@@ -94,6 +94,13 @@ Su ogni pagina interna aggiungi anche un `BreadcrumbList` (Home › Sezione).
 - **E-E-A-T**: autore reale con biografia, opere edite, sede e profili collegati; fonti primarie sempre citate; date esplicite.
 - `robots.txt` **consente** i crawler IA (scelta coerente con un sito che vuole essere citato). Se preferisci escluderne qualcuno, togli la relativa riga `Allow`.
 
+## 4-bis) Collegamenti e funzioni (verifica del sito)
+- **Tutti i pulsanti e le domande di esempio ora sono cliccabili** e portano alla pagina giusta (in precedenza puntavano a `#`, cioè «a vuoto»: era il motivo per cui cliccando su un volume dell'Opera non si apriva nulla).
+- **Volumi dell'Opera** → i pulsanti «Scheda e PDF» aprono i file nella cartella `volumi/`. Per attivarli, copia lì i 7 PDF con i nomi indicati in `volumi/LEGGIMI.txt` (sono gli stessi che hai nella cartella «opera»).
+- **Rete dei siti** (CalcoloMediazione, Olismo Integrato, Enneagramma Evolutivo) → aprono i rispettivi siti in una nuova scheda.
+- **Riquadro «Chiedi/Componi» e domande di esempio** → è la parte che richiede un motore lato server (l'assistente vero e proprio, non ancora attivo). Per non lasciare il clic «a vuoto», le domande di esempio compilano il campo di ricerca e il pulsante mostra un messaggio di cortesia. Quando collegherai il motore, questi elementi vanno agganciati all'endpoint reale.
+- **favicon** → `/favicon.ico` e `/apple-touch-icon.png` sono richiamati ma non inclusi: aggiungili in radice (facoltativo, evita un 404 dell'icona).
+
 ## 5) Cosa devi fare tu (lato server/account — non automatizzabile da qui)
 1. **HTTPS + canonicalizzazione dominio**: redirect 301 da `www` a `https://mediareinformati.it` (o viceversa) — un solo dominio canonico.
 2. **Google Search Console** e **Bing Webmaster Tools**: verifica il dominio e invia `sitemap.xml`.
