@@ -24,8 +24,8 @@
 <meta name="twitter:title" content="Mediazione, il diritto della pace — mediareinformati.it">
 <meta name="twitter:description" content="Archivio interrogabile sulla mediazione: storia, diritto e comparazione su 195 ordinamenti. Con le fonti pubbliche in coda.">
 <meta name="twitter:image" content="https://mediareinformati.it/og-cover.png">
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/favicon.svg">
 <style>
   :root{
     --crema:#F4F1EA; --carta:#FFFFFF; --ink:#141414; --corallo:#A93226; --corallo2:#8A281D; --acc:#A93226;
@@ -132,6 +132,16 @@
   .s-chi{--acc:#2F5D7C;background:#E8EEF2}
   .s-faq{--acc:#2E6E4E;background:#EAF1EC}
   #diritto{--acc:#1F5D7A} #storia{--acc:#8A5A2B} #pratica{--acc:#A93226} #dati{--acc:#2E6E4E}
+
+  /* profili colorati per pubblico */
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .card.prof{border-top:6px solid var(--pc,#A93226)}
+  .card.prof .ic{border-color:var(--pc);background:#fff}
+  .card.prof .ic svg{stroke:var(--pc)}
+  .card.prof .plabel{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--pc);margin-bottom:6px}
+  .card.prof .btn-primary{background:var(--pc);border-color:var(--ink)}
+  @media(max-width:900px){ .g4{grid-template-columns:1fr 1fr} }
+  @media(max-width:560px){ .g4{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
@@ -169,26 +179,12 @@
 <section id="inizia" class="s-inizia">
   <div class="wrap">
     <h2>Scegli il tuo percorso</h2>
-    <p class="sub">Tre porte d'ingresso: ti portiamo dritto a ciò che ti serve.</p>
-    <div class="grid g3">
-      <article class="card">
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M6 7l-2 6a4 4 0 0 0 8 0L6 7zm12 0l-2 6a4 4 0 0 0 8 0l-2-6"/></svg></div>
-        <h3>Sono un avvocato</h3>
-        <p class="d">Norma vigente, obbligatorietà, giurisprudenza e comparazione: dove trovarle e come citarle.</p>
-        <a class="btn btn-primary btn-sm" href="#sezioni">Il tuo percorso →</a>
-      </article>
-      <article class="card">
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0-9-9M12 7v5l3 2"/></svg></div>
-        <h3>Sono un mediatore</h3>
-        <p class="d">Primo incontro, costi, deontologia, telematica e strumenti del tavolo.</p>
-        <a class="btn btn-primary btn-sm" href="#pratica">Il tuo percorso →</a>
-      </article>
-      <article class="card">
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 5h18M3 5v14h18V5M8 9h8M8 13h5"/></svg></div>
-        <h3>Sono un formatore</h3>
-        <p class="d">Dossier, dati e grafici, storia, glossario ed esercitazioni, pronti per l'aula ed esportabili.</p>
-        <a class="btn btn-primary btn-sm" href="#dati">Il tuo percorso →</a>
-      </article>
+    <p class="sub">Quattro porte d'ingresso: ti portiamo dritto a ciò che ti serve.</p>
+    <div class="grid g4">
+      <article class="card prof" style="--pc:#1F5D7A"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M6 7l-2 6a4 4 0 0 0 8 0L6 7zm12 0l-2 6a4 4 0 0 0 8 0l-2-6"/></svg></div><div class="plabel">Avvocato</div><h3>Sono un avvocato</h3><p class="d">Norma vigente, obbligatorietà, giurisprudenza e comparazione: dove trovarle e come citarle.</p><a class="btn btn-primary btn-sm" href="diritto.html">Vai al diritto →</a></article>
+      <article class="card prof" style="--pc:#2E6E4E"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="7" cy="7" r="2.6"/><circle cx="17" cy="7" r="2.6"/><path d="M3.3 19a3.7 3.7 0 0 1 7.4 0M13.3 19a3.7 3.7 0 0 1 7.4 0M10 12.5h4"/></svg></div><div class="plabel">Mediatore</div><h3>Sono un mediatore</h3><p class="d">Primo incontro, costi, deontologia, telematica e strumenti del tavolo.</p><a class="btn btn-primary btn-sm" href="pratica.html">Vai alla pratica →</a></article>
+      <article class="card prof" style="--pc:#9A5B00"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 4 2 9l10 5 10-5-10-5z"/><path d="M6 11.5V16c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6v-4.5"/><path d="M22 9v5"/></svg></div><div class="plabel">Formatore</div><h3>Sono un formatore</h3><p class="d">Dossier, dati e grafici, storia, glossario ed esercitazioni, pronti per l’aula ed esportabili.</p><a class="btn btn-primary btn-sm" href="statistiche.html">Vai ai dati →</a></article>
+      <article class="card prof" style="--pc:#5A3E85"><div class="ic"><svg viewBox="0 0 24 24"><path d="M9.5 18h5"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.8 10.7c.7.6 1.3 1.4 1.3 2.3h5c0-.9.6-1.7 1.3-2.3A6 6 0 0 0 12 3z"/></svg></div><div class="plabel">Cittadino</div><h3>Sono un semplice utente</h3><p class="d">Hai una controversia o vuoi solo capire come funziona? In parole chiare: quando la mediazione è obbligatoria, quanto costa e come si svolge.</p><a class="btn btn-primary btn-sm" href="assistente.html">Fai una domanda →</a></article>
     </div>
   </div>
 </section>
@@ -230,7 +226,7 @@
 
       <!-- Storia -->
       <article class="card" id="storia">
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H19v15H5.5A1.5 1.5 0 0 0 4 20.5zM19 19v2H6.5A2.5 2.5 0 0 1 4 18.5"/></svg></div>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 9h18L12 4 3 9z"/><path d="M5.5 9v9M9.5 9v9M14.5 9v9M18.5 9v9"/><path d="M3 21h18"/></svg></div>
         <h3>Storia della mediazione</h3>
         <div class="qlist">
           <a class="q" href="storia.html"><span><b>Da dove nasce la mediazione?</b><span>933 voci, dai miti mesopotamici alle leggi dal 1770 a oggi.</span></span><span class="arw">→</span></a>
@@ -242,7 +238,7 @@
 
       <!-- Pratica -->
       <article class="card" id="pratica">
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4l-6 6 2.9 2.9 6-6a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.1-.4-.4-2.1z"/></svg></div>
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="7" cy="7" r="2.6"/><circle cx="17" cy="7" r="2.6"/><path d="M3.3 19a3.7 3.7 0 0 1 7.4 0M13.3 19a3.7 3.7 0 0 1 7.4 0M10 12.5h4"/></svg></div>
         <h3>Pratica e comunicazione</h3>
         <div class="qlist">
           <a class="q" href="pratica.html"><span><b>Domani conduci un primo incontro?</b><span>Dispense e manuali operativi dell'autore: arrivi preparato.</span></span><span class="arw">→</span></a>
@@ -334,9 +330,9 @@
     <h2 style="font-size:22px;margin-top:8px">La rete del progetto</h2>
     <p class="sub">Un ecosistema con base di conoscenza comune e funzioni complementari.</p>
     <div class="grid g3">
-      <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h4"/></svg></div><h3>CalcoloMediazione.it</h3><p class="d">Indennità (d.m. 150/2023), confronto costi mediazione/processo, credito d'imposta, procura, antiriciclaggio.</p><a class="btn btn-ghost btn-sm" href="https://www.calcolomediazione.it" target="_blank" rel="noopener">Apri →</a></article>
+      <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01M16 17h.01"/></svg></div><h3>CalcoloMediazione.it</h3><p class="d">Indennità (d.m. 150/2023), confronto costi mediazione/processo, credito d'imposta, procura, antiriciclaggio.</p><a class="btn btn-ghost btn-sm" href="https://www.calcolomediazione.it" target="_blank" rel="noopener">Apri →</a></article>
       <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.5-7 10-7 10z"/></svg></div><h3>Olismo Integrato</h3><p class="d"><i>Leggere la persona, accompagnare il conflitto</i>: mediazione integrata, manuale di 584 pagine.</p><a class="btn btn-ghost btn-sm" href="https://www.olismo-integrato.it" target="_blank" rel="noopener">Apri →</a></article>
-      <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l3 6 6 .5-4.5 4 1.5 6-6-3.5-6 3.5 1.5-6L3 9.5 9 9z"/></svg></div><h3>Enneagramma Evolutivo</h3><p class="d">Il test dei 9 Frutti dell'Albero della Vita: enneatipo, compatibilità, percorsi applicati alla mediazione.</p><a class="btn btn-ghost btn-sm" href="https://www.enneagrammaevolutivo.it" target="_blank" rel="noopener">Apri →</a></article>
+      <article class="card"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3l7.8 15H4.2z"/><path d="M12 12l4.8 5.5M12 12L7.2 17.5"/></svg></div><h3>Enneagramma Evolutivo</h3><p class="d">Il test dei 9 Frutti dell'Albero della Vita: enneatipo, compatibilità, percorsi applicati alla mediazione.</p><a class="btn btn-ghost btn-sm" href="https://www.enneagrammaevolutivo.it" target="_blank" rel="noopener">Apri →</a></article>
     </div>
 
     <p class="note"><b>Regola editoriale.</b> Le opere edite non sono pubblicate sul sito in versione integrale: l'archivio serve solo a comporre i contributi, che citano le fonti primarie. Ogni contributo va sempre verificato sulle fonti e non costituisce parere legale.</p>
