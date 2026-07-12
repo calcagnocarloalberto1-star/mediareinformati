@@ -4,6 +4,13 @@
 
 Il sito è gratuito, senza registrazione. Un assistente compone risposte fondate esclusivamente sull'archivio del sito, con citazioni delle fonti. I dati sono verificati e le affermazioni sono ancorate a provvedimenti ufficiali (gazzette, portali legislativi, banche dati).
 
+## L'Opera «Mediazione, il diritto della pace»
+- [L'Opera](https://mediareinformati.it/opera.html): trattato in cinque volumi che fonda il sito — storia, diritto europeo, comparazione mondiale sui 195 ordinamenti e comunicazione. La tesi: la mediazione come forma giuridica della pace.
+- [Comunicazione e relazione](https://mediareinformati.it/comunicazione.html): la fisiologia del mediare — ascolto, Analisi Transazionale, neurobiologia del conflitto, la danza del conflitto (Volume Quarto), teoria dei motori psico-relazionali.
+- [Libreria dei modelli](https://mediareinformati.it/modelli.html): clausole di mediazione, verbali, informativa ex art. 4, domanda e procure ex art. 8 (Volume Secondo), testi pronti all'uso.
+- [Timeline della mediazione](https://mediareinformati.it/storia-timeline.html): la storia del comporre i conflitti dalle origini al diritto della pace.
+- [Tavola dei concetti](https://mediareinformati.it/tavola-concetti.html): mappa dei concetti-cardine della mediazione (conflitto, terzo, riservatezza, accordo, esecutività, pace).
+
 ## Percorsi per pubblico
 - [Per l'avvocato](https://mediareinformati.it/percorso-avvocato.html): normativa vigente, obbligatorietà, giurisprudenza e comparazione internazionale, con fonti citabili.
 - [Per il mediatore](https://mediareinformati.it/percorso-mediatore.html): strumenti pratici per preparare e condurre il tavolo (primo incontro, costi, deontologia, telematica).
