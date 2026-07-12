@@ -31,6 +31,7 @@
       if (!ts.base.length && !ts.extra.length) return [];
       var nq = normaTesto(q);
       var base = cfg.dati();
+      if (window.DATA_OPERA) base = base.concat(window.DATA_OPERA.map(function (o) { return { titolo: o.titolo, meta: "", estratto: o.sintesi, testo: o.sintesi }; }));
       if (cfg.italiaPrima && !(ESTERO.test(nq) || /orient|stranier|estero|europe|mondo|comparat|internazional/.test(nq))) {
         base = base.filter(function (r) {
           var chiave = normaTesto(r.titolo + " " + (r.meta || ""));
