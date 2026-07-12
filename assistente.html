@@ -143,6 +143,7 @@
 <script src="data/dgstat.js"></script>
 <script src="data/link.js"></script>
 <script src="data/corpus.js"></script>
+<script src="data/opera.js"></script>
 <script src="data/storia.js"></script>
 <script src="data/corpus_storia.js"></script>
 <script src="data/leggi_ue.js"></script>
@@ -335,6 +336,7 @@
       pronunce: top(giurBase, ["titolo", "massima", "materia", "organo"], ts, 5, 2),
       articoli: top(articoliBase, ["titolo", "estratto", "categorie"], ts, 5, 2,
         function (r) { return CORPO[r.id] || ""; }),
+      opera: top((window.DATA_OPERA || []), ["titolo", "temi", "area", "sintesi"], ts, 5, 2, function (r) { return r.sintesi; }),
       leggi: (function () {
         // domanda comparativa/mondiale: mostra un ventaglio rappresentativo di paesi con scheda aggiornata
         if (comparativa) {
@@ -395,6 +397,7 @@
     d.paesi.forEach(function (p) { righe.push("[SCHEDA " + p.paese.toUpperCase() + "] " + testoPuro(p.html).slice(0, 900)); });
     var nSt = d.storicaPrima ? 12 : 4, lSt = d.storicaPrima ? 2400 : 900;
     d.storia.slice(0, nSt).forEach(function (x) { righe.push("[STORIA] " + x.r.titolo + " (" + x.r.opera + (x.r.capitolo ? ", " + x.r.capitolo : "") + "): " + (CORPO_ST[x.r.id] || x.r.estratto).slice(0, lSt)); });
+    (d.opera || []).slice(0, 5).forEach(function (x) { righe.push("[APPROFONDIMENTO DOTTRINALE] " + x.r.titolo + ": " + x.r.sintesi.slice(0, 1500)); });
     d.norme.slice(0, 4).forEach(function (x) { righe.push("[NORMA] " + x.r.titolo + " (" + x.r.anno + ", " + x.r.ambito + ")"); });
     d.pronunce.slice(0, 4).forEach(function (x) { righe.push("[PRONUNCIA] " + x.r.titolo + " (" + x.r.anno + ", " + x.r.organo + ")" + (x.r.massima ? " — " + x.r.massima : "")); });
     d.articoli.slice(0, 4).forEach(function (x) { righe.push("[ARTICOLO — possibile fonte datata] " + x.r.titolo + " (" + x.r.data + "): " + (CORPO[x.r.id] || x.r.estratto).slice(0, 900)); });
