@@ -447,5 +447,5 @@
 }
 </script>
 
-<script>document.addEventListener("click",function(e){var f=e.target.closest("[data-fill]");if(f){e.preventDefault();var eng=f.closest(".engine")||document;var i=eng.querySelector(".searchrow input");if(i){i.value=f.getAttribute("data-fill");i.focus();i.scrollIntoView({block:"center",behavior:"smooth"});}return;}var b=e.target.closest(".searchrow button");if(b){e.preventDefault();var row=b.closest(".searchrow");var i=row.querySelector("input");var eng=b.closest(".engine")||row.parentNode;var m=eng.querySelector(".engine-msg");if(!m){m=document.createElement("p");m.className="engine-msg";m.style.cssText="margin:12px 2px 0;font-size:14px;font-weight:700";eng.appendChild(m);}var has=i&&i.value.trim();m.style.color=has?"#2E6E4E":"#A93226";m.textContent=has?"Grazie: l\u2019assistente sar\u00e0 presto operativo e comporr\u00e0 la risposta con le fonti.":"Scrivi prima una domanda.";}});</script></body>
+<script src="config.js" defer></script><script src="assistente.js" defer></script></body>
 </html>
