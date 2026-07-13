@@ -4,28 +4,39 @@ Allow: /
 Disallow: /_da_eliminare/
 Disallow: /volumi/
 
-# Motori generativi / AI (consentiti: il sito vuole essere citato con le fonti)
+# Motori generativi / AI (consentiti: il sito vuole essere citato con le fonti; esclusi i volumi integrali)
 User-agent: GPTBot
 Allow: /
+Disallow: /volumi/
 User-agent: OAI-SearchBot
 Allow: /
+Disallow: /volumi/
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /volumi/
 User-agent: PerplexityBot
 Allow: /
+Disallow: /volumi/
 User-agent: Perplexity-User
 Allow: /
+Disallow: /volumi/
 User-agent: Google-Extended
 Allow: /
+Disallow: /volumi/
 User-agent: ClaudeBot
 Allow: /
+Disallow: /volumi/
 User-agent: Claude-Web
 Allow: /
+Disallow: /volumi/
 User-agent: Applebot-Extended
 Allow: /
+Disallow: /volumi/
 User-agent: CCBot
 Allow: /
+Disallow: /volumi/
 User-agent: Bingbot
 Allow: /
+Disallow: /volumi/
 
 Sitemap: https://mediareinformati.it/sitemap.xml
