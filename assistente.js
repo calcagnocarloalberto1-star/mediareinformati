@@ -13,7 +13,7 @@
   var IDX = [
     {t:"Quando la mediazione è obbligatoria?", u:"diritto.html",
      a:"È condizione di procedibilità nelle materie dell'art. 5 del d.lgs. 28/2010 (riforma Cartabia, correttivo d.lgs. 216/2024): tra le altre condominio, diritti reali, divisione, successioni, patti di famiglia, locazione, comodato, affitto d'azienda, responsabilità medica, diffamazione a mezzo stampa, contratti assicurativi, bancari e finanziari, franchising, società di persone, subfornitura.",
-     k:"obbligatoria obbligatorieta obbligo procedibilita condizione materie quando devo obbligatorio condominio locazione successioni medica bancari"},
+     k:"obbligatoria obbligatorieta obbligo procedibilita condizione materie quando devo obbligatorio condominio locazione successioni eredita eredi ereditarie divisione medica bancari lite fratelli parenti"},
     {t:"Quanto dura il procedimento di mediazione?", u:"diritto.html",
      a:"Dopo il correttivo (d.lgs. 216/2024) la durata è di sei mesi (art. 6 del d.lgs. 28/2010), prorogabile con l'accordo delle parti.",
      k:"durata dura quanto tempo mesi termine scadenza sei mesi lunghezza"},
@@ -51,8 +51,11 @@
      a:"La sezione Dati raccoglie oltre 242.000 mediatori in 103 ordinamenti, le serie DGSTAT 2011–2025, l'EU Justice Scoreboard 2026 e i dati del World Justice Project, con tabelle Excel scaricabili.",
      k:"quanti mediatori numeri dati statistiche cifre quantita dgstat scoreboard mondo registri excel"},
     {t:"L'opera «Mediazione, il diritto della pace»", u:"opera.html",
-     a:"L'opera è in cinque volumi in PDF: I) Mediazione in Europa; II) L'avvocato negoziatore; III) Mediazione nel mondo (195 ordinamenti); IV) Fisiologia della comunicazione; V) Storia della mediazione e corpus normativo.",
-     k:"opera volumi volume libro libri pdf scaricare trattato monografia leggere"},
+     a:"L'opera, in corso di pubblicazione con un editore, si articola in cinque volumi: I) Mediazione in Europa; II) L'avvocato negoziatore; III) Mediazione nel mondo (195 ordinamenti); IV) Fisiologia della comunicazione; V) Storia della mediazione e corpus normativo.",
+     k:"opera volumi volume libro libri trattato monografia pubblicazione editore uscita"},
+    {t:"Come si diventa mediatore? Requisiti e formazione", u:"biblioteca.html",
+     a:"Per esercitare occorrono i requisiti di legge e un percorso di formazione presso enti abilitati; nella Biblioteca la scheda «Background dei mediatori» raccoglie requisiti e formazione, Paese per Paese.",
+     k:"diventare diventa formazione formarsi requisiti corso corsi abilitazione iscrizione registro albo elenco come si diventa professione carriera"},
     {t:"Glossario della mediazione e degli ADR", u:"glossario.html",
      a:"Il glossario spiega i termini della mediazione e degli ADR con i riferimenti normativi; è raggiungibile dalla Biblioteca.",
      k:"glossario termine termini definizione definizioni significato lessico vocabolario adr sigle"},
@@ -65,22 +68,30 @@
   ];
 
   function norm(s){ return (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,""); }
-  var STOP = {"che":1,"come":1,"cosa":1,"con":1,"per":1,"del":1,"della":1,"dei":1,"delle":1,"una":1,"uno":1,"gli":1,"nel":1,"nella":1,"sono":1,"sul":1,"sulla":1,"quando":1,"quanto":1,"quale":1,"quali":1,"chi":1,"non":1,"the":1};
+  // parole non discriminanti: articoli/preposizioni + termini onnipresenti nel dominio
+  var STOP = {"che":1,"come":1,"cosa":1,"con":1,"per":1,"del":1,"della":1,"dei":1,"delle":1,"una":1,"uno":1,"gli":1,"nel":1,"nella":1,"sono":1,"sul":1,"sulla":1,"quando":1,"quanto":1,"quale":1,"quali":1,"chi":1,"non":1,"the":1,
+    "mediazione":1,"mediare":1,"mediatore":1,"mediatori":1,"mediazioni":1,"adr":1,"sito":1,"archivio":1,"vorrei":1,"posso":1,"puo":1,"essere":1,"fare":1,"proprio":1,"anche":1,"tra":1,"dal":1,"dalla":1};
 
   function search(q){
     var terms = norm(q).split(/[^a-z0-9]+/).filter(function(w){ return w.length>2 && !STOP[w]; });
     if(!terms.length) return [];
-    return IDX.map(function(e){
-      var nt=norm(e.t), nk=norm(e.k), na=norm(e.a), score=0;
+    var scored = IDX.map(function(e){
+      var nt=norm(e.t), nk=norm(e.k), na=norm(e.a), score=0, hits=0;
       terms.forEach(function(w){
-        if(nt.indexOf(w)>=0) score+=4;
-        if(nk.indexOf(w)>=0) score+=3;
-        if(na.indexOf(w)>=0) score+=1;
+        var h=0;
+        if(nt.indexOf(w)>=0) h+=5;
+        if(nk.indexOf(w)>=0) h+=3;
+        if(na.indexOf(w)>=0) h+=1;
+        if(h>0){ hits++; score+=h; }
       });
-      return {e:e, score:score};
-    }).filter(function(x){ return x.score>0; })
-      .sort(function(a,b){ return b.score-a.score; })
-      .slice(0,5).map(function(x){ return x.e; });
+      return {e:e, score:score, hits:hits};
+    }).filter(function(x){ return x.hits>0; })
+      .sort(function(a,b){ return (b.score-a.score) || (b.hits-a.hits); });
+    if(!scored.length) return [];
+    var top = scored[0].score;
+    // mostra solo le voci realmente pertinenti: soglia minima + vicine al punteggio migliore
+    return scored.filter(function(x){ return x.score >= Math.max(3, top*0.55); })
+                 .slice(0,3).map(function(x){ return x.e; });
   }
 
   function box(eng){
@@ -96,7 +107,7 @@
       b.innerHTML = '<p style="color:#A93226;font-weight:700;margin:0;line-height:1.45">Nessun risultato diretto per «'+esc(q)+'». Consulta le sezioni del sito o scrivi all’Avv. Calcagno: <a href="mailto:'+EMAIL+'" style="color:inherit">'+EMAIL+'</a>.</p>';
       return;
     }
-    var html = '<p style="font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#5b574f;margin:0 0 10px">Dall’archivio del sito</p>';
+    var html = '<p style="font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#5b574f;margin:0 0 10px">Risposte pertinenti dall’archivio</p>';
     html += res.map(function(e){
       return '<a href="'+e.u+'" style="display:block;border:2px solid #141414;background:#F4F1EA;box-shadow:3px 3px 0 #141414;padding:13px 15px;margin-bottom:10px;text-decoration:none;color:#141414">'
         + '<b style="font-size:15px">'+esc(e.t)+'</b>'
@@ -140,6 +151,24 @@
   }
 
   document.addEventListener("click", function(e){
+    // menu mobile/iPad
+    var tog = e.target.closest(".navtoggle");
+    if(tog){ e.preventDefault();
+      var links = tog.parentNode.querySelector("nav.links");
+      if(links){ var op = links.classList.toggle("open"); tog.setAttribute("aria-expanded", op?"true":"false"); }
+      return;
+    }
+    // tendina "Consultazione"
+    var mb = e.target.closest(".menubtn");
+    if(mb){ e.preventDefault();
+      var sm = mb.parentNode.querySelector(".submenu");
+      if(sm){ var o2 = sm.classList.toggle("open"); mb.setAttribute("aria-expanded", o2?"true":"false"); }
+      return;
+    }
+    // chiudi menu aperti cliccando fuori
+    if(!e.target.closest("header.nav")){
+      document.querySelectorAll("nav.links.open,.submenu.open").forEach(function(el){ el.classList.remove("open"); });
+    }
     var f = e.target.closest("[data-fill]");
     if(f){ e.preventDefault();
       var eng = f.closest(".engine") || document;

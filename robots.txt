@@ -2,6 +2,7 @@
 User-agent: *
 Allow: /
 Disallow: /_da_eliminare/
+Disallow: /volumi/
 
 # Motori generativi / AI (consentiti: il sito vuole essere citato con le fonti)
 User-agent: GPTBot
