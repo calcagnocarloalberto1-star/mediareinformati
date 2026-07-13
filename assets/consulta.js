@@ -8,6 +8,8 @@
 
   window.initConsulta = function (cfg) {
     var ultima = null;
+    // niente domande precostituite sotto la barra: si mostra solo la risposta
+    var _sug = document.getElementById("suggerimenti"); if (_sug && _sug.parentNode) _sug.parentNode.removeChild(_sug);
 
     function termini(q) {
       var n = normaTesto(q).replace(/[?!.,;:'"()]/g, " ");
@@ -108,7 +110,6 @@
       cont.innerHTML = "<div class='risposta'>" +
         "<h3 class='titolo-risposta'>" + esc(q) + "</h3>" +
         "<div id='blocco-ai'><p class='cit'>Sto componendo il contributo…</p></div>" +
-        "<div id='blocco-fonti'>" + fontiHtml(fonti) + "</div>" +
         "<div class='barra-export'><button class='bottone-secondario' id='ex-doc'>Scarica il contributo in Word</button></div>" +
         "</div>";
       document.getElementById("ex-doc").addEventListener("click", esportaDoc);
@@ -124,7 +125,7 @@
       var prompt = "Sei l'assistente di mediareinformati.it, piattaforma italiana di consultazione sulla mediazione. " + (cfg.ruolo || "") +
         " Scrivi in italiano, in prosa da saggio didattico per mediatori, avvocati e formatori.\nREGISTRO LINGUISTICO OBBLIGATORIO: usa un italiano impeccabile, scorrevole e formale, con grammatica, concordanze verbali, preposizioni, punteggiatura e sintassi corrette e con la terminologia giuridica italiana propria della materia; evita anglicismi, calchi dall'inglese, costruzioni ambigue, ripetizioni e refusi; scrivi come un giurista italiano di madrelingua e rileggi mentalmente il testo prima di consegnarlo. " +
         "DOMANDA: " + q + "\n\nMATERIALI DELL'ARCHIVIO DEL SITO (base documentale riservata):\n" + materiali +
-        "\n\nREGOLE: 1) componi una RICOSTRUZIONE AUTONOMA, continua e armonica (600-1000 parole), che risponda esattamente alla domanda, NON un elenco di frammenti; 2) NON menzionare mai il curatore dell'archivio ne' le sue opere: scrivi come trattazione scientifica autonoma; 3) VALORIZZA e cita tra parentesi le fonti primarie ed esterne richiamate nei materiali (leggi con estremi, codici storici, pronunce, documenti istituzionali, autori storici); 4) scarta in silenzio i materiali non pertinenti; se quelli pertinenti sono pochi, dillo e limita la trattazione a quanto documentato; 5) non inventare estremi normativi o giurisprudenziali; 5-bis) PRIORITÀ ALLA VIGENZA: se un materiale riporta un 'AGGIORNAMENTO AL 2026' o comunque una data più recente, quello è lo stato VIGENTE e prevale sulle versioni anteriori (leggi del 2007-2012, direttiva 2008/52/CE, testi tradotti storici); enuncia per prima la regola attuale con la sua data e usa il resto come contesto storico, senza presentarlo come diritto vigente e senza ricorrere a tue conoscenze pregresse eventualmente superate; 6) rielabora sempre: nessun passo letterale oltre 40 parole; niente testi integrali; 7) chiudi con 2-3 spunti operativi o formativi; 8) NON fare MAI riferimento all'archivio, ai materiali, al manuale, alle schede, agli schemi o alle 'fonti fornite': scrivi come trattazione autonoma e cita soltanto le fonti primarie pubbliche col loro nome (leggi con estremi, pronunce, documenti istituzionali).\n" +
+        "\n\nREGOLE: 1) componi una RICOSTRUZIONE AUTONOMA, netta, articolata e approfondita (900-1500 parole), continua e armonica, con approccio MULTIDISCIPLINARE quando la domanda lo richiede — integrando il profilo giuridico con quello tecnico-procedurale e, se pertinente al quesito, con quello comunicativo, psicologico e con i modelli di lettura della persona (enneagramma evolutivo, Analisi Transazionale, teoria polivagale) — che risponda in modo esatto e completo alla domanda, NON un elenco di frammenti; 2) NON menzionare mai il curatore dell'archivio ne' le sue opere: scrivi come trattazione scientifica autonoma; 3) VALORIZZA e cita tra parentesi le fonti primarie ed esterne richiamate nei materiali (leggi con estremi, codici storici, pronunce, documenti istituzionali, autori storici); 4) scarta in silenzio i materiali non pertinenti; se quelli pertinenti sono pochi, dillo e limita la trattazione a quanto documentato; 5) non inventare estremi normativi o giurisprudenziali; 5-bis) PRIORITÀ ALLA VIGENZA: se un materiale riporta un 'AGGIORNAMENTO AL 2026' o comunque una data più recente, quello è lo stato VIGENTE e prevale sulle versioni anteriori (leggi del 2007-2012, direttiva 2008/52/CE, testi tradotti storici); enuncia per prima la regola attuale con la sua data e usa il resto come contesto storico, senza presentarlo come diritto vigente e senza ricorrere a tue conoscenze pregresse eventualmente superate; 6) rielabora sempre: nessun passo letterale oltre 40 parole; niente testi integrali; 7) chiudi con 2-3 spunti operativi o formativi; 8) NON fare MAI riferimento all'archivio, ai materiali, al manuale, alle schede, agli schemi o alle 'fonti fornite': scrivi come trattazione autonoma e cita soltanto le fonti primarie pubbliche col loro nome (leggi con estremi, pronunce, documenti istituzionali).\n" +
         "Struttura in markdown: ## Inquadramento, ## Sviluppo (più paragrafi collegati), ## Punti essenziali, ## Per la pratica e la formazione.";
       Promise.resolve(puter.ai.chat(prompt)).then(function (r) {
         var t = (r && r.message && r.message.content) ? r.message.content : (typeof r === "string" ? r : "");
@@ -137,7 +138,7 @@
 
     function esportaDoc() {
       if (!ultima) return;
-      var corpo = document.getElementById("blocco-ai").innerHTML + document.getElementById("blocco-fonti").innerHTML;
+      var corpo = document.getElementById("blocco-ai").innerHTML;
       var html = "<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'>" +
         "<style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.5}h1{color:#9c2b1f;font-size:18pt}h4{color:#111;border-bottom:1px solid #ccc}.cit{color:#777;font-size:10pt}summary{font-weight:bold}</style></head><body>" +
         "<h1>" + esc(ultima.domanda) + "</h1><p><em>mediareinformati.it — " + (cfg.nomeSezione || "contributo") + ", " + new Date().toLocaleDateString("it") + "</em></p>" +
@@ -155,9 +156,6 @@
     });
     document.getElementById("domanda").addEventListener("keydown", function (e) {
       if (e.key === "Enter") { var q = this.value.trim(); if (q) componi(q); }
-    });
-    document.getElementById("suggerimenti").addEventListener("click", function (e) {
-      if (e.target.tagName === "BUTTON") { document.getElementById("domanda").value = e.target.textContent; componi(e.target.textContent); }
     });
   };
 })();
