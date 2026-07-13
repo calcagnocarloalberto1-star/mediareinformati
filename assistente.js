@@ -53,6 +53,12 @@
     {t:"L'opera «Mediazione, il diritto della pace»", u:"opera.html",
      a:"L'opera è in cinque volumi in PDF: I) Mediazione in Europa; II) L'avvocato negoziatore; III) Mediazione nel mondo (195 ordinamenti); IV) Fisiologia della comunicazione; V) Storia della mediazione e corpus normativo.",
      k:"opera volumi volume libro libri pdf scaricare trattato monografia leggere"},
+    {t:"Glossario della mediazione e degli ADR", u:"glossario.html",
+     a:"Il glossario spiega i termini della mediazione e degli ADR con i riferimenti normativi; è raggiungibile dalla Biblioteca.",
+     k:"glossario termine termini definizione definizioni significato lessico vocabolario adr sigle"},
+    {t:"Dossier, articoli e schede-Paese (Biblioteca)", u:"biblioteca.html",
+     a:"Nella Biblioteca trovi i dossier tematici, gli articoli d'autore, il glossario, i profili e le banche dati dei 195 Paesi, la timeline storica e i materiali sulla comunicazione.",
+     k:"dossier approfondimenti biblioteca articoli glossario timeline schede paese profili banche dati sistemi censimento background monografie"},
     {t:"Chi è l'autore del sito?", u:"progetto.html",
      a:"Carlo Alberto Calcagno, avvocato, mediatore e formatore a Genova: vicedirettore della Scuola di Alta Formazione U.N.A.M., docente e autore di quattro monografie sulla risoluzione dei conflitti.",
      k:"autore chi sei chi e calcagno avvocato genova cv curriculum contatti unam formatore"}
