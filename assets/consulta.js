@@ -10,6 +10,18 @@
     var ultima = null;
     // niente domande precostituite sotto la barra: si mostra solo la risposta
     var _sug = document.getElementById("suggerimenti"); if (_sug && _sug.parentNode) _sug.parentNode.removeChild(_sug);
+    if (!document.getElementById("consulta-css")) {
+      var st = document.createElement("style"); st.id = "consulta-css";
+      st.textContent = ".chat-seg{margin-top:18px;border-top:1px dashed #cbb;padding-top:14px}" +
+        "#chat-log{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}" +
+        ".cm-user{align-self:flex-end;max-width:88%;background:#efe6da;border:1px solid #d8cfc2;border-radius:12px 12px 2px 12px;padding:8px 12px;font-size:14.5px}" +
+        ".cm-ai{align-self:flex-start;max-width:96%;background:#fff;border:1px solid #e2dacb;border-radius:12px 12px 12px 2px;padding:8px 14px;font-size:14.5px}" +
+        ".cm-ai h4{margin:.4em 0 .2em}.cm-ai p{margin:.4em 0}" +
+        ".chat-input{display:flex;gap:8px;flex-wrap:wrap}" +
+        ".chat-input input{flex:1;min-width:200px;padding:10px 12px;border:2px solid var(--ink,#141414);border-radius:8px;font-size:14.5px}" +
+        ".chat-input button[disabled]{opacity:.5;cursor:not-allowed}";
+      document.head.appendChild(st);
+    }
 
     function termini(q) {
       var n = normaTesto(q).replace(/[?!.,;:'"()]/g, " ");
@@ -107,33 +119,110 @@
       if (!fonti.length) { stato.textContent = "Nessun contenuto corrisponde alla domanda: prova a riformularla."; cont.innerHTML = ""; return; }
       stato.textContent = "";
       ultima = { domanda: q, fonti: fonti, ai: "" };
+      var aiOn = !!(window.MEDIA_AI && window.MEDIA_AI.endpoint);
       cont.innerHTML = "<div class='risposta'>" +
         "<h3 class='titolo-risposta'>" + esc(q) + "</h3>" +
         "<div id='blocco-ai'><p class='cit'>Sto componendo il contributo…</p></div>" +
-        "<div class='barra-export'><button class='bottone-secondario' id='ex-doc'>Scarica il contributo in Word</button> <button class='bottone-secondario' id='ex-ppt'>Scarica le slide (PPTX)</button></div>" +
+        "<div class='barra-export'><button class='bottone-secondario' id='ex-doc'>Scarica in Word</button> <button class='bottone-secondario' id='ex-ppt'>Scarica le slide (PPTX)</button></div>" +
+        "<div class='chat-seg'><div id='chat-log'></div>" +
+        "<div class='chat-input'><input type='text' id='chat-q' placeholder=\"Chiedi un adattamento o un approfondimento (es. «adatta a un copione di primo incontro»)\" autocomplete='off'><button class='bottone-primario' id='chat-send'>Chiedi all’assistente →</button></div>" +
+        "<p class='micro' id='chat-nota'></p></div>" +
         "</div>";
       document.getElementById("ex-doc").addEventListener("click", esportaDoc);
       document.getElementById("ex-ppt").addEventListener("click", esportaSlide);
+      (function () {
+        var send = document.getElementById("chat-send"), inp = document.getElementById("chat-q"), nota = document.getElementById("chat-nota");
+        nota.textContent = aiOn ? "L’assistente mantiene il filo: puoi chiedere adattamenti e approfondimenti in sequenza." : "Approfondimento con l’IA non ancora attivo su questo sito.";
+        function invia() { var m = inp.value.trim(); if (!m) return; inp.value = ""; chiediIA(m); }
+        send.addEventListener("click", invia);
+        inp.addEventListener("keydown", function (e) { if (e.key === "Enter") invia(); });
+        if (!aiOn) send.disabled = true;
+      })();
 
       var bAI = document.getElementById("blocco-ai");
-      if (!(window.puter && puter.ai && puter.ai.chat)) {
-        bAI.innerHTML = "<p class='cit'>Composizione AI non disponibile: di seguito i materiali pertinenti.</p>";
-        return;
-      }
       var materiali = fonti.map(function (x) {
         return "[" + x.r.titolo + (x.r.meta ? " — " + x.r.meta : "") + "]\n" + String(x.r.testo || x.r.estratto || "").slice(0, 2200);
       }).join("\n\n");
-      var prompt = "Sei l'assistente di mediareinformati.it, piattaforma italiana di consultazione sulla mediazione. " + (cfg.ruolo || "") +
+      ultima.materiali = materiali;
+      // 1) Risposta GRATUITA immediata, costruita dal corpus del sito: nessun servizio esterno, sempre disponibile.
+      var baseTxt = componiDaCorpus(fonti);
+      ultima.ai = baseTxt;
+      bAI.innerHTML = "<h4>Contributo</h4>" + mdPulito(baseTxt);
+      // 2) Se il sito ha configurato un endpoint IA, elabora la versione discorsiva completa (qualità saggio) e avvia la chat.
+      if (window.MEDIA_AI && window.MEDIA_AI.endpoint) {
+        var p = costruisciPrompt(q, materiali);
+        ultima.chat = [{ role: "user", content: p }];
+        bAI.innerHTML = "<h4>Contributo</h4>" + mdPulito(baseTxt) + "<p class='cit' id='ai-status'>Elaboro la versione discorsiva…</p>";
+        chiamaIA(ultima.chat, function (t, err) {
+          if (t) {
+            ultima.ai = t; ultima.chat.push({ role: "assistant", content: t });
+            bAI.innerHTML = "<h4>Contributo (da verificare sulle fonti)</h4>" + mdPulito(t);
+          } else {
+            var st = document.getElementById("ai-status");
+            if (st) st.textContent = "Elaborazione IA non riuscita: resta valido il contributo qui sopra.";
+          }
+        });
+      }
+    }
+
+    // Prompt di sistema riusato sia per il contributo sia per la chat
+    function costruisciPrompt(q, materiali) {
+      return "Sei l'assistente di mediareinformati.it, piattaforma italiana di consultazione sulla mediazione. " + (cfg.ruolo || "") +
         " Scrivi in italiano, in prosa da saggio didattico per mediatori, avvocati e formatori.\nREGISTRO LINGUISTICO OBBLIGATORIO: usa un italiano impeccabile, scorrevole e formale, con grammatica, concordanze verbali, preposizioni, punteggiatura e sintassi corrette e con la terminologia giuridica italiana propria della materia; evita anglicismi, calchi dall'inglese, costruzioni ambigue, ripetizioni e refusi; scrivi come un giurista italiano di madrelingua e rileggi mentalmente il testo prima di consegnarlo. " +
         "DOMANDA: " + q + "\n\nMATERIALI DELL'ARCHIVIO DEL SITO (base documentale riservata):\n" + materiali +
         "\n\nREGOLE: 1) componi una RICOSTRUZIONE AUTONOMA, netta, articolata e approfondita (900-1500 parole), continua e armonica, con approccio MULTIDISCIPLINARE quando la domanda lo richiede — integrando il profilo giuridico con quello tecnico-procedurale e, se pertinente al quesito, con quello comunicativo, psicologico e con i modelli di lettura della persona (enneagramma evolutivo, Analisi Transazionale, teoria polivagale) — che risponda in modo esatto e completo alla domanda, NON un elenco di frammenti; 2) NON menzionare mai il curatore dell'archivio ne' le sue opere: scrivi come trattazione scientifica autonoma; 3) VALORIZZA e cita tra parentesi le fonti primarie ed esterne richiamate nei materiali (leggi con estremi, codici storici, pronunce, documenti istituzionali, autori storici); 4) scarta in silenzio i materiali non pertinenti; se quelli pertinenti sono pochi, dillo e limita la trattazione a quanto documentato; 5) non inventare estremi normativi o giurisprudenziali; 5-bis) PRIORITÀ ALLA VIGENZA: se un materiale riporta un 'AGGIORNAMENTO AL 2026' o comunque una data più recente, quello è lo stato VIGENTE e prevale sulle versioni anteriori (leggi del 2007-2012, direttiva 2008/52/CE, testi tradotti storici); enuncia per prima la regola attuale con la sua data e usa il resto come contesto storico, senza presentarlo come diritto vigente e senza ricorrere a tue conoscenze pregresse eventualmente superate; 6) rielabora sempre: nessun passo letterale oltre 40 parole; niente testi integrali; 7) chiudi con 2-3 spunti operativi o formativi; 8) NON fare MAI riferimento all'archivio, ai materiali, al manuale, alle schede, agli schemi o alle 'fonti fornite': scrivi come trattazione autonoma e cita soltanto le fonti primarie pubbliche col loro nome (leggi con estremi, pronunce, documenti istituzionali).\n" +
         "Struttura in markdown: ## Inquadramento, ## Sviluppo (più paragrafi collegati), ## Punti essenziali, ## Per la pratica e la formazione.";
-      Promise.resolve(puter.ai.chat(prompt)).then(function (r) {
-        var t = (r && r.message && r.message.content) ? r.message.content : (typeof r === "string" ? r : "");
-        if (t) { ultima.ai = t; bAI.innerHTML = "<h4>Contributo (da verificare sulle fonti)</h4>" + mdPulito(t); }
-        else bAI.innerHTML = "<p class='cit'>Composizione AI non riuscita: di seguito i materiali pertinenti.</p>";
-      }).catch(function () {
-        bAI.innerHTML = "<p class='cit'>Composizione AI non disponibile in questo momento: di seguito i materiali pertinenti.</p>";
+    }
+
+    // Risposta gratuita: sintesi strutturata dai materiali più pertinenti (nessun LLM esterno)
+    function componiDaCorpus(fonti) {
+      function frasi(t, n) {
+        t = String(t || "").replace(/\s+/g, " ").trim();
+        if (!t) return "";
+        var f = t.split(/(?<=[.!?])\s+/).filter(function (s) { return s.length > 20; });
+        return f.slice(0, n).join(" ");
+      }
+      var top = fonti.slice(0, 6), out = [];
+      out.push("## Inquadramento");
+      out.push(frasi(top[0].r.testo || top[0].r.estratto, 3) || "Il tema va inquadrato tenendo insieme il profilo giuridico e quello pratico-procedurale.");
+      out.push("## Sviluppo");
+      top.forEach(function (x) { var p = frasi(x.r.testo || x.r.estratto, 3); if (p) out.push(p); });
+      out.push("## Punti essenziali");
+      top.forEach(function (x) { var t = (x.r.titolo || "").replace(/\s+/g, " ").trim(); if (t) out.push("- " + t); });
+      out.push("## Per la pratica e la formazione");
+      out.push("Verificare sempre le fonti primarie e adattare l'impostazione al caso concreto. Per una trattazione discorsiva e un adattamento su misura, usa l'approfondimento con l'assistente qui sotto.");
+      return out.join("\n\n");
+    }
+
+    // Chiamata al proxy IA del sito (la chiave resta lato server): messages = storico conversazione
+    function chiamaIA(messages, cb) {
+      try {
+        fetch(window.MEDIA_AI.endpoint, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ model: (window.MEDIA_AI.model || ""), messages: messages })
+        }).then(function (r) { return r.json(); }).then(function (d) {
+          var t = (d && (d.text || d.content || (d.message && d.message.content) ||
+            (d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content))) || "";
+          cb(t, t ? null : (d && d.error));
+        }).catch(function (e) { cb("", e); });
+      } catch (e) { cb("", e); }
+    }
+
+    // Follow-up conversazionale
+    function chiediIA(message) {
+      var log = document.getElementById("chat-log");
+      log.insertAdjacentHTML("beforeend", "<div class='cm-user'>" + esc(message) + "</div>");
+      if (!(window.MEDIA_AI && window.MEDIA_AI.endpoint)) {
+        log.insertAdjacentHTML("beforeend", "<div class='cm-ai'><p class='cit'>Approfondimento con l’IA non ancora configurato su questo sito.</p></div>");
+        return;
+      }
+      ultima.chat = ultima.chat || [];
+      ultima.chat.push({ role: "user", content: message });
+      var ph = document.createElement("div"); ph.className = "cm-ai"; ph.innerHTML = "<p class='cit'>Elaboro…</p>";
+      log.appendChild(ph);
+      chiamaIA(ultima.chat, function (t) {
+        if (t) { ultima.chat.push({ role: "assistant", content: t }); ph.innerHTML = mdPulito(t); }
+        else ph.innerHTML = "<p class='cit'>Servizio IA non raggiungibile in questo momento.</p>";
       });
     }
 
