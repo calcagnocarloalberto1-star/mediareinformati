@@ -41,8 +41,10 @@
       var ordinati = base.map(function (r) {
         var s = punteggio(r.titolo, ts) * 2.4 + punteggio(r.meta, ts) * 1.1 + punteggio(r.testo || r.estratto, ts) * 0.9;
         return { r: r, s: s };
-      }).filter(function (x) { return x.s >= 1.5; })
-        .sort(function (a, b) { return b.s - a.s; });
+      }).sort(function (a, b) { return b.s - a.s; });
+      var soprasoglia = ordinati.filter(function (x) { return x.s >= 1.5; });
+      if (soprasoglia.length) ordinati = soprasoglia;
+      else ordinati = ordinati.filter(function (x) { return x.s > 0; }).slice(0, 8);
       var visti = {}, out = [];
       ordinati.forEach(function (x) {
         var k = normaTesto(x.r.titolo).replace(/\(\d+\)|copia|\bdef\b/g, "").replace(/\s+/g, " ").trim().slice(0, 60);
