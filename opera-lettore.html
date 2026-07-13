@@ -1,0 +1,100 @@
+<!DOCTYPE html><html lang="it"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lettore &mdash; L&rsquo;Opera &mdash; mediareinformati.it</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{--ink:#141414;--corallo:#A93226;--crema:#F4F1EA}
+*{box-sizing:border-box}
+html,body{margin:0;background:#33322f;color:#eee;font-family:Georgia,serif;
+-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-touch-callout:none}
+.barra{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+background:var(--ink);color:#fff;padding:10px 16px;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+.barra a.home{color:#fff;text-decoration:none;font-weight:700;font-size:13.5px;border:1px solid #6b6b6b;padding:6px 12px;border-radius:6px}
+.barra a.home:hover{background:#6b6b6b}
+.barra .tit{font-weight:800;font-size:15px;color:#fff}
+.barra .pg{margin-left:auto;font-size:13px;color:#c9c3b8}
+#vis{display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px 10px 80px}
+.pagina{position:relative;box-shadow:0 8px 30px rgba(0,0,0,.55);background:#fff;max-width:960px;width:100%}
+.pagina canvas{display:block;width:100%;height:auto}
+.ph{width:100%;background:#faf9f6;display:flex;align-items:center;justify-content:center;color:#bbb;font-family:system-ui,sans-serif;font-size:13px}
+.wm{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;
+font-family:system-ui,sans-serif;font-size:30px;font-weight:800;letter-spacing:3px;color:rgba(169,50,38,.09);transform:rotate(-27deg);white-space:nowrap}
+.msg{color:#eee;font-family:system-ui,sans-serif;text-align:center;padding:60px 20px;font-size:15px;line-height:1.6}
+.note{color:#b7b2a7;font-family:system-ui,sans-serif;font-size:12.5px;text-align:center;padding:0 20px 30px;max-width:680px;margin:0 auto}
+@media print{html,body{display:none!important}}
+</style></head><body oncontextmenu="return false">
+<div class="barra">
+<a class="home" href="opera.html">&larr; L&rsquo;Opera</a>
+<span class="tit" id="tit">Volume</span>
+<span class="pg" id="pg"></span>
+</div>
+<div id="vis"><p class="msg" id="msg">Caricamento del volume in corso&hellip;<br><span style="font-size:13px;color:#b7b2a7">La lettura &egrave; consentita online; il testo non &egrave; scaricabile n&eacute; copiabile.</span></p></div>
+<p class="note">Opera di Carlo Alberto Calcagno, in corso di pubblicazione con un editore. Consultazione online in sola lettura: riproduzione, copia e download non consentiti. &copy; Tutti i diritti riservati.</p>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+(function(){
+  "use strict";
+  var VOLS={
+    "1":["volumi/Vol1_MediazioneInEuropa.pdf","Volume Primo — Mediazione in Europa"],
+    "2":["volumi/Vol2_AvvocatoNegoziatore.pdf","Volume Secondo — L’avvocato negoziatore"],
+    "3":["volumi/Vol3_MediazioneNelMondo.pdf","Volume Terzo — Mediazione nel mondo"],
+    "4":["volumi/Vol4_FisiologiaComunicazione.pdf","Volume Quarto — Fisiologia della comunicazione"],
+    "5":["volumi/Vol5_StoriaECorpusNormativo.pdf","Volume Quinto — Storia della mediazione e corpus normativo"]
+  };
+  // Protezioni: niente selezione, copia, trascinamento, salvataggio o stampa.
+  ["selectstart","copy","cut","dragstart","contextmenu"].forEach(function(ev){
+    document.addEventListener(ev,function(e){e.preventDefault();return false;});
+  });
+  document.addEventListener("keydown",function(e){
+    var k=(e.key||"").toLowerCase();
+    if((e.ctrlKey||e.metaKey)&&(k==="s"||k==="p"||k==="c"||k==="u"||k==="a")){e.preventDefault();return false;}
+    if(k==="printscreen"){/* non bloccabile, ma azzeriamo la clipboard */ try{navigator.clipboard&&navigator.clipboard.writeText("");}catch(x){}}
+  });
+  var params=new URLSearchParams(location.search);
+  var v=VOLS[params.get("vol")]||VOLS["1"];
+  document.getElementById("tit").textContent=v[1];
+  document.title=v[1]+" — mediareinformati.it";
+  if(!window.pdfjsLib){document.getElementById("msg").innerHTML="Impossibile inizializzare il lettore. Riprova più tardi.";return;}
+  pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  var vis=document.getElementById("vis"), msg=document.getElementById("msg");
+  var pending={};
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){
+        var n=+en.target.getAttribute("data-p");
+        io.unobserve(en.target);
+        if(pending[n]) pending[n]();
+      }
+    });
+  },{rootMargin:"600px 0px"});
+  pdfjsLib.getDocument(v[0]).promise.then(function(pdf){
+    if(msg) msg.remove();
+    document.getElementById("pg").textContent=pdf.numPages+" pagine";
+    var scale=Math.min(2, Math.max(1.2,(window.devicePixelRatio||1)*1.1));
+    for(var i=1;i<=pdf.numPages;i++){
+      (function(n){
+        var wrap=document.createElement("div");wrap.className="pagina";wrap.setAttribute("data-p",n);
+        var ph=document.createElement("div");ph.className="ph";ph.style.height="1100px";ph.textContent="Pagina "+n;
+        wrap.appendChild(ph);
+        var wm=document.createElement("div");wm.className="wm";wm.textContent="mediareinformati.it";wrap.appendChild(wm);
+        vis.appendChild(wrap);
+        pending[n]=function(){
+          pdf.getPage(n).then(function(page){
+            var vp=page.getViewport({scale:scale});
+            var canvas=document.createElement("canvas");
+            canvas.width=vp.width;canvas.height=vp.height;
+            var ctx=canvas.getContext("2d");
+            page.render({canvasContext:ctx,viewport:vp}).promise.then(function(){
+              if(ph.parentNode) wrap.replaceChild(canvas,ph);
+            });
+          });
+        };
+        io.observe(wrap);
+      })(i);
+    }
+  }).catch(function(err){
+    if(msg) msg.innerHTML="Non è stato possibile aprire il volume in questo momento. <br>Torna all&rsquo;<a style='color:#e8a' href='opera.html'>Opera</a> e riprova più tardi.";
+  });
+})();
+</script>
+</body></html>
