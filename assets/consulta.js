@@ -3,6 +3,8 @@
                        suggerimenti:[], placeholder, sinonimi:[[regex,[term]]], italiaPrima:bool, nomeFile }) */
 (function () {
   "use strict";
+  // Endpoint del proxy IA del sito (la chiave resta su Cloudflare). Sovrascrivibile per pagina.
+  window.MEDIA_AI = window.MEDIA_AI || { endpoint: "https://proud-limit-e448.calcagnocarloalberto1.workers.dev" };
   var STOP = "il lo la i gli le un una uno di a da in con su per tra fra e o ma che chi cui non come dove quando quanto quale quali cosa cos è e' della delle dei degli del al alla alle ai agli sul sulla sulle nei nelle nel si mi ti ci vi ne se più meno molto poco tutto tutti ogni questo questa questi queste quello quella essere avere fare può puo sono viene vengono stato stata qual mediante circa anche ancora poi già gia verso presso senza sotto sopra hanno ruolo modo era erano quali funziona prevede riguarda".split(" ");
   var ESTERO = /kosov|giappon|cines|\bcina\b|russ|spagn|svizzer|frances|francia|prussia|danes|danimarc|portog|austri|german|tedesc|inghilterr|inglese|regno unito|stati uniti|\busa\b|slovacc|sloven|romania|rumen|bulgar|polon|ungher|olanda|belgio|malta|cipro|albania|croaz|grecia|irland|lituan|letton|eston|finland|svez|lussemburg|malesia|vietnam|yemen|india|argentin|brasil|canad|marocc|turc|ucrain|australi|israel|onu|uncitral/;
 
@@ -123,7 +125,7 @@
       cont.innerHTML = "<div class='risposta'>" +
         "<h3 class='titolo-risposta'>" + esc(q) + "</h3>" +
         "<div id='blocco-ai'><p class='cit'>Sto componendo il contributo…</p></div>" +
-        "<div class='barra-export'><button class='bottone-secondario' id='ex-doc'>Scarica in Word</button> <button class='bottone-secondario' id='ex-ppt'>Scarica le slide (PPTX)</button></div>" +
+        "<div class='barra-export'>" + (aiOn ? "<button class='bottone-primario' id='ex-ia'>Approfondisci con l’IA →</button> " : "") + "<button class='bottone-secondario' id='ex-doc'>Scarica in Word</button> <button class='bottone-secondario' id='ex-ppt'>Scarica le slide (PPTX)</button></div>" +
         "<div class='chat-seg'><div id='chat-log'></div>" +
         "<div class='chat-input'><input type='text' id='chat-q' placeholder=\"Chiedi un adattamento o un approfondimento (es. «adatta a un copione di primo incontro»)\" autocomplete='off'><button class='bottone-primario' id='chat-send'>Chiedi all’assistente →</button></div>" +
         "<p class='micro' id='chat-nota'></p></div>" +
@@ -148,19 +150,23 @@
       var baseTxt = componiDaCorpus(fonti);
       ultima.ai = baseTxt;
       bAI.innerHTML = "<h4>Contributo</h4>" + mdPulito(baseTxt);
-      // 2) Se il sito ha configurato un endpoint IA, elabora la versione discorsiva completa (qualità saggio) e avvia la chat.
-      if (window.MEDIA_AI && window.MEDIA_AI.endpoint) {
-        var p = costruisciPrompt(q, materiali);
-        ultima.chat = [{ role: "user", content: p }];
-        bAI.innerHTML = "<h4>Contributo</h4>" + mdPulito(baseTxt) + "<p class='cit' id='ai-status'>Elaboro la versione discorsiva…</p>";
-        chiamaIA(ultima.chat, function (t, err) {
-          if (t) {
-            ultima.ai = t; ultima.chat.push({ role: "assistant", content: t });
-            bAI.innerHTML = "<h4>Contributo (da verificare sulle fonti)</h4>" + mdPulito(t);
-          } else {
-            var st = document.getElementById("ai-status");
-            if (st) st.textContent = "Elaborazione IA non riuscita: resta valido il contributo qui sopra.";
-          }
+      // 2) IA A RICHIESTA (ibrido): il pulsante genera la versione discorsiva completa (qualità saggio) e avvia la chat.
+      if (aiOn) {
+        document.getElementById("ex-ia").addEventListener("click", function () {
+          var b = this; b.disabled = true;
+          var p = costruisciPrompt(q, materiali);
+          ultima.chat = [{ role: "user", content: p }];
+          bAI.innerHTML = "<h4>Contributo</h4>" + mdPulito(ultima.ai) + "<p class='cit' id='ai-status'>Elaboro la versione discorsiva con l’IA…</p>";
+          chiamaIA(ultima.chat, function (t) {
+            b.disabled = false;
+            if (t) {
+              ultima.ai = t; ultima.chat.push({ role: "assistant", content: t });
+              bAI.innerHTML = "<h4>Contributo (da verificare sulle fonti)</h4>" + mdPulito(t);
+            } else {
+              var st = document.getElementById("ai-status");
+              if (st) st.textContent = "Elaborazione IA non riuscita in questo momento: resta valido il contributo qui sopra.";
+            }
+          });
         });
       }
     }
