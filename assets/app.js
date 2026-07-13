@@ -9,8 +9,8 @@
 */
 (function () {
   "use strict";
-  // Rimozione definitiva delle "domande comuni" sotto i motori/assistenti (non piu volute).
-  (function(){try{var s=document.createElement("style");s.textContent=".suggerimenti-domande{display:none!important}";(document.head||document.documentElement).appendChild(s);var rm=function(){var l=document.querySelectorAll(".suggerimenti-domande, #suggerimenti");for(var i=0;i<l.length;i++){if(l[i].parentNode)l[i].parentNode.removeChild(l[i]);}};if(document.readyState!=="loading")rm();else document.addEventListener("DOMContentLoaded",rm);}catch(e){}})();
+  // Rimozione definitiva delle "domande comuni" (chips che riempiono la ricerca) sotto motori/assistenti.
+  (function(){try{var s=document.createElement("style");s.textContent=".suggerimenti-domande,[data-fill]{display:none!important}";(document.head||document.documentElement).appendChild(s);var rm=function(){var kill=[];var a=document.querySelectorAll(".suggerimenti-domande, #suggerimenti");for(var i=0;i<a.length;i++)kill.push(a[i]);var b=document.querySelectorAll("[data-fill]");for(var j=0;j<b.length;j++){var q=b[j].closest?b[j].closest(".qlist"):null;kill.push(q||b[j]);}for(var k=0;k<kill.length;k++){if(kill[k]&&kill[k].parentNode)kill[k].parentNode.removeChild(kill[k]);}};if(document.readyState!=="loading")rm();else document.addEventListener("DOMContentLoaded",rm);}catch(e){}})();
 
   function norma(s) {
     return (s || "").toString().toLowerCase()
