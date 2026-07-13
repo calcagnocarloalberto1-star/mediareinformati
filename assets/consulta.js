@@ -125,7 +125,7 @@
       cont.innerHTML = "<div class='risposta'>" +
         "<h3 class='titolo-risposta'>" + esc(q) + "</h3>" +
         "<div id='blocco-ai'><p class='cit'>Sto componendo il contributo…</p></div>" +
-        "<div class='barra-export'>" + (aiOn ? "<button class='bottone-primario' id='ex-ia'>Approfondisci con l’IA →</button> " : "") + "<button class='bottone-secondario' id='ex-doc'>Scarica in Word</button> <button class='bottone-secondario' id='ex-ppt'>Scarica le slide (PPTX)</button></div>" +
+        "<div class='barra-export'><button class='bottone-secondario' id='ex-doc'>Scarica in Word</button> <button class='bottone-secondario' id='ex-ppt'>Scarica le slide (PPTX)</button></div>" +
         "<div class='chat-seg'><div id='chat-log'></div>" +
         "<div class='chat-input'><input type='text' id='chat-q' placeholder=\"Chiedi un adattamento o un approfondimento (es. «adatta a un copione di primo incontro»)\" autocomplete='off'><button class='bottone-primario' id='chat-send'>Chiedi all’assistente →</button></div>" +
         "<p class='micro' id='chat-nota'></p></div>" +
@@ -146,28 +146,24 @@
         return "[" + x.r.titolo + (x.r.meta ? " — " + x.r.meta : "") + "]\n" + String(x.r.testo || x.r.estratto || "").slice(0, 2200);
       }).join("\n\n");
       ultima.materiali = materiali;
-      // 1) Risposta GRATUITA immediata, costruita dal corpus del sito: nessun servizio esterno, sempre disponibile.
+      // Assemblaggio grezzo dal corpus: usato come base per l'export e come fallback se l'IA non risponde.
       var baseTxt = componiDaCorpus(fonti);
       ultima.ai = baseTxt;
-      bAI.innerHTML = "<h4>Contributo</h4>" + mdPulito(baseTxt);
-      // 2) IA A RICHIESTA (ibrido): il pulsante genera la versione discorsiva completa (qualità saggio) e avvia la chat.
       if (aiOn) {
-        document.getElementById("ex-ia").addEventListener("click", function () {
-          var b = this; b.disabled = true;
-          var p = costruisciPrompt(q, materiali);
-          ultima.chat = [{ role: "user", content: p }];
-          bAI.innerHTML = "<h4>Contributo</h4>" + mdPulito(ultima.ai) + "<p class='cit' id='ai-status'>Elaboro la versione discorsiva con l’IA…</p>";
-          chiamaIA(ultima.chat, function (t) {
-            b.disabled = false;
-            if (t) {
-              ultima.ai = t; ultima.chat.push({ role: "assistant", content: t });
-              bAI.innerHTML = "<h4>Contributo (da verificare sulle fonti)</h4>" + mdPulito(t);
-            } else {
-              var st = document.getElementById("ai-status");
-              if (st) st.textContent = "Elaborazione IA non riuscita in questo momento: resta valido il contributo qui sopra.";
-            }
-          });
+        // Composizione AUTOMATICA con l'IA: risposta discorsiva e coerente (qualità saggio) + chat.
+        bAI.innerHTML = "<p class='cit'>Sto componendo il contributo…</p>";
+        var p = costruisciPrompt(q, materiali);
+        ultima.chat = [{ role: "user", content: p }];
+        chiamaIA(ultima.chat, function (t) {
+          if (t) {
+            ultima.ai = t; ultima.chat.push({ role: "assistant", content: t });
+            bAI.innerHTML = "<h4>Contributo (da verificare sulle fonti)</h4>" + mdPulito(t);
+          } else {
+            bAI.innerHTML = "<h4>Contributo</h4>" + mdPulito(baseTxt) + "<p class='cit'>(Elaborazione IA non disponibile in questo momento: puoi riprovare tra poco o usare la chat qui sotto.)</p>";
+          }
         });
+      } else {
+        bAI.innerHTML = "<h4>Contributo</h4>" + mdPulito(baseTxt);
       }
     }
 
