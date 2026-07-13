@@ -9,6 +9,8 @@
 */
 (function () {
   "use strict";
+  // Rimozione definitiva delle "domande comuni" sotto i motori/assistenti (non piu volute).
+  (function(){try{var s=document.createElement("style");s.textContent=".suggerimenti-domande{display:none!important}";(document.head||document.documentElement).appendChild(s);var rm=function(){var l=document.querySelectorAll(".suggerimenti-domande, #suggerimenti");for(var i=0;i<l.length;i++){if(l[i].parentNode)l[i].parentNode.removeChild(l[i]);}};if(document.readyState!=="loading")rm();else document.addEventListener("DOMContentLoaded",rm);}catch(e){}})();
 
   function norma(s) {
     return (s || "").toString().toLowerCase()
