@@ -148,21 +148,30 @@
       ultima.materiali = materiali;
       // Assemblaggio grezzo dal corpus: usato come base per l'export e come fallback se l'IA non risponde.
       var baseTxt = componiDaCorpus(fonti);
-      ultima.ai = baseTxt;
+      ultima.ai = baseTxt; ultima.pronto = false;
       if (aiOn) {
         // Composizione AUTOMATICA con l'IA: risposta discorsiva e coerente (qualità saggio) + chat.
         bAI.innerHTML = "<p class='cit'>Sto componendo il contributo…</p>";
         var p = costruisciPrompt(q, materiali);
         ultima.chat = [{ role: "user", content: p }];
-        chiamaIA(ultima.chat, function (t) {
-          if (t) {
-            ultima.ai = t; ultima.chat.push({ role: "assistant", content: t });
-            bAI.innerHTML = "<h4>Contributo (da verificare sulle fonti)</h4>" + mdPulito(t);
-          } else {
-            bAI.innerHTML = "<h4>Contributo</h4>" + mdPulito(baseTxt) + "<p class='cit'>(Elaborazione IA non disponibile in questo momento: puoi riprovare tra poco o usare la chat qui sotto.)</p>";
-          }
-        });
+        var tent = 0;
+        (function prova() {
+          tent++;
+          chiamaIA(ultima.chat, function (t) {
+            if (t) {
+              ultima.ai = t; ultima.pronto = true; ultima.chat.push({ role: "assistant", content: t });
+              bAI.innerHTML = "<h4>Contributo (da verificare sulle fonti)</h4>" + mdPulito(t);
+            } else if (tent < 3) {
+              bAI.innerHTML = "<p class='cit'>Sto componendo il contributo… (nuovo tentativo)</p>";
+              setTimeout(prova, 1600);
+            } else {
+              ultima.pronto = true;
+              bAI.innerHTML = "<h4>Contributo</h4>" + mdPulito(baseTxt) + "<p class='cit'>(Elaborazione IA non disponibile in questo momento: riprova tra qualche istante o usa la chat qui sotto.)</p>";
+            }
+          });
+        })();
       } else {
+        ultima.pronto = true;
         bAI.innerHTML = "<h4>Contributo</h4>" + mdPulito(baseTxt);
       }
     }
@@ -181,7 +190,13 @@
       function frasi(t, n) {
         t = String(t || "").replace(/\s+/g, " ").trim();
         if (!t) return "";
-        var f = t.split(/(?<=[.!?])\s+/).filter(function (s) { return s.length > 20; });
+        var f = t.split(/(?<=[.!?])\s+/).filter(function (s) {
+          s = s.trim();
+          if (s.length <= 30) return false;
+          if (/^\d/.test(s)) return false;
+          if (/(Calcagno|\u00A9|Appunti\s+(?:sulla|di|sul))/i.test(s)) return false;
+          return true;
+        });
         return f.slice(0, n).join(" ");
       }
       var top = fonti.slice(0, 6), out = [];
@@ -230,6 +245,7 @@
 
     function esportaDoc() {
       if (!ultima) return;
+      if (!ultima.pronto) { alert("Attendi che il contributo sia pronto, poi scaricalo."); return; }
       var corpo = document.getElementById("blocco-ai").innerHTML;
       var html = "<html xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'>" +
         "<style>body{font-family:Georgia,serif;font-size:12pt;line-height:1.5}h1{color:#9c2b1f;font-size:18pt}h4{color:#111;border-bottom:1px solid #ccc}.cit{color:#777;font-size:10pt}summary{font-weight:bold}</style></head><body>" +
@@ -272,7 +288,7 @@
     }
 
     function esportaSlide() {
-      if (!ultima || !ultima.ai) { alert("Genera prima il contributo (attendi la composizione), poi scarica le slide."); return; }
+      if (!ultima || !ultima.pronto) { alert("Attendi che il contributo sia pronto, poi scarica le slide."); return; }
       caricaPptx(function () {
         var P = window.PptxGenJS;
         if (!P) { alert("Libreria slide non disponibile."); return; }
