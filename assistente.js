@@ -104,17 +104,14 @@
   function renderResults(eng, q){
     var b = box(eng), res = search(q);
     if(!res.length){
-      b.innerHTML = '<p style="color:#A93226;font-weight:700;margin:0;line-height:1.45">Nessun risultato diretto per «'+esc(q)+'». Consulta le sezioni del sito o scrivi all’Avv. Calcagno: <a href="mailto:'+EMAIL+'" style="color:inherit">'+EMAIL+'</a>.</p>';
+      b.innerHTML = '<div style="border:2px solid #141414;background:#fff;box-shadow:3px 3px 0 #141414;padding:14px 16px;line-height:1.5"><b>Non ho una risposta diretta a \u00ab'+esc(q)+'\u00bb.</b><br><span style="color:#5b574f;font-size:14px">Prova a riformulare la domanda con altre parole, oppure scrivi all\u2019Avv. Calcagno: <a href="mailto:'+EMAIL+'" style="color:#A93226">'+EMAIL+'</a>.</span></div>';
       return;
     }
-    var html = '<p style="font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#5b574f;margin:0 0 10px">Risposte pertinenti dall’archivio</p>';
-    html += res.map(function(e){
-      return '<a href="'+e.u+'" style="display:block;border:2px solid #141414;background:#F4F1EA;box-shadow:3px 3px 0 #141414;padding:13px 15px;margin-bottom:10px;text-decoration:none;color:#141414">'
-        + '<b style="font-size:15px">'+esc(e.t)+'</b>'
-        + '<span style="display:block;color:#5b574f;font-size:13.5px;line-height:1.5;margin:4px 0 6px">'+esc(e.a)+'</span>'
-        + '<span style="color:#A93226;font-weight:800;font-size:13px">Approfondisci →</span></a>';
+    var html = '<p style="font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#5b574f;margin:0 0 10px">Risposta dall\u2019archivio</p>';
+    html += res.map(function(e,i){
+      return '<div style="border:2px solid #141414;background:'+(i===0?'#fff':'#F4F1EA')+';box-shadow:3px 3px 0 #141414;padding:14px 16px;margin-bottom:10px"><b style="font-size:15.5px;display:block;margin-bottom:6px">'+esc(e.t)+'</b><span style="color:#3a372f;font-size:14.5px;line-height:1.6">'+esc(e.a)+'</span></div>';
     }).join("");
-    html += '<p style="font-size:12.5px;color:#5b574f;margin:6px 0 0;line-height:1.45">Ricerca nell’archivio pubblico del sito. L’assistente che compone un’unica risposta ragionata con tutte le fonti è in preparazione.</p>';
+    html += '<p style="font-size:12.5px;color:#5b574f;margin:6px 0 0;line-height:1.45">Risposte tratte dall\u2019archivio del sito, da verificare sempre sulle fonti citate. L\u2019assistente IA che compone la trattazione completa con tutte le fonti \u00e8 in preparazione.</p>';
     b.innerHTML = html;
   }
 
