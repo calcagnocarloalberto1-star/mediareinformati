@@ -110,9 +110,10 @@
       cont.innerHTML = "<div class='risposta'>" +
         "<h3 class='titolo-risposta'>" + esc(q) + "</h3>" +
         "<div id='blocco-ai'><p class='cit'>Sto componendo il contributo…</p></div>" +
-        "<div class='barra-export'><button class='bottone-secondario' id='ex-doc'>Scarica il contributo in Word</button></div>" +
+        "<div class='barra-export'><button class='bottone-secondario' id='ex-doc'>Scarica il contributo in Word</button> <button class='bottone-secondario' id='ex-ppt'>Scarica le slide (PPTX)</button></div>" +
         "</div>";
       document.getElementById("ex-doc").addEventListener("click", esportaDoc);
+      document.getElementById("ex-ppt").addEventListener("click", esportaSlide);
 
       var bAI = document.getElementById("blocco-ai");
       if (!(window.puter && puter.ai && puter.ai.chat)) {
@@ -148,6 +149,77 @@
       a.href = URL.createObjectURL(blob);
       a.download = (cfg.nomeFile || "contributo") + "_" + normaTesto(ultima.domanda).replace(/[^a-z0-9]+/g, "_").slice(0, 40) + ".doc";
       a.click();
+    }
+
+    function caricaPptx(cb) {
+      if (window.PptxGenJS) { cb(); return; }
+      var s = document.createElement("script");
+      s.src = "https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.12.0/pptxgen.bundle.js";
+      s.onload = function () { cb(); };
+      s.onerror = function () { alert("Impossibile caricare la libreria per le slide. Riprova con connessione attiva."); };
+      document.head.appendChild(s);
+    }
+
+    function pulisciRiga(t) {
+      return String(t).replace(/^#{1,6}\s*/, "").replace(/\*\*/g, "").replace(/`/g, "").replace(/^\s*[-*]\s+/, "• ").trim();
+    }
+
+    function parseSezioni(md) {
+      var righe = String(md).split(/\r?\n/);
+      var sezioni = [], cur = null;
+      for (var i = 0; i < righe.length; i++) {
+        var m = righe[i].match(/^\s*#{1,6}\s+(.*)/);
+        if (m) { cur = { titolo: pulisciRiga(m[1]), corpo: [] }; sezioni.push(cur); }
+        else {
+          var t = righe[i].trim();
+          if (!t) continue;
+          if (!cur) { cur = { titolo: "", corpo: [] }; sezioni.push(cur); }
+          cur.corpo.push(pulisciRiga(t));
+        }
+      }
+      return sezioni;
+    }
+
+    function esportaSlide() {
+      if (!ultima || !ultima.ai) { alert("Genera prima il contributo (attendi la composizione), poi scarica le slide."); return; }
+      caricaPptx(function () {
+        var P = window.PptxGenJS;
+        if (!P) { alert("Libreria slide non disponibile."); return; }
+        var pptx = new P();
+        pptx.layout = "LAYOUT_WIDE";
+        var oggi = new Date().toLocaleDateString("it");
+        // Copertina
+        var s0 = pptx.addSlide();
+        s0.background = { color: "FBF7F2" };
+        s0.addText(String(ultima.domanda), { x: 0.6, y: 1.5, w: 12.1, h: 3.0, fontSize: 30, bold: true, color: "9C2B1F", fontFace: "Georgia", valign: "top" });
+        s0.addText("mediareinformati.it — " + (cfg.nomeSezione || "contributo") + " · " + oggi, { x: 0.6, y: 6.4, w: 12.1, h: 0.5, fontSize: 13, italic: true, color: "777777", fontFace: "Georgia" });
+        // Sezioni
+        var sezioni = parseSezioni(ultima.ai);
+        sezioni.forEach(function (sec) {
+          var chunks = [], buf = "";
+          sec.corpo.forEach(function (p) {
+            if (buf && (buf.length + p.length) > 760) { chunks.push(buf); buf = p; }
+            else { buf = buf ? (buf + "\n\n" + p) : p; }
+          });
+          if (buf) chunks.push(buf);
+          if (!chunks.length) chunks = [""];
+          chunks.forEach(function (ch, idx) {
+            var sl = pptx.addSlide();
+            sl.background = { color: "FFFFFF" };
+            var tit = (sec.titolo || "Contributo") + (chunks.length > 1 ? " (" + (idx + 1) + "/" + chunks.length + ")" : "");
+            sl.addText(tit, { x: 0.5, y: 0.35, w: 12.3, h: 0.9, fontSize: 23, bold: true, color: "9C2B1F", fontFace: "Georgia", valign: "middle" });
+            sl.addShape(pptx.ShapeType.line, { x: 0.55, y: 1.28, w: 3.2, h: 0, line: { color: "9C2B1F", width: 2 } });
+            sl.addText(ch, { x: 0.6, y: 1.5, w: 12.1, h: 5.5, fontSize: 15, color: "222222", fontFace: "Calibri", valign: "top", lineSpacingMultiple: 1.12, paraSpaceAfter: 6 });
+            sl.addText("mediareinformati.it", { x: 10.6, y: 7.0, w: 2.5, h: 0.35, fontSize: 9, color: "AAAAAA", align: "right" });
+          });
+        });
+        // Nota finale
+        var sd = pptx.addSlide();
+        sd.background = { color: "FBF7F2" };
+        sd.addText("Nota", { x: 0.6, y: 0.6, w: 12, h: 0.7, fontSize: 22, bold: true, color: "9C2B1F", fontFace: "Georgia" });
+        sd.addText("Contributo elaborato da mediareinformati.it; verificare sempre le fonti primarie citate. Ha finalità informative e divulgative: non costituisce né sostituisce un parere legale, psicologico, medico o terapeutico, né consulenza professionale personalizzata, e non instaura alcun rapporto professionale. Per ogni decisione rivolgersi a un professionista qualificato.", { x: 0.6, y: 1.6, w: 12.1, h: 4.5, fontSize: 15, color: "444444", fontFace: "Calibri", valign: "top", lineSpacingMultiple: 1.2 });
+        pptx.writeFile({ fileName: (cfg.nomeFile || "contributo") + "_" + normaTesto(ultima.domanda).replace(/[^a-z0-9]+/g, "_").slice(0, 40) + "_slide.pptx" });
+      });
     }
 
     document.getElementById("chiedi").addEventListener("click", function () {
