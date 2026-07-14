@@ -12,6 +12,25 @@
   // Rimozione definitiva delle "domande comuni" (chips che riempiono la ricerca) sotto motori/assistenti.
   (function(){try{var s=document.createElement("style");s.textContent=".suggerimenti-domande,[data-fill]{display:none!important}";(document.head||document.documentElement).appendChild(s);var rm=function(){var kill=[];var a=document.querySelectorAll(".suggerimenti-domande, #suggerimenti");for(var i=0;i<a.length;i++)kill.push(a[i]);var b=document.querySelectorAll("[data-fill]");for(var j=0;j<b.length;j++){var q=b[j].closest?b[j].closest(".qlist"):null;kill.push(q||b[j]);}for(var k=0;k<kill.length;k++){if(kill[k]&&kill[k].parentNode)kill[k].parentNode.removeChild(kill[k]);}};if(document.readyState!=="loading")rm();else document.addEventListener("DOMContentLoaded",rm);}catch(e){}})();
 
+  // Menu di navigazione mobile/tablet: hamburger + tendina "Consultazione" (condiviso da tutte le pagine che caricano questo script).
+  document.addEventListener("click", function (e) {
+    var tog = e.target.closest(".navtoggle");
+    if (tog) { e.preventDefault();
+      var links = tog.parentNode.querySelector("nav.links");
+      if (links) { var op = links.classList.toggle("open"); tog.setAttribute("aria-expanded", op ? "true" : "false"); }
+      return;
+    }
+    var mb = e.target.closest(".menubtn");
+    if (mb) { e.preventDefault();
+      var sm = mb.parentNode.querySelector(".submenu");
+      if (sm) { var o2 = sm.classList.toggle("open"); mb.setAttribute("aria-expanded", o2 ? "true" : "false"); }
+      return;
+    }
+    if (!e.target.closest("header.nav")) {
+      document.querySelectorAll("nav.links.open,.submenu.open").forEach(function (el) { el.classList.remove("open"); });
+    }
+  });
+
   function norma(s) {
     return (s || "").toString().toLowerCase()
       .normalize("NFD").replace(/[̀-ͯ]/g, "");
