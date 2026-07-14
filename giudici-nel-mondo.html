@@ -131,7 +131,7 @@ table.tb td.num,table.tb th.num{text-align:right;font-variant-numeric:tabular-nu
       h+="<tr><td>"+esc(r.paese)+"</td><td>"+esc(r.cont)+"</td><td class='num'>"+n+"</td><td class='num'>"+fmt(r.dens)+"</td><td class='num'>"+esc(r.anno)+"</td><td>"+esc(r.onorari)+"</td><td>"+fonte+"</td></tr>";});
     corpo.innerHTML=h;conta.textContent=rows.length+" Stati"+(q?" (filtrati)":"");
   }
-  document.querySelectorAll("table.tb th[data-k]").forEach(function(th){if(th.closest("details"))return;th.style.cursor="pointer";th.addEventListener("click",function(){var k=th.getAttribute("data-k");if(sortK===k)sortDir=-sortDir;else{sortK=k;sortDir=(k==="paese"||k==="cont"||k==="onorari"||k==="url")?1:-1;}render(cerca.value);});});
+  document.querySelectorAll("table.tb th[data-k]").forEach(function(th){if(th.closest("details"))return;th.style.cursor="pointer";th.tabIndex=0;th.setAttribute("aria-sort","none");function attiva(){var k=th.getAttribute("data-k");if(sortK===k)sortDir=-sortDir;else{sortK=k;sortDir=(k==="paese"||k==="cont"||k==="onorari"||k==="url")?1:-1;}document.querySelectorAll("table.tb th[data-k]").forEach(function(t){if(!t.closest("details"))t.setAttribute("aria-sort","none");});th.setAttribute("aria-sort",sortDir===1?"ascending":"descending");render(cerca.value);}th.addEventListener("click",attiva);th.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();attiva();}});});
   cerca.addEventListener("input",function(){render(cerca.value);});render("");
   // confronto
   var cf=document.getElementById("cf-corpo"),cfc=document.getElementById("cf-cerca");
