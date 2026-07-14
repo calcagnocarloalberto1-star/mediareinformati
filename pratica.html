@@ -176,7 +176,8 @@
 <script async src="data/opera.js"></script>
 <script src="assets/consulta.js" defer></script>
 <script src="https://js.puter.com/v2/" defer></script>
-<script defer>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 var CORPO_ART = {};
 (window.DATA_CORPUS || []).forEach(function (c) { CORPO_ART[c.id] = c.testo; });
 var CORPO_PR = {};
@@ -212,6 +213,7 @@ initConsulta({
     });
     return didattici.concat(art);
   }
+});
 });
 </script>
 </body></html>
