@@ -166,7 +166,7 @@
               setTimeout(prova, 1600);
             } else {
               ultima.pronto = true;
-              bAI.innerHTML = "<h4>Contributo</h4>" + mdPulito(baseTxt) + "<p class='cit'>(Elaborazione IA non disponibile in questo momento: riprova tra qualche istante o usa la chat qui sotto.)</p>";
+              bAI.innerHTML = "<p class='cit'>L’elaborazione IA non è disponibile in questo momento (capacità del servizio momentaneamente esaurita): riprova tra qualche minuto, oppure usa la chat qui sotto quando l’IA sarà di nuovo raggiungibile.</p><details style='margin-top:10px'><summary style='cursor:pointer;color:#777;font-size:13px'>Estratti grezzi dalle fonti (non rielaborati dall’IA)</summary>" + mdPulito(baseTxt) + "</details>";
             }
           });
         })();
