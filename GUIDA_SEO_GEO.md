@@ -61,7 +61,7 @@ Questo pacchetto rende il sito ottimizzato sia per i **motori di ricerca** (SEO:
 ```json
 {"@context":"https://schema.org","@type":"ProfilePage","mainEntity":{
  "@type":"Person","name":"Carlo Alberto Calcagno",
- "jobTitle":["Avvocato","Mediatore","Formatore"],
+ "jobTitle":["Mediatore","Formatore"],
  "address":{"@type":"PostalAddress","addressLocality":"Genova","addressCountry":"IT"},
  "knowsAbout":["Mediazione","ADR","Negoziazione assistita","Diritto comparato","Storia dei sistemi di composizione dei conflitti"],
  "sameAs":["https://www.mediaresenzaconfini.org","https://www.calcolomediazione.it","https://www.olismo-integrato.it","https://www.enneagrammaevolutivo.it"],
