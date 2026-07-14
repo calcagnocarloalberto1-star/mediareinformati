@@ -130,7 +130,7 @@ table.tb td.num,table.tb th.num{text-align:right;font-variant-numeric:tabular-nu
     });
     corpo.innerHTML=h;conta.textContent=rows.length+" giurisdizioni"+(q?" (filtrate)":"");
   }
-  document.querySelectorAll("table.tb th").forEach(function(th){th.addEventListener("click",function(){var k=th.getAttribute("data-k");if(sortK===k)sortDir=-sortDir;else{sortK=k;sortDir=(k==="paese"||k==="cont")?1:-1;}render(cerca.value);});});
+  document.querySelectorAll("table.tb th").forEach(function(th){th.tabIndex=0;th.setAttribute("aria-sort","none");function attiva(){var k=th.getAttribute("data-k");if(sortK===k)sortDir=-sortDir;else{sortK=k;sortDir=(k==="paese"||k==="cont")?1:-1;}document.querySelectorAll("table.tb th").forEach(function(t){t.setAttribute("aria-sort","none");});th.setAttribute("aria-sort",sortDir===1?"ascending":"descending");render(cerca.value);}th.addEventListener("click",attiva);th.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();attiva();}});});
   cerca.addEventListener("input",function(){render(cerca.value);});render("");
 })();
 </script>
