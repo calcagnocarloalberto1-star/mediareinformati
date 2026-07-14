@@ -314,8 +314,8 @@
       <h3>Che cosa vuoi sapere?</h3>
       <p class="hint">Risponde attingendo all'intero archivio e cita sempre le fonti.</p>
       <div class="searchrow">
-        <input placeholder="Es. Quando la mediazione è obbligatoria?" aria-label="La tua domanda">
-        <button class="btn btn-primary">Chiedi →</button>
+        <input type="text" id="domanda" placeholder="Es. Quando la mediazione è obbligatoria?" autocomplete="off" aria-label="La tua domanda">
+        <button class="btn btn-primary" id="chiedi">Chiedi →</button>
       </div>
       <div class="qlist" style="margin-top:16px">
         <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -325,8 +325,10 @@
           <a class="q" style="flex:0 0 auto;padding:8px 12px" href="#home" data-fill="Come funziona in Francia?"><b>Come funziona in Francia?</b></a>
         </div>
       </div>
-      <p class="micro">Oggi la ricerca trova le voci pertinenti dell'archivio; l'assistente che compone un'unica risposta con le fonti — esportabile in <b>Word, PDF e slide</b> — è in preparazione. Da verificare sempre sulle fonti; non è un parere professionale.</p>
+      <p class="micro">Le risposte sono generate dall'assistente IA sull'archivio del sito e vanno sempre verificate sulle fonti citate; non costituiscono parere legale, psicologico, medico o terapeutico.</p>
     </div>
+    <p class="conteggio" id="stato"></p>
+    <div id="contenitore-risposta"></div>
   </div>
 </section>
 
@@ -511,5 +513,24 @@
 }
 </script>
 
-<script src="config.js?v=6" defer></script><script src="assistente.js?v=6" defer></script></body>
+<script src="data/pratica.js"></script><script src="data/corpus_pratica.js"></script><script src="data/storia.js"></script><script src="data/corpus_storia.js"></script><script src="data/articoli.js"></script><script src="data/corpus.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script><script src="assets/app.js"></script><script async src="data/opera.js"></script><script src="assets/consulta.js"></script>
+<script>
+var CORPO_ART={}; (window.DATA_CORPUS||[]).forEach(function(c){CORPO_ART[c.id]=c.testo;});
+var CORPO_PR={}; var CORPO_ST={};
+(function(){try{if(window.DATA_CORPUS_PRATICA_C&&window.pako){var b=atob(window.DATA_CORPUS_PRATICA_C),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);JSON.parse(new TextDecoder("utf-8").decode(pako.inflate(u))).forEach(function(c){CORPO_PR[c.id]=c.testo;});}}catch(e){}})();
+(function(){try{if(window.DATA_CORPUS_STORIA_C&&window.pako){var b=atob(window.DATA_CORPUS_STORIA_C),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);JSON.parse(new TextDecoder("utf-8").decode(pako.inflate(u))).forEach(function(c){CORPO_ST[c.id]=c.testo;});}}catch(e){}})();
+initConsulta({
+  nomeSezione:"contributo di consultazione", nomeFile:"mediareinformati", fonteTitolo:"Materiali utilizzati",
+  ruolo:"Componi un contributo di CONSULTAZIONE SULLA MEDIAZIONE (diritto, pratica, storia): ricostruzione autonoma che risponde con precisione alla domanda valorizzando le fonti richiamate nei materiali.",
+  italiaPrima:true,
+  sinonimi:[[/obbligator|procedibilit/,["procedibilita","28/2010","obbligatoria"]],[/cartabia|riform/,["cartabia","149/2022","216/2024"]],[/primo incontro/,["primo incontro","effettivita"]],[/telematic|online/,["telematica","videoconferenza"]],[/cost[oi]|spes|indennit/,["indennita","spese","150/2023"]]],
+  dati:function(){
+    var pr=(window.DATA_PRATICA_SEZ||[]).map(function(r){ return {titolo:r.titolo, meta:r.opera+" · "+r.temi.join(", "), estratto:r.estratto, testo:CORPO_PR[r.id]||r.estratto}; });
+    var st=(window.DATA_STORIA||[]).map(function(r){ return {titolo:r.titolo, meta:(r.opera||"")+" · "+(r.temi||[]).join(", "), estratto:r.estratto, testo:CORPO_ST[r.id]||r.estratto}; });
+    var art=(window.DATA_ARTICOLI||[]).map(function(r){ return {titolo:r.titolo, meta:"Articolo · "+r.data, estratto:r.estratto, testo:CORPO_ART[r.id]||r.estratto, url:r.url}; });
+    return pr.concat(st).concat(art);
+  }
+});
+</script>
+</body>
 </html>
