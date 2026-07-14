@@ -172,6 +172,7 @@
 <script src="data/storia.js" defer></script>
 <script src="data/corpus_storia.js" defer></script>
 <script src="data/articoli.js" defer></script>
+<script src="data/arbitrato.js" defer></script>
 <script src="data/corpus.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js" defer></script>
 <script src="assets/app.js" defer></script>
@@ -193,7 +194,8 @@ initConsulta({
     var pr=(window.DATA_PRATICA_SEZ||[]).map(function(r){ return {titolo:r.titolo, meta:r.opera+" · "+r.temi.join(", "), estratto:r.estratto, testo:CORPO_PR[r.id]||r.estratto}; });
     var st=(window.DATA_STORIA||[]).map(function(r){ return {titolo:r.titolo, meta:(r.opera||"")+" · "+(r.temi||[]).join(", "), estratto:r.estratto, testo:CORPO_ST[r.id]||r.estratto}; });
     var art=(window.DATA_ARTICOLI||[]).map(function(r){ return {titolo:r.titolo, meta:"Articolo · "+r.data, estratto:r.estratto, testo:CORPO_ART[r.id]||r.estratto, url:r.url}; });
-    return pr.concat(st).concat(art);
+    var arb=(window.DATA_ARBITRATO||[]).map(function(r){ return {titolo:r.titolo, meta:(r.opera||"")+" · "+(r.temi||[]).join(", "), estratto:r.estratto, testo:r.testo||r.estratto, url:r.url}; });
+    return pr.concat(st).concat(art).concat(arb);
   }
 });
 
