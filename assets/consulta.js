@@ -166,7 +166,7 @@
               setTimeout(prova, 1600);
             } else {
               ultima.pronto = true;
-              bAI.innerHTML = "<p class='cit'>L’elaborazione IA non è disponibile in questo momento (capacità del servizio momentaneamente esaurita): riprova tra qualche minuto, oppure usa la chat qui sotto quando l’IA sarà di nuovo raggiungibile.</p><details style='margin-top:10px'><summary style='cursor:pointer;color:#777;font-size:13px'>Estratti grezzi dalle fonti (non rielaborati dall’IA)</summary>" + mdPulito(baseTxt) + "</details>";
+              bAI.innerHTML = "<p class='cit'>In questo momento l'assistente non riesce a elaborare una risposta: il servizio è molto richiesto. Riprova tra qualche minuto, oppure scrivi qui sotto in chat — saremo felici di aiutarti appena possibile.</p><details style='margin-top:10px'><summary style='cursor:pointer;color:#777;font-size:13px'>Estratti grezzi dalle fonti (non rielaborati dall’IA)</summary>" + mdPulito(baseTxt) + "</details>";
             }
           });
         })();
