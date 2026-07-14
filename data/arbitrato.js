@@ -389,5 +389,92 @@ window.DATA_ARBITRATO = [
 "estratto": "Con questa seconda tranche la tabella copre oltre 55 giurisdizioni extra-UE, in aggiunta ai 27 Stati membri dell'Unione europea già presentati. Restano da aggiungere, nelle prossime fasi, i rimanenti Paesi dell'Africa, dell'Asia centrale, dei Caraibi e dell'Oceania: il lavoro…",
 "testo": "Con questa seconda tranche la tabella copre oltre 55 giurisdizioni extra-UE, in aggiunta ai 27 Stati membri dell'Unione europea già presentati. Restano da aggiungere, nelle prossime fasi, i rimanenti Paesi dell'Africa, dell'Asia centrale, dei Caraibi e dell'Oceania: il lavoro prosegue progressivamente verso la copertura dei 195 ordinamenti mondiali.",
 "url": "arbitrato.html"
-}
-];
+},
+{
+"id": "arb37",
+"titolo": "Che cos'è l'ENE: definizione e caratteri generali",
+"opera": "La valutazione neutrale preventiva (ENE)",
+"temi": [
+"La valutazione neutrale preventiva (ENE)"
+],
+"estratto": "La Valutazione Neutrale Preventiva, in inglese early neutral evaluation (ENE), è una forma di risoluzione alternativa delle controversie che consiste in un parere imparziale reso da uno specialista neutrale sugli aspetti tecnici e giuridici di una lite…",
+"testo": "La Valutazione Neutrale Preventiva, in inglese early neutral evaluation (ENE), è una forma di risoluzione alternativa delle controversie (ADR) che consiste in un parere imparziale reso da uno specialista neutrale sugli aspetti tecnici e giuridici di una lite, allo scopo di offrire alle parti una prospettiva realistica sul possibile esito di un eventuale contenzioso e di aiutarle a chiarire e restringere le proprie divergenze. Non è un giudizio, un lodo arbitrale né una mediazione: il valutatore non decide la controversia e non può imporre alcuna soluzione, si limita a un'opinione sui meriti del caso, incluse le probabilità di successo delle rispettive posizioni e, se pertinente, l'ordine di grandezza di un eventuale risarcimento. La procedura è particolarmente utile quando le parti hanno una valutazione molto divergente delle proprie prospettive di successo, o una comprensione inadeguata del rischio di un giudizio. È di regola informale, riservata e non vincolante: quanto emerge non può essere successivamente utilizzato come prova in un giudizio o in un arbitrato, ed è per questo che l'istituto è diffuso in particolare nei paesi di common law, oltre che, di recente, in Spagna.",
+"url": "arbitrato.html"
+},
+{
+"id": "arb38",
+"titolo": "L'ENE negli Stati Uniti",
+"opera": "La valutazione neutrale preventiva (ENE)",
+"temi": [
+"La valutazione neutrale preventiva (ENE)"
+],
+"estratto": "Negli Stati Uniti l'ENE è offerta come programma dai tribunali distrettuali federali nell'ambito dei rispettivi uffici di Alternative Dispute Resolution. Il modello più risalente è quello del Distretto Nord della California, attivo dal 1985…",
+"testo": "Negli Stati Uniti l'ENE è offerta come programma dai tribunali distrettuali federali nell'ambito dei rispettivi uffici di Alternative Dispute Resolution (ADR Unit). Il modello più risalente e più citato in dottrina è quello della Corte distrettuale del Distretto Nord della California, attivo dal 1985: un avvocato con specifica competenza nella materia del contendere conduce un incontro informale con le parti e i loro difensori, durante il quale ciascuna parte espone prove e argomentazioni senza il rigore delle regole processuali sulle prove; il valutatore fornisce quindi una valutazione dei meriti del caso, incluse le probabilità di responsabilità e l'intervallo dei danni, se pertinente. L'obiettivo dichiarato non è tanto imporre un accordo, quanto migliorare la comunicazione tra le parti, offrire un riscontro realistico e favorire le trattative. Programmi analoghi sono attivi, tra gli altri, nei distretti del Vermont e della Pennsylvania Occidentale, e l'istituto è utilizzato anche nel contenzioso federale in materia di lavoro.",
+"url": "arbitrato.html"
+},
+{
+"id": "arb39",
+"titolo": "L'ENE nel Regno Unito",
+"opera": "La valutazione neutrale preventiva (ENE)",
+"temi": [
+"La valutazione neutrale preventiva (ENE)"
+],
+"estratto": "Nel Regno Unito l'ENE è un metodo flessibile per risolvere controversie commerciali senza affrontare un giudizio o un arbitrato completi, incoraggiato dalle Civil Procedure Rules e offerto anche da organismi privati come il CEDR…",
+"testo": "Nel Regno Unito l'ENE è un metodo flessibile per risolvere controversie commerciali senza affrontare un giudizio o un arbitrato completi. Un valutatore indipendente esamina i punti di forza e di debolezza delle rispettive posizioni delle parti e fornisce una prospettiva neutrale che serve da base per un'eventuale trattativa di accordo. Il procedimento è di regola non vincolante e si svolge su base «senza pregiudizio» (without prejudice), cosicché quanto emerso non può essere successivamente utilizzato come prova in giudizio. Le Civil Procedure Rules consentono ai giudici di disporla, in particolare nelle Business and Property Courts e nella Commercial Court, ed è disponibile anche presso alcuni tribunali dal 2015; accanto alla via giudiziaria, l'ENE è offerta da organismi privati di risoluzione delle controversie, tra cui il CEDR (Centre for Effective Dispute Resolution), che dispone di un proprio elenco di valutatori accreditati e di percorsi di certificazione per i professionisti che intendono operare in questo ruolo.",
+"url": "arbitrato.html"
+},
+{
+"id": "arb40",
+"titolo": "ENE e mediazione: differenze e complementarità",
+"opera": "La valutazione neutrale preventiva (ENE)",
+"temi": [
+"La valutazione neutrale preventiva (ENE)"
+],
+"estratto": "L'ENE e la mediazione sono entrambi strumenti di ADR, ma perseguono finalità diverse: nell'ENE un esperto neutrale valuta le probabilità di successo delle posizioni giuridiche, nella mediazione un mediatore facilita la negoziazione diretta tra le parti…",
+"testo": "L'ENE e la mediazione sono entrambi strumenti di ADR, ma perseguono finalità diverse. Nell'ENE un esperto neutrale fornisce una valutazione delle probabilità di successo delle posizioni giuridiche delle parti: l'accento è sulla prospettiva tecnica e realistica dell'esito di un eventuale giudizio, non sulla ricerca diretta di un accordo. Nella mediazione, invece, un mediatore neutrale facilita la comunicazione tra le parti e le assiste nel negoziare esse stesse una soluzione condivisa, senza esprimere un parere sul merito della controversia. L'ENE non è di regola obbligatoria per legge, mentre in molti ordinamenti — tra cui l'Italia — la mediazione è condizione di procedibilità per talune materie civili e commerciali. I due istituti possono anche essere complementari: se durante l'ENE o a seguito del parere reso dal valutatore emerge l'opportunità di una composizione condivisa, le parti possono decidere di avviare, in un momento successivo e su base volontaria, un procedimento di mediazione, eventualmente rivolgendosi allo stesso valutatore se questi sia anche iscritto come mediatore.",
+"url": "arbitrato.html"
+},
+{
+"id": "arb41",
+"titolo": "Le fasi della procedura",
+"opera": "La valutazione neutrale preventiva (ENE)",
+"temi": [
+"La valutazione neutrale preventiva (ENE)"
+],
+"estratto": "Nei modelli anglosassoni e nelle proposte di adattamento italiano, l'ENE si articola in sei fasi: avvio, selezione del valutatore, preparazione, sessione di valutazione, parere del valutatore, riservatezza…",
+"testo": "Nei modelli anglosassoni e nelle proposte di adattamento italiano, l'ENE si articola generalmente in sei fasi. Avvio: la procedura può essere attivata da una clausola scritta nel contratto delle parti o da un accordo raggiunto successivamente; è comunque facoltativa e non sostituisce la mediazione, la negoziazione assistita o altre condizioni di procedibilità previste dalla legge. Selezione del valutatore: alle parti viene messo a disposizione un elenco di valutatori neutrali con comprovata esperienza nella materia della controversia; le parti concordano il nominativo e prendono contatto direttamente con il professionista prescelto. Preparazione: le parti, anche tramite i propri difensori, predispongono note scritte che illustrano la sostanza della disputa, le questioni di responsabilità e di danno e le prove ritenute rilevanti. Sessione di valutazione: l'incontro è informale, non si applicano le regole processuali sulla prova e non vi sono interrogatori o controinterrogatori formali; l'incontro non viene registrato. Parere del valutatore: al termine, il valutatore rende un parere non vincolante, che può fungere da catalizzatore per una successiva trattativa. Riservatezza: l'intera procedura, e quanto in essa emerso, resta confidenziale; il valutatore e chiunque altro coinvolto non possono essere obbligati a testimoniare in un successivo giudizio o arbitrato su quanto appreso durante l'ENE.",
+"url": "arbitrato.html"
+},
+{
+"id": "arb42",
+"titolo": "L'ENE in Spagna: la opinión de persona experta independiente",
+"opera": "La valutazione neutrale preventiva (ENE)",
+"temi": [
+"La valutazione neutrale preventiva (ENE)"
+],
+"estratto": "In Spagna un istituto assimilabile all'ENE ha assunto rilievo legislativo con la Ley Orgánica 1/2025, che ha introdotto i MASC come requisito di procedibilità; tra questi figura la opinión de persona experta independiente…",
+"testo": "In Spagna un istituto assimilabile all'ENE ha assunto rilievo legislativo con la Ley Orgánica 1/2025, del 2 gennaio, di misure in materia di efficienza del servizio pubblico della giustizia, che ha introdotto i MASC (Medios Adecuados de Solución de Controversias) come requisito di procedibilità per l'accesso alla giurisdizione civile in numerose materie. Tra i MASC espressamente elencati dalla legge figura la opinión de persona experta independiente (parere di persona esperta indipendente): un professionista terzo, scelto dalle parti o da un organismo abilitato, esamina la controversia e fornisce un parere tecnico non vincolante sulle rispettive posizioni, con funzione analoga a quella dell'ENE anglosassone. Il Ministero della Giustizia spagnolo ha dedicato all'istituto una propria pagina informativa nel portale dell'amministrazione della giustizia, mentre gli ordini professionali, tra cui il Consejo General de la Abogacía Española e l'Il·lustre Col·legi de l'Advocacia de Barcelona, hanno pubblicato guide operative per l'individuazione degli esperti e lo svolgimento della procedura.",
+"url": "arbitrato.html"
+},
+{
+"id": "arb43",
+"titolo": "Verso l'ENE in Italia: la proposta dell'Organismo di Mediazione di Reggio Emilia",
+"opera": "La valutazione neutrale preventiva (ENE)",
+"temi": [
+"La valutazione neutrale preventiva (ENE)"
+],
+"estratto": "In Italia l'ENE non è ad oggi disciplinata da una norma di legge, ma l'Organismo di Mediazione e Formazione presso il Tribunale di Reggio Emilia ha elaborato una propria proposta regolamentare per diffondere questa buona prassi…",
+"testo": "In Italia l'ENE non è ad oggi disciplinata da una norma di legge, ma l'Organismo di Mediazione e Formazione presso il Tribunale di Reggio Emilia, promosso dall'Ordine degli Avvocati di Reggio Emilia, ha elaborato una propria proposta regolamentare per diffondere questa buona prassi, in conformità con le norme vigenti e con gli indirizzi ministeriali in materia di mediazione. La proposta prevede la formazione di un elenco di specialisti, denominati Valutatori, scelti tra avvocati iscritti all'albo con qualifica di cassazionisti o titolo di specialista, giudici in quiescenza e notai, in possesso di comprovata esperienza nel settore per cui chiedono l'iscrizione; i Valutatori devono essere imparziali e indipendenti dalle parti, non trovarsi nelle situazioni di incompatibilità previste dall'art. 815 c.p.c. e, una volta reso il parere, non possono difendere le parti nello stesso procedimento né in altri per un biennio. Qualsiasi materia civile, commerciale o amministrativa disponibile per le parti può essere oggetto della valutazione; se emerge l'opportunità di una composizione condivisa, le parti possono successivamente rivolgersi a un organismo di mediazione, anche allo stesso Valutatore se iscritto come mediatore, secondo le regole del d.lgs. 4 marzo 2010, n. 28. L'Organismo non richiede alcun compenso, né al Valutatore né alle parti, per l'attività di segnalazione: il compenso del Valutatore resta oggetto di libero accordo con le parti.",
+"url": "arbitrato.html"
+},
+{
+"id": "arb44",
+"titolo": "Fonti",
+"opera": "La valutazione neutrale preventiva (ENE)",
+"temi": [
+"La valutazione neutrale preventiva (ENE)"
+],
+"estratto": "United States District Court, Northern District of California, Early Neutral Evaluation (ENE) Program. CEDR, Early Neutral Evaluation. Ley Orgánica 1/2025. Regolamento ENE dell'Organismo di Mediazione di Reggio Emilia…",
+"testo": "United States District Court, Northern District of California, Early Neutral Evaluation (ENE) Program, cand.uscourts.gov. United States District Court for the District of Vermont, Early Neutral Evaluation (ENE), vtd.uscourts.gov. CEDR (Centre for Effective Dispute Resolution), Early Neutral Evaluation, cedr.com. Ley Orgánica 1/2025, de 2 de enero, de medidas en materia de eficiencia del Servicio Público de Justicia; Ministerio de Justicia, Opinión de Persona Experta Independiente, administraciondejusticia.gob.es. Regolamento per la Valutazione Neutrale Preventiva (ENE) dell'Organismo di Mediazione e Formazione presso il Tribunale di Reggio Emilia.",
+"url": "arbitrato.html"
+},];
