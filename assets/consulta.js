@@ -203,9 +203,9 @@
       }
       var top = fonti.slice(0, 6), out = [];
       out.push("## Inquadramento");
-      out.push(frasi(top[0].r.testo || top[0].r.estratto, 3) || "Il tema va inquadrato tenendo insieme il profilo giuridico e quello pratico-procedurale.");
+      out.push(frasi(top[0].r.estratto, 3) || "Il tema va inquadrato tenendo insieme il profilo giuridico e quello pratico-procedurale.");
       out.push("## Sviluppo");
-      top.forEach(function (x) { var p = frasi(x.r.testo || x.r.estratto, 3); if (p) out.push(p); });
+      top.forEach(function (x) { var p = frasi(x.r.estratto, 3); if (p) out.push(p); });
       out.push("## Punti essenziali");
       top.forEach(function (x) { var t = (x.r.titolo || "").replace(/\s+/g, " ").trim(); if (t) out.push("- " + t); });
       out.push("## Per la pratica e la formazione");
