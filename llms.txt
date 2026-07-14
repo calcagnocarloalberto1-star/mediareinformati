@@ -8,6 +8,7 @@ Nota per i motori generativi: i contenuti possono essere citati indicando la fon
 - [Home](https://mediareinformati.it/): panoramica e accesso all'assistente
 - [Inizia da qui](https://mediareinformati.it/inizia.html): percorsi per avvocato, mediatore, formatore
 - [Storia della mediazione](https://mediareinformati.it/storia.html): 933 voci, dai miti antichi alle leggi dal 1770 a oggi
+- [Altri sistemi di giustizia complementare](https://mediareinformati.it/arbitrato.html): arbitrato nei secoli, nella UE (tabella comparata 27 Stati) e nel mondo (leggi e istituzioni arbitrali)
 - [Diritto e comparazione](https://mediareinformati.it/diritto.html): norma vigente, obbligatorietà, 195 profili-Paese, 291 pronunce
 - [Pratica e comunicazione](https://mediareinformati.it/pratica.html): primo incontro, tecniche di conduzione, strumenti
 - [Dati e corpus](https://mediareinformati.it/statistiche.html): statistiche, dossier, fonti ufficiali
