@@ -79,9 +79,9 @@ font-family:system-ui,sans-serif;font-size:30px;font-weight:800;letter-spacing:3
   },{rootMargin:"600px 0px"});
   pdfjsLib.getDocument(v[0]).promise.then(function(pdf){
     if(msg) msg.remove();
-    document.getElementById("pg").textContent=pdf.numPages+" pagine";
+    document.getElementById("pg").textContent=pdf.numPages+" pagine (anteprima: prime "+Math.min(pdf.numPages,15)+")";
     var scale=Math.min(2, Math.max(1.2,(window.devicePixelRatio||1)*1.1));
-    for(var i=1;i<=pdf.numPages;i++){
+    for(var i=1;i<=Math.min(pdf.numPages,15);i++){
       (function(n){
         var wrap=document.createElement("div");wrap.className="pagina";wrap.setAttribute("data-p",n);
         var ph=document.createElement("div");ph.className="ph";ph.style.height="1100px";ph.textContent="Pagina "+n;
@@ -101,6 +101,13 @@ font-family:system-ui,sans-serif;font-size:30px;font-weight:800;letter-spacing:3
         };
         io.observe(wrap);
       })(i);
+    }
+    if(pdf.numPages>15){
+      var more=document.createElement("div");
+      more.className="nota-anteprima";
+      more.style.cssText="padding:32px 16px;text-align:center;color:#5b5574;font-style:italic;border-top:2px dashed #d9d4c8;margin-top:12px;";
+      more.textContent="Anteprima limitata alle prime 15 pagine. Le restanti pagine saranno disponibili alla pubblicazione dell\u2019opera.";
+      vis.appendChild(more);
     }
   }).catch(function(err){
     if(msg) msg.innerHTML="Non è stato possibile aprire il volume in questo momento. <br>Torna all&rsquo;<a style='color:#e8a' href='opera.html'>Opera</a> e riprova più tardi.";
