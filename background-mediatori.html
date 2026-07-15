@@ -97,8 +97,9 @@ table.bg a{color:#a93226}
     <span><a href="progetto.html" style="color:#d8d4cb">Chi sono e le fonti del progetto</a></span>
   </div>
 </footer>
-<script src="data/registri_paesi.js"></script>
+<script src="data/registri_paesi.js" defer></script>
 <script>
+document.addEventListener("DOMContentLoaded", function () {
 (function(){
   var A=(window.DATA_REGISTRI||[]);
   var corpo=document.getElementById("bg-corpo"),conta=document.getElementById("bg-conta"),cerca=document.getElementById("bg-cerca");
@@ -114,6 +115,8 @@ table.bg a{color:#a93226}
   }
   cerca.addEventListener("input",function(){render(cerca.value);});render("");
 })();
+});
+
 </script>
 <script defer src="assets/legal.js"></script>
 </body>
