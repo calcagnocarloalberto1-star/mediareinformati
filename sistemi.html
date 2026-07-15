@@ -131,12 +131,13 @@
   </div>
 </footer>
 
-<script src="data/sistemi.js"></script>
-<script src="assets/app.js"></script>
+<script src="data/sistemi.js" defer></script>
+<script src="assets/app.js" defer></script>
 <script async src="data/opera.js"></script>
-<script src="assets/consulta.js"></script>
-<script src="https://js.puter.com/v2/"></script>
+<script src="assets/consulta.js" defer></script>
+<script src="https://js.puter.com/v2/" defer></script>
 <script>
+document.addEventListener("DOMContentLoaded", function () {
 initConsulta({
   nomeSezione: "contributo comparato",
   nomeFile: "sistemi",
@@ -158,8 +159,11 @@ initConsulta({
     });
   }
 });
+});
+
 </script>
 <script>
+document.addEventListener("DOMContentLoaded", function () {
 (function(){
   function fill(){
     var ul=document.getElementById('legenda-paesi');
@@ -172,6 +176,8 @@ initConsulta({
   }
   if(document.readyState!=='loading'){fill();}else{document.addEventListener('DOMContentLoaded',fill);}
 })();
+});
+
 </script>
 <script defer src="assets/legal.js"></script>
 </body>
