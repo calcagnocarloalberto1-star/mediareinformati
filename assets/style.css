@@ -13,6 +13,12 @@
   --ombra-s: 3px 3px 0 #141414;
 }
 * { box-sizing: border-box; }
+.skip-link {
+  position: absolute; left: -999px; top: 0; z-index: 500;
+  background: var(--rosso); color: #fff; padding: 10px 16px;
+  border-radius: 0 0 6px 0; font-size: .875rem; font-weight: 600; text-decoration: none;
+}
+.skip-link:focus { left: 0; }
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
