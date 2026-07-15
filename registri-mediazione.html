@@ -95,9 +95,10 @@ table.rg a{color:#a93226;word-break:break-word}
     <span><a href="progetto.html" style="color:#d8d4cb">Chi sono e le fonti del progetto</a></span>
   </div>
 </footer>
-<script src="data/registri_paesi.js"></script>
-<script src="data/mediatori_conteggi.js"></script>
+<script src="data/registri_paesi.js" defer></script>
+<script src="data/mediatori_conteggi.js" defer></script>
 <script>
+document.addEventListener("DOMContentLoaded", function () {
 (function(){
   var A=(window.DATA_REGISTRI||[]);
   var corpo=document.getElementById("rg-corpo"),conta=document.getElementById("rg-conta"),cerca=document.getElementById("rg-cerca");
@@ -116,6 +117,8 @@ table.rg a{color:#a93226;word-break:break-word}
   }
   cerca.addEventListener("input",function(){render(cerca.value);});render("");
 })();
+});
+
 </script>
 <script defer src="assets/legal.js"></script>
 </body>
