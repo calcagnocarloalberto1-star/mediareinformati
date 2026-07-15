@@ -105,10 +105,11 @@
   <span>mediareinformati.it — piattaforma di consultazione sulla mediazione</span>
   <span><a href="progetto.html" style="color:#d8d4cb">Chi sono e le fonti del progetto</a></span>
 </div></footer>
-<script src="data/profili_paesi.js"></script>
-<script src="assets/app.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+<script src="data/profili_paesi.js" defer></script>
+<script src="assets/app.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js" defer></script>
 <script>
+document.addEventListener("DOMContentLoaded", function () {
 (function(){
   "use strict";
   var P = window.DATA_PROFILI || [];
@@ -205,6 +206,8 @@
     var b=document.getElementById("ex"); if(b) b.addEventListener("click",function(){esportaDoc(p);});
   });
 })();
+});
+
 </script>
 <script defer src="assets/legal.js"></script>
 </body>
