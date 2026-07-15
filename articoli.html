@@ -119,13 +119,14 @@
   </div>
 </footer>
 
-<script src="data/articoli.js"></script>
-<script src="data/corpus.js"></script>
-<script src="assets/app.js"></script>
+<script src="data/articoli.js" defer></script>
+<script src="data/corpus.js" defer></script>
+<script src="assets/app.js" defer></script>
 <script async src="data/opera.js"></script>
-<script src="assets/consulta.js"></script>
-<script src="https://js.puter.com/v2/"></script>
+<script src="assets/consulta.js" defer></script>
+<script src="https://js.puter.com/v2/" defer></script>
 <script>
+document.addEventListener("DOMContentLoaded", function () {
 var CORPO_ART = {};
 (window.DATA_CORPUS || []).forEach(function (c) { CORPO_ART[c.id] = c.testo; });
 initConsulta({
@@ -148,6 +149,8 @@ initConsulta({
     });
   }
 });
+});
+
 </script>
 <script defer src="assets/legal.js"></script>
 </body>
