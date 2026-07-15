@@ -111,8 +111,9 @@ table.tb td.num,table.tb th.num{text-align:right;font-variant-numeric:tabular-nu
     <span><a href="progetto.html" style="color:#d8d4cb">Chi sono e le fonti del progetto</a></span>
   </div>
 </footer>
-<script src="data/avvocati_mondo.js"></script>
+<script src="data/avvocati_mondo.js" defer></script>
 <script>
+document.addEventListener("DOMContentLoaded", function () {
 (function(){
   var A=(window.DATA_AVVOCATI||[]);
   var corpo=document.getElementById("tb-corpo"),conta=document.getElementById("tb-conta"),cerca=document.getElementById("tb-cerca");
@@ -138,6 +139,8 @@ table.tb td.num,table.tb th.num{text-align:right;font-variant-numeric:tabular-nu
   document.querySelectorAll("table.tb th").forEach(function(th){th.tabIndex=0;th.setAttribute("aria-sort","none");function attiva(){var k=th.getAttribute("data-k");if(sortK===k)sortDir=-sortDir;else{sortK=k;sortDir=(k==="paese"||k==="cont")?1:-1;}document.querySelectorAll("table.tb th").forEach(function(t){t.setAttribute("aria-sort","none");});th.setAttribute("aria-sort",sortDir===1?"ascending":"descending");render(cerca.value);}th.addEventListener("click",attiva);th.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();attiva();}});});
   cerca.addEventListener("input",function(){render(cerca.value);});render("");
 })();
+});
+
 </script>
 <script defer src="assets/legal.js"></script>
 </body>
