@@ -107,8 +107,9 @@ table.tm tr:hover td{background:#faf9f6}
     <span><a href="progetto.html" style="color:#d8d4cb">Chi sono e le fonti del progetto</a></span>
   </div>
 </footer>
-<script src="data/terminologia.js?v=4"></script>
+<script src="data/terminologia.js?v=4" defer></script>
 <script>
+document.addEventListener("DOMContentLoaded", function () {
 (function(){
   var A=(window.DATA_TERMINOLOGIA||[]);
   var K=["mediazione","mediazione_civile","mediazione_familiare","mediazione_sociale","mediazione_comunitaria","mediazione_penale","giustizia_riparativa","mediatore","conciliazione","arbitrato","negoziazione","controversia","accordo","parte","riservatezza","imparzialita","giudice","giudizio","processo","cancellieri","panel_mediatori","ministero_giustizia"];
@@ -129,6 +130,8 @@ table.tm tr:hover td{background:#faf9f6}
   cerca.addEventListener("input",function(){render(cerca.value);});
   render("");
 })();
+});
+
 </script>
 <script defer src="assets/legal.js"></script>
 </body>
