@@ -134,8 +134,9 @@ table.art a:hover{text-decoration:underline}
     <span><a href="progetto.html" style="color:#d8d4cb">Chi sono e le fonti del progetto</a></span>
   </div>
 </footer>
-<script src="data/articoli.js"></script>
+<script src="data/articoli.js" defer></script>
 <script>
+document.addEventListener("DOMContentLoaded", function () {
 (function(){
   var A=(window.DATA_ARTICOLI||[]).filter(function(r){return r.url && /^https?:/.test(r.url);});
   var PER=30, pagina=1, ordine="data-desc";
@@ -203,6 +204,8 @@ table.art a:hover{text-decoration:underline}
   });
   render();
 })();
+});
+
 </script>
 <script defer src="assets/legal.js"></script>
 </body>
