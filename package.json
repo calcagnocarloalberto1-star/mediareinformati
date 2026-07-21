@@ -4,6 +4,6 @@
   "private": true,
   "description": "Sito statico mediareinformati.it — test di integrità (nessuna dipendenza runtime).",
   "scripts": {
-    "test": "node tests/test-sanitize-url.js && node tests/test-links.js && node tests/test-html-invariants.js && node tests/test-struttura.js && node tests/test-tabelle.js && node tools/aggiorna-date-dossier.js --check && node tools/aggiorna-sitemap.js --check && node tools/arricchisci-dossier.js --check && node tests/test-lazyload.js"
+    "test": "node tests/test-sanitize-url.js && node tests/test-links.js && node tests/test-html-invariants.js && node tests/test-struttura.js && node tests/test-tabelle.js && node tools/aggiorna-date-dossier.js --check && node tools/aggiorna-sitemap.js --check && node tools/arricchisci-dossier.js --check && node tests/test-seo.js && node tests/test-lazyload.js"
   }
 }
