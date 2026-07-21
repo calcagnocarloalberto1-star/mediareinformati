@@ -8,8 +8,47 @@
   var STOP = "il lo la i gli le un una uno di a da in con su per tra fra e o ma che chi cui non come dove quando quanto quale quali cosa cos è e' della delle dei degli del al alla alle ai agli sul sulla sulle nei nelle nel si mi ti ci vi ne se più meno molto poco tutto tutti ogni questo questa questi queste quello quella essere avere fare può puo sono viene vengono stato stata qual mediante circa anche ancora poi già gia verso presso senza sotto sopra hanno ruolo modo era erano quali funziona prevede riguarda".split(" ");
   var ESTERO = /kosov|giappon|cines|\bcina\b|russ|spagn|svizzer|frances|francia|prussia|danes|danimarc|portog|austri|german|tedesc|inghilterr|inglese|regno unito|stati uniti|\busa\b|slovacc|sloven|romania|rumen|bulgar|polon|ungher|olanda|belgio|malta|cipro|albania|croaz|grecia|irland|lituan|letton|eston|finland|svez|lussemburg|malesia|vietnam|yemen|india|argentin|brasil|canad|marocc|turc|ucrain|australi|israel|onu|uncitral/;
 
+  // Caricamento pigro degli archivi dati: gli script pesanti (data/*.js, pako)
+  // servono solo quando l'utente pone una domanda, non al primo paint.
+  function caricaScript(voce, cb) {
+    var src = voce, integrity = null;
+    if (Array.isArray(voce)) { src = voce[0]; integrity = voce[1]; }
+    var s = document.createElement("script");
+    if (integrity) { s.integrity = integrity; s.crossOrigin = "anonymous"; s.referrerPolicy = "no-referrer"; }
+    s.src = src;
+    s.onload = function () { cb(null); };
+    s.onerror = function () { cb(new Error("Impossibile caricare " + src)); };
+    document.head.appendChild(s);
+  }
+
   window.initConsulta = function (cfg) {
     var ultima = null;
+    var datiPronti = false, caricamentoInCorso = false;
+
+    // Carica una sola volta gli archivi elencati in cfg.caricaPrima, poi esegue
+    // cfg.preparaDati (decompressione) e infine la callback. Se non c'è nulla da
+    // caricare, procede immediatamente (retrocompatibile con le pagine esistenti).
+    function assicuraDati(cb) {
+      if (datiPronti || !(cfg.caricaPrima && cfg.caricaPrima.length)) { cb(); return; }
+      if (caricamentoInCorso) return;
+      caricamentoInCorso = true;
+      var stato = document.getElementById("stato");
+      if (stato) stato.textContent = "Carico l’archivio di consultazione…";
+      var lista = cfg.caricaPrima.slice(), i = 0, errore = false;
+      (function prossimo() {
+        if (i >= lista.length) {
+          try { if (cfg.preparaDati) cfg.preparaDati(); } catch (e) {}
+          datiPronti = true; caricamentoInCorso = false;
+          if (stato) stato.textContent = "";
+          cb();
+          return;
+        }
+        caricaScript(lista[i++], function (err) {
+          if (err && !errore) { errore = true; if (stato) stato.textContent = "Archivio non raggiungibile: verifica la connessione e riprova."; caricamentoInCorso = false; return; }
+          if (!errore) prossimo();
+        });
+      })();
+    }
     // niente domande precostituite sotto la barra: si mostra solo la risposta
     var _sug = document.getElementById("suggerimenti"); if (_sug && _sug.parentNode) _sug.parentNode.removeChild(_sug);
     if (!document.getElementById("consulta-css")) {
@@ -335,10 +374,10 @@
 
     document.getElementById("chiedi").addEventListener("click", function () {
       var q = document.getElementById("domanda").value.trim();
-      if (q) componi(q);
+      if (q) assicuraDati(function () { componi(q); });
     });
     document.getElementById("domanda").addEventListener("keydown", function (e) {
-      if (e.key === "Enter") { var q = this.value.trim(); if (q) componi(q); }
+      if (e.key === "Enter") { var q = this.value.trim(); if (q) assicuraDati(function () { componi(q); }); }
     });
   };
 })();
