@@ -28,6 +28,9 @@ table.tb td.num,table.tb th.num{text-align:right;font-variant-numeric:tabular-nu
 .sint th,.sint td{border-bottom:1px solid #eee;padding:6px 9px;text-align:left}
 .sint th{background:#f4f2ec;color:#152a46}
 .sint td.num{text-align:right;font-variant-numeric:tabular-nums}
+table.tb caption{text-align:left;font-weight:700;color:#152a46;padding:8px 9px;font-size:15px}
+.tbl-wrap{overflow-x:auto}
+.tbl-wrap:focus-visible{outline:3px solid #a93226;outline-offset:2px}
 </style>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/favicon.svg">
@@ -102,7 +105,7 @@ table.tb td.num,table.tb th.num{text-align:right;font-variant-numeric:tabular-nu
   <p><a class="dl" href="download/avvocati-mondiali-2026.xlsx">Scarica la tabella completa (Excel)</a></p>
   <input type="text" id="tb-cerca" placeholder="Cerca un paese o un continente…" autocomplete="off">
   <p class="tb-conta" id="tb-conta"></p>
-  <table class="tb"><thead><tr><th data-k="paese">Paese</th><th data-k="cont">Continente</th><th class="num" data-k="n">Avvocati</th><th class="num" data-k="dens">/100.000 ab.</th><th class="num" data-k="anno">Anno</th><th class="num" data-k="tier">Tier</th><th data-k="fonte">Fonte</th></tr></thead><tbody id="tb-corpo"></tbody></table>
+  <div class="tbl-wrap" role="region" tabindex="0" aria-label="Avvocati per giurisdizione — censimento 2026"><table class="tb"><caption>Avvocati per giurisdizione — censimento 2026</caption><thead><tr><th scope="col" data-k="paese">Paese</th><th scope="col" data-k="cont">Continente</th><th scope="col" class="num" data-k="n">Avvocati</th><th scope="col" class="num" data-k="dens">/100.000 ab.</th><th scope="col" class="num" data-k="anno">Anno</th><th scope="col" class="num" data-k="tier">Tier</th><th scope="col" data-k="fonte">Fonte</th></tr></thead><tbody id="tb-corpo"></tbody></table></div>
   <div class="avviso-provvisorio" style="margin-top:22px"><strong>Avvertenza.</strong> Censimento a cura di mediareinformati.it (elaborazione dell&rsquo;Avv. Carlo Alberto Calcagno) su fonti primarie nazionali, verificate al 2026. Le cifre riflettono definizioni nazionali non sempre omogenee (inclusione o meno di praticanti e giuristi d&rsquo;impresa). Non costituisce né sostituisce un parere legale, psicologico, medico o terapeutico, né alcuna forma di consulenza professionale personalizzata.</div>
 </main>
 <footer class="sito">

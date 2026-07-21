@@ -11,12 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: "20"
+          node-version: "24"
 
       # Nessuna dipendenza npm: i test usano solo la libreria standard di Node.
       - name: Sanitizzazione URL (assistente.js)
@@ -27,3 +27,12 @@ jobs:
 
       - name: Invarianti HTML/CSS (Puter, var(--border), h1)
         run: node tests/test-html-invariants.js
+
+      - name: Struttura semantica (h1/main, breadcrumb, skip-link)
+        run: node tests/test-struttura.js
+
+      - name: Accessibilità tabelle (region, caption, scope)
+        run: node tests/test-tabelle.js
+
+      - name: Coerenza date dossier (dateModified = git)
+        run: node tools/aggiorna-date-dossier.js --check
