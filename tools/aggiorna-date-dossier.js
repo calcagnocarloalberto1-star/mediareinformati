@@ -24,6 +24,23 @@ var ROOT = path.join(__dirname, "..");
 var DIR = path.join(ROOT, "dossier");
 var check = process.argv.indexOf("--check") !== -1;
 
+// Su storia shallow "git log -1 -- file" può restituire la data del commit di
+// confine anziché la vera ultima modifica: le date sarebbero inattendibili e
+// divergerebbero dalla CI (fetch-depth: 0). Meglio interrompere con chiarezza.
+(function verificaStoriaCompleta() {
+  var shallow;
+  try {
+    shallow = cp.execSync("git rev-parse --is-shallow-repository", {
+      cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"]
+    }).trim();
+  } catch (e) { return; }
+  if (shallow === "true") {
+    console.error("Errore: repository git shallow. Le date 'dateModified' " +
+      "sarebbero inattendibili. Esegui 'git fetch --unshallow' e riprova.");
+    process.exit(1);
+  }
+})();
+
 function dataUltimoCommit(file) {
   var out;
   try {
