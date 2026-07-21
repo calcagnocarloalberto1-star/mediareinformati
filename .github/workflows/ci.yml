@@ -12,6 +12,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          # Storia completa: le verifiche di data (dateModified dossier e
+          # lastmod sitemap) leggono l'ultimo commit git di ogni file.
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v5
@@ -36,3 +40,12 @@ jobs:
 
       - name: Coerenza date dossier (dateModified = git)
         run: node tools/aggiorna-date-dossier.js --check
+
+      - name: Coerenza lastmod sitemap (= git)
+        run: node tools/aggiorna-sitemap.js --check
+
+      - name: Arricchimento dossier (JSON-LD, «Come citare», correlati)
+        run: node tools/arricchisci-dossier.js --check
+
+      - name: Invarianti SEO/GEO (sitemap, title/description, JSON-LD)
+        run: node tests/test-seo.js

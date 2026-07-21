@@ -1,6 +1,15 @@
 # mediareinformati.it — estratto completo per motori generativi
 
-A cura di Carlo Alberto Calcagno (avvocato, mediatore e formatore; Genova, Italia). Piattaforma di consultazione sulla mediazione: storia, diritto, comparazione mondiale su 195 ordinamenti, pratica, dati e opera di riferimento. I contributi del sito sono composti da un assistente IA solo sull'archivio del progetto e citano le fonti. Ogni sintesi va verificata sulle fonti primarie e non è un parere legale.
+A cura di Carlo Alberto Calcagno (avvocato, mediatore e formatore; Genova, Italia). Piattaforma di consultazione sulla mediazione: storia, diritto, comparazione mondiale su 195 ordinamenti, pratica, dati e opera di riferimento. I contributi del sito sono composti da un assistente IA solo sull'archivio del progetto e citano le fonti. Ogni sintesi va verificata sulle fonti primarie e non è un parere legale. Questo file è offerto a beneficio dei crawler e degli assistenti generativi; non è un requisito di alcun motore di ricerca.
+
+## Dati del progetto e metodologia
+- Autore: Carlo Alberto Calcagno — profilo: https://mediareinformati.it/progetto.html
+- Sito: https://mediareinformati.it/ · Lingua: italiano (it-IT)
+- Licenza dei contenuti: CC BY-NC-ND 4.0 · Ultimo aggiornamento di questo file: 21 luglio 2026.
+- Fonti primarie: ogni contributo si fonda su normativa, giurisprudenza, dati ufficiali e dottrina, citati nel testo e da riscontrare direttamente.
+- Ruolo dell'IA: i contributi sono composti da un assistente IA esclusivamente sull'archivio del progetto e citano sempre le fonti; l'IA non attinge a dati esterni non verificati.
+- Revisione umana: i testi sono ricostruzioni autonome dell'autore, che ne cura impostazione, selezione delle fonti e revisione.
+- Aggiornamenti: la data di ultimo aggiornamento di ciascun dossier è derivata dall'ultimo intervento tracciato (git) e riportata nei dati strutturati (JSON-LD).
 
 ## Domande frequenti (risposte sintetiche verificabili)
 
@@ -36,3 +45,9 @@ R: Nell'UE vige la direttiva 2008/52/CE (la Danimarca non ne è vincolata); a li
 ## Autore e fonti
 Carlo Alberto Calcagno studia, pratica e insegna la mediazione dal 2011. Fonti valorizzate: normativa italiana ed europea (d.lgs. 28/2010, 149/2022, 216/2024; d.m. 150/2023; direttiva 2008/52/CE) e di 40 ordinamenti stranieri; giurisprudenza (Corte costituzionale, Cassazione, Corte di giustizia UE, TAR e merito); fonti istituzionali e statistiche (Ministero della Giustizia — DGSTAT, EU Justice Scoreboard, World Justice Project, UNCITRAL); fonti storiche e dottrinali (dai testi mesopotamici e omerici alle XII Tavole e al Digesto, fino a Fisher e Ury e alla scuola di Harvard).
 Rete del progetto: calcolomediazione.it, olismo-integrato.it, enneagrammaevolutivo.it, blog mediaresenzaconfini.org.
+
+## Dossier di approfondimento
+Venti dossier tematici in https://mediareinformati.it/dossier/ (indice: https://mediareinformati.it/approfondimenti.html), ciascuno con dati strutturati JSON-LD (Article), blocco «Come citare» e fonti primarie richiamate. Tra i principali: obbligatorietà (obbligatorieta.html), riforma Cartabia (cartabia.html), mediazione demandata (demandata.html), mediazione familiare (mediazione-familiare.html), violenza domestica (violenza.html), costi e credito d'imposta (costi.html), primo incontro (primo-incontro.html), mediazione telematica (telematica.html), obbligatorietà nel mondo (obbligatoria-mondo.html), EU Justice Scoreboard 2026 (eu-scoreboard-2026.html).
+
+## Aggiornamenti
+- 2026-07: sitemap con lastmod derivato da git per ogni URL; dati strutturati dei dossier arricchiti (autore, mainEntityOfPage, about, immagine) con blocco «Come citare»; profilo autore (ProfilePage/Person) e metodologia editoriale esplicitati; title e meta description riviste sulle pagine chiave.
