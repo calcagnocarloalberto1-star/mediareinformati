@@ -42,7 +42,7 @@
      a:"La sezione dedicata al Volume Secondo tratta la deontologia dell'assistenza in mediazione, le tecniche di negoziazione (interessi, BATNA, gestione dell'impasse), i modelli operativi (clausole, verbali, informative, procure) e la responsabilità dell'avvocato negli ADR.",
      k:"avvocato negoziatore negoziazione difensore deontologia clausola clausole verbale procura informativa batna interessi impasse responsabilita adr assistenza legale tecniche tavolo"},
     {t:"Storia della mediazione", u:"storia.html",
-     a:"La sezione Storia raccoglie 933 voci: dalle origini mitiche mesopotamiche alla conciliazione greco-romana (aidesis, diaitetái, conciliatio), fino alle leggi dal 1770 a oggi.",
+     a:"La sezione Storia raccoglie 936 voci: dalle origini mitiche mesopotamiche alla conciliazione greco-romana (aidesis, diaitetái, conciliatio), fino alle leggi dal 1770 a oggi.",
      k:"storia origini nascita antica greci romani mesopotamia conciliatore ottocento evoluzione radici"},
     {t:"Come si prepara e si conduce il primo incontro?", u:"pratica.html",
      a:"La sezione Pratica raccoglie dispense e manuali operativi per preparare e condurre il primo incontro, con le tecniche di comunicazione e 22 strumenti del tavolo; è disponibile gratis il manuale integrale (584 pp.).",
@@ -100,6 +100,18 @@
     return b;
   }
   function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  // escape per contesto attributo (include apici, evita la fuga dall'attributo)
+  function escAttr(s){ return esc(s).replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
+  // whitelist schemi: consente solo http/https e URL relativi/anchor;
+  // neutralizza javascript:, data:, vbscript:, ecc. anche se offuscati con spazi/controlli.
+  function safeUrl(u){
+    u = (u==null ? "" : String(u)).trim();
+    if(!u) return "#";
+    var probe = u.replace(/[\x00-\x20]+/g,"");
+    var m = /^([a-z][a-z0-9+.\-]*):/i.exec(probe);
+    if(m && !/^https?$/i.test(m[1])) return "#";
+    return u;
+  }
 
   function renderResults(eng, q){
     var b = box(eng), res = search(q);
@@ -122,8 +134,8 @@
   function renderAI(eng, data){
     var b = box(eng);
     var srcs = (data.sources||[]).map(function(s){
-      var u = s.url||"#", t = s.title||s.url||"fonte";
-      return '<li><a href="'+u+'" style="color:#A93226">'+esc(t)+'</a></li>';
+      var u = safeUrl(s.url), t = s.title||s.url||"fonte";
+      return '<li><a href="'+escAttr(u)+'" rel="noopener noreferrer" style="color:#A93226">'+esc(t)+'</a></li>';
     }).join("");
     b.innerHTML = '<div style="border:2px solid #141414;background:#fff;box-shadow:3px 3px 0 #141414;padding:16px">'
       + '<p style="margin:0 0 8px;line-height:1.6">'+esc(data.answer||"").replace(/\n/g,"<br>")+'</p>'
