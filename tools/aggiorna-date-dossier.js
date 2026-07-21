@@ -41,7 +41,7 @@ files.forEach(function (nome) {
   var p = path.join(DIR, nome);
   var testo = fs.readFileSync(p, "utf8");
   // Interviene solo se esiste già un blocco Article con dateModified.
-  if (testo.indexOf('"@type": "Article"') === -1) return;
+  if (!/"@type":\s*"Article"/.test(testo)) return;
   var data = dataUltimoCommit("dossier/" + nome);
   if (!data) return; // git non attendibile: non tocchiamo nulla.
 

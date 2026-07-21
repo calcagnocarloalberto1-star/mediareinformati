@@ -289,3 +289,18 @@ nav.principale .sub a:hover { background: #f5f7fa; color: var(--rosso); }
 .briciole a:hover { border-bottom-color: currentColor; }
 .briciole li[aria-current="page"] { font-weight: 700; color: var(--inchiostro); }
 .briciole li + li::before { content: "›"; margin: 0 8px; opacity: .55; }
+
+/* Contenuti correlati (link interni dalla mappa editoriale) */
+.correlati-auto { margin: 30px 0 8px; }
+.correlati-auto h2 { font-size: 1.05rem; margin: 0 0 8px; }
+.correlati-auto ul { margin: 0; padding-left: 1.1em; line-height: 1.75; }
+.correlati-auto a { color: var(--rosso); }
+
+/* Blocco "Come citare questa pagina" (uniforme su tutti i dossier) */
+.come-citare { margin: 26px 0 8px; padding: 14px 18px; background: var(--crema);
+  border: 1px solid var(--bordo); border-left: 4px solid var(--rosso); border-radius: 4px;
+  font-size: 14px; line-height: 1.6; color: var(--inchiostro); }
+.come-citare h2 { font-size: 1.05rem; margin: 0 0 6px; }
+.come-citare cite { font-style: normal; font-weight: 700; }
+.come-citare .cc-url { word-break: break-all; }
+.come-citare .cc-nota { margin: 8px 0 0; font-size: 13px; color: var(--grigio); }
