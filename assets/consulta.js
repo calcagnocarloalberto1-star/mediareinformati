@@ -263,6 +263,8 @@
     function caricaPptx(cb) {
       if (window.PptxGenJS) { cb(); return; }
       var s = document.createElement("script");
+      s.crossOrigin = "anonymous";
+      s.integrity = "sha384-ZSs6LKr2GoUPDyHrN+rCQgyHL1yUyok5xMniSrgeRG7rUvA6vTmxronM1eZOfjgz";
       s.src = "https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.12.0/pptxgen.bundle.js";
       s.onload = function () { cb(); };
       s.onerror = function () { alert("Impossibile caricare la libreria per le slide. Riprova con connessione attiva."); };

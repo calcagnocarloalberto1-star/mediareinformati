@@ -1,0 +1,9 @@
+{
+  "name": "mediareinformati",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sito statico mediareinformati.it — test di integrità (nessuna dipendenza runtime).",
+  "scripts": {
+    "test": "node tests/test-sanitize-url.js && node tests/test-links.js && node tests/test-html-invariants.js"
+  }
+}

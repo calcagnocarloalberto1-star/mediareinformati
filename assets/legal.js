@@ -20,13 +20,22 @@
                      '<a href="cookie.html" style="color:#d8d4cb">Cookie</a> &middot; ' +
                      '<a href="note-legali.html" style="color:#d8d4cb">Note legali</a>';
     interno.appendChild(span);
+    if (!interno.querySelector(".legale-disclaimer")) {
+      var disc = document.createElement("span");
+      disc.className = "legale-disclaimer";
+      disc.style.cssText = "flex-basis:100%;color:#b3aea3;font-size:.78rem;margin-top:6px";
+      disc.textContent = "I contenuti hanno finalità di informazione generale e non costituiscono un parere legale.";
+      interno.appendChild(disc);
+    }
   }
   function mostraBanner() {
     var scelta;
     try { scelta = localStorage.getItem(KEY); } catch (e) { scelta = null; }
     if (scelta) return;
+    var attivoPrima = document.activeElement;
     var b = document.createElement("div");
     b.setAttribute("role", "dialog");
+    b.setAttribute("aria-modal", "true");
     b.setAttribute("aria-label", "Informativa cookie");
     b.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#152a46;color:#f4f2ec;" +
       "padding:14px 18px;box-shadow:0 -2px 12px rgba(0,0,0,.25);font-family:Georgia,serif;font-size:.9rem;line-height:1.5";
@@ -42,12 +51,18 @@
         '</div>' +
       '</div>';
     document.body.appendChild(b);
+    var accetta = document.getElementById("mri-cookie-accetta");
     function chiudi(val) {
       try { localStorage.setItem(KEY, val); } catch (e) {}
+      document.removeEventListener("keydown", suEsc);
       if (b.parentNode) b.parentNode.removeChild(b);
+      if (attivoPrima && typeof attivoPrima.focus === "function") attivoPrima.focus();
     }
-    document.getElementById("mri-cookie-accetta").addEventListener("click", function () { chiudi("accettato"); });
+    function suEsc(e) { if (e.key === "Escape") { e.preventDefault(); chiudi("solo-tecnici"); } }
+    document.addEventListener("keydown", suEsc);
+    accetta.addEventListener("click", function () { chiudi("accettato"); });
     document.getElementById("mri-cookie-rifiuta").addEventListener("click", function () { chiudi("solo-tecnici"); });
+    accetta.focus();
   }
   pronti(function () { aggiungiLinkFooter(); mostraBanner(); });
 })();
