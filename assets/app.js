@@ -126,7 +126,7 @@
     strumenti.appendChild(riga);
     radice.appendChild(strumenti);
 
-    var conteggio = el("p", { "class": "conteggio" });
+    var conteggio = el("p", { "class": "conteggio", "aria-live": "polite", role: "status" });
     radice.appendChild(conteggio);
     var lista = el("ul", { "class": "risultati" });
     radice.appendChild(lista);
@@ -164,9 +164,12 @@
       mostra.forEach(function (r, i) {
         var li = el("li", {}, cfg.rendi(r));
         if (cfg.dettaglio) {
-          var btn = el("button", { "class": "apri-dettaglio", type: "button" }, "Dettaglio");
+          var btn = el("button", { "class": "apri-dettaglio", type: "button", "aria-expanded": "false" }, "Dettaglio");
           var pann = el("div", { "class": "r-dettaglio" }, cfg.dettaglio(r));
-          btn.addEventListener("click", function () { li.classList.toggle("aperto"); });
+          btn.addEventListener("click", function () {
+            var aperto = li.classList.toggle("aperto");
+            btn.setAttribute("aria-expanded", aperto ? "true" : "false");
+          });
           li.appendChild(btn);
           li.appendChild(pann);
         }
