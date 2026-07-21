@@ -280,3 +280,12 @@ nav.principale .sub a:hover { background: #f5f7fa; color: var(--rosso); }
   outline: 3px solid var(--rosso);
   outline-offset: 2px;
 }
+
+/* Briciole di pane (breadcrumb visibile, coerente con il BreadcrumbList JSON-LD) */
+.briciole { font-size: 13px; color: var(--grigio); margin: 0 0 20px; line-height: 1.5; }
+.briciole ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0; }
+.briciole li { display: inline-flex; align-items: center; }
+.briciole a { color: inherit; text-decoration: none; border-bottom: 1px solid transparent; }
+.briciole a:hover { border-bottom-color: currentColor; }
+.briciole li[aria-current="page"] { font-weight: 700; color: var(--inchiostro); }
+.briciole li + li::before { content: "›"; margin: 0 8px; opacity: .55; }

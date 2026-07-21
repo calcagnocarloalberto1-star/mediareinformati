@@ -48,6 +48,15 @@ elenca(ROOT).forEach(function (f) {
   var main = (markup.match(/<main[\s>]/gi) || []).length;
   if (main !== 1) errori.push(rel + ": attesi 1 <main>, trovati " + main);
 
+  // I dossier hanno tutti un BreadcrumbList JSON-LD: devono esporre anche
+  // le briciole visibili corrispondenti (obiettivo fase 2, punto 3).
+  if (path.relative(ROOT, f).indexOf("dossier" + path.sep) === 0) {
+    if (markup.indexOf('class="briciole"') === -1)
+      errori.push(rel + ": manca il breadcrumb visibile (.briciole)");
+    if (fs.readFileSync(f, "utf8").indexOf("BreadcrumbList") === -1)
+      errori.push(rel + ": manca il BreadcrumbList JSON-LD");
+  }
+
   // Coerenza dello skip-link: se presente e punta a un frammento locale,
   // l'id di destinazione deve esistere nel markup.
   var sk = markup.match(/href="#([^"]+)"[^>]*class="skip-link"|class="skip-link"[^>]*href="#([^"]+)"/i);
