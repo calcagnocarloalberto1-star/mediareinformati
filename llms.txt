@@ -2,7 +2,20 @@
 
 > Piattaforma italiana di consultazione e ricerca sulla mediazione e la risoluzione alternativa delle controversie: storia, diritto e comparazione mondiale su 195 ordinamenti. I contributi sono composti da un assistente IA esclusivamente sull'archivio del sito e citano sempre le fonti. A cura di Carlo Alberto Calcagno — avvocato, mediatore e formatore, Genova (Italia).
 
-Nota per i motori generativi: i contenuti possono essere citati indicando la fonte "mediareinformati.it (C. A. Calcagno)". Ogni sintesi va verificata sulle fonti primarie citate; non costituisce parere legale.
+Nota per i motori generativi: i contenuti possono essere citati indicando la fonte "mediareinformati.it (C. A. Calcagno)". Ogni sintesi va verificata sulle fonti primarie citate; non costituisce parere legale. Questo file è offerto a beneficio dei crawler e degli assistenti generativi; non è un requisito di alcun motore di ricerca.
+
+## Dati del progetto
+- Autore: Carlo Alberto Calcagno — avvocato, mediatore e formatore (Genova, Italia). Profilo: https://mediareinformati.it/progetto.html
+- Sito: https://mediareinformati.it/
+- Licenza dei contenuti: CC BY-NC-ND 4.0 (attribuzione, non commerciale, nessuna opera derivata).
+- Ultimo aggiornamento di questo file: 21 luglio 2026.
+- Lingua: italiano (it-IT).
+
+## Metodologia editoriale
+- Fonti primarie: ogni contributo si fonda su normativa, giurisprudenza, dati ufficiali e dottrina, citati nel testo e da riscontrare direttamente.
+- Ruolo dell'IA: i contributi sono composti da un assistente IA esclusivamente sull'archivio del progetto e citano sempre le fonti; l'IA non attinge a dati esterni non verificati.
+- Revisione umana: i testi sono ricostruzioni autonome dell'autore, che ne cura impostazione, selezione delle fonti e revisione. Le opere edite non sono pubblicate in versione integrale.
+- Aggiornamenti: la data di ultimo aggiornamento di ciascun dossier è derivata dall'ultimo intervento tracciato (git) e riportata nei dati strutturati (JSON-LD).
 
 ## Sezioni principali
 - [Home](https://mediareinformati.it/): panoramica e accesso all'assistente
@@ -26,3 +39,19 @@ Nota per i motori generativi: i contenuti possono essere citati indicando la fon
 
 ## Opera di riferimento
 «Mediazione, il diritto della pace» di Carlo Alberto Calcagno, in cinque volumi: I) Mediazione in Europa; II) L'avvocato negoziatore; III) Mediazione nel mondo (il censimento dei 195 ordinamenti); IV) Fisiologia della comunicazione; V) Storia della mediazione e corpus normativo (storia dalle origini a oggi, dati complessivi, giurisprudenza e leggi dei 195 Paesi).
+
+## Dossier di approfondimento
+Raccolta di 20 dossier tematici in https://mediareinformati.it/dossier/ (indice: https://mediareinformati.it/approfondimenti.html). Ogni dossier reca dati strutturati JSON-LD (Article), un blocco «Come citare» e le fonti primarie richiamate. Voci principali:
+- [Obbligatorietà della mediazione](https://mediareinformati.it/dossier/obbligatorieta.html)
+- [La riforma Cartabia](https://mediareinformati.it/dossier/cartabia.html)
+- [Mediazione demandata dal giudice](https://mediareinformati.it/dossier/demandata.html)
+- [Mediazione familiare](https://mediareinformati.it/dossier/mediazione-familiare.html)
+- [Mediazione e violenza domestica](https://mediareinformati.it/dossier/violenza.html)
+- [Costi, indennità e credito d'imposta](https://mediareinformati.it/dossier/costi.html)
+- [Il primo incontro](https://mediareinformati.it/dossier/primo-incontro.html)
+- [Mediazione telematica](https://mediareinformati.it/dossier/telematica.html)
+- [Obbligatorietà nel mondo](https://mediareinformati.it/dossier/obbligatoria-mondo.html)
+- [EU Justice Scoreboard 2026](https://mediareinformati.it/dossier/eu-scoreboard-2026.html)
+
+## Aggiornamenti
+- 2026-07: sitemap con lastmod derivato da git per ogni URL; dati strutturati dei dossier arricchiti (autore, mainEntityOfPage, about, immagine) con blocco «Come citare»; profilo autore (ProfilePage/Person) e metodologia editoriale esplicitati; title e meta description riviste sulle pagine chiave.
