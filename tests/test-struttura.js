@@ -67,6 +67,19 @@ elenca(ROOT).forEach(function (f) {
   }
 });
 
+// Le pagine hub di primo livello devono rendere i link legali raggiungibili
+// anche con JavaScript disattivato (obiettivo fase 2, punto 4): niente
+// iniezione via legal.js, i tre link devono essere nel markup statico.
+["index", "inizia", "diritto", "statistiche", "pratica", "storia", "arbitrato",
+ "avvocato-negoziatore", "biblioteca", "opera", "assistente", "progetto"].forEach(function (nome) {
+  var f = path.join(ROOT, nome + ".html");
+  var t = fs.readFileSync(f, "utf8");
+  ["privacy.html", "cookie.html", "note-legali.html"].forEach(function (dest) {
+    if (t.indexOf('href="' + dest + '"') === -1)
+      errori.push(nome + ".html: manca il link legale statico a " + dest);
+  });
+});
+
 console.log("Pagine di contenuto verificate per struttura semantica.");
 if (errori.length) {
   console.error("\nInvarianti di struttura violate (" + errori.length + "):");
