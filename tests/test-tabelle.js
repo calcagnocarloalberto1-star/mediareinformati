@@ -39,6 +39,41 @@ PAGINE.forEach(function (nome) {
 });
 
 console.log("Tabelle dati verificate su " + PAGINE.length + " pagine.");
+
+/* Tabelle chiave/valore (senza <thead>): ogni riga dati deve avere
+   un'intestazione di riga <th scope="row"> come prima cella. */
+var CHIAVE_VALORE = {
+  "statistiche.html": [
+    "La mediazione civile in Italia — 1° semestre 2025",
+    "Materie con la maggiore probabilità di accordo"
+  ]
+};
+
+Object.keys(CHIAVE_VALORE).forEach(function (nome) {
+  var t = fs.readFileSync(path.join(ROOT, nome), "utf8");
+  CHIAVE_VALORE[nome].forEach(function (cap) {
+    var capIdx = t.indexOf("<caption>" + cap + "</caption>");
+    if (capIdx < 0) {
+      errori.push(nome + ": caption non trovata: " + cap);
+      return;
+    }
+    var start = t.lastIndexOf("<table", capIdx);
+    var end = t.indexOf("</table>", capIdx);
+    if (start < 0 || end < 0) {
+      errori.push(nome + ": tabella non delimitata per: " + cap);
+      return;
+    }
+    var seg = t.slice(start, end + 8);
+    var righe = conta(seg, /<tr[\s>]/gi);
+    var rowh = conta(seg, /<th scope="row"/gi);
+    if (rowh < righe)
+      errori.push(nome + " [" + cap + "]: " + righe +
+        " righe ma " + rowh + " <th scope=\"row\">");
+  });
+});
+
+console.log("Tabelle chiave/valore verificate: intestazioni di riga presenti.");
+
 if (errori.length) {
   console.error("\nInvarianti tabelle violate (" + errori.length + "):");
   errori.forEach(function (e) { console.error("  " + e); });
