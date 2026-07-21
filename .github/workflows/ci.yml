@@ -30,3 +30,9 @@ jobs:
 
       - name: Struttura semantica (h1/main, breadcrumb, skip-link)
         run: node tests/test-struttura.js
+
+      - name: Accessibilità tabelle (region, caption, scope)
+        run: node tests/test-tabelle.js
+
+      - name: Coerenza date dossier (dateModified = git)
+        run: node tools/aggiorna-date-dossier.js --check
