@@ -19,7 +19,7 @@ var ROOT = path.join(__dirname, "..");
    richiede "&"); nei file dati JSON il valore e' in forma decodificata. */
 var SOSTITUZIONI = [
   { old: "http://www.lawnet.gov.lk/wp-content/uploads/Law%20Site/4-stats_1956_2006/set4/1988Y0V0C72A.html",
-    nuovo: "https://www.lawnet.gov.lk/wp-content/uploads/cons_stat_up2_2006/1988Y0V0C72A.html" },
+    nuovo: "https://mediation.gov.lk/en/resources/acts/" },
   { old: "https://ccah.ht/fondement-juridique",
     nuovo: "https://www.ccah.ht/procedure/procedures-non-contraignantes/la-mediation" },
   { old: "https://imimediation.org/links/legislation-and-regulations/law-10385-for-mediation-in-dispute-resolution-in-the-republic-of-albania/",
@@ -27,9 +27,9 @@ var SOSTITUZIONI = [
   { old: "https://imimediation.org/links/legislation-and-regulations/law-no-192-on-mediation-and-organisation-of-the-profession-of-mediator-in-romania/",
     nuovo: "https://legislatie.just.ro/Public/DetaliiDocument/71928" },
   { old: "https://laws.gov.fj/Acts/DisplayAct/919",
-    nuovo: "https://www.laws.gov.fj/Acts/DisplayAct/919" },
+    nuovo: "https://natlex.ilo.org/dyn/natlex2/r/natlex/fe/details?p3_isn=66125" },
   { old: "https://legalaffairs.gov.in/sites/default/files/MediationAct2023.pdf",
-    nuovo: "https://www.indiacode.nic.in/bitstream/123456789/19637/1/A2023-32.pdf" },
+    nuovo: "https://www.indiacode.nic.in/handle/123456789/19637" },
   { old: "https://lesotholii.org/content/part-viii-completion-mediation",
     nuovo: "http://www.judiciary.gov.ls/high-court/" },
   { old: "https://mpravde.gov.rs/en/sekcija/28482/mediation.php",
@@ -49,6 +49,8 @@ var SOSTITUZIONI = [
     nuovo: "https://adala.justice.gov.ma/api/uploads/2024/06/07/%D8%A7%D9%84%D8%AA%D8%AD%D9%83%D9%8A%D9%85%20%D9%88%D8%A7%D9%84%D9%88%D8%B3%D8%A7%D8%B7%D8%A9%20%D8%A7%D9%84%D8%A7%D8%AA%D9%81%D8%A7%D9%82%D9%8A%D8%A9-1717759890590.pdf" },
   { old: "https://www.conciliacionbolivia.org/mapa-de-la-conciliacion",
     nuovo: "https://www.conciliacionbolivia.org/mapa-conciliaci%C3%B3n" },
+  { old: "https://www.lawnet.gov.lk/wp-content/uploads/cons_stat_up2_2006/1988Y0V0C72A.html",
+    nuovo: "https://mediation.gov.lk/en/resources/acts/" },
   { old: "https://www.lawethiopia.com/index.php/federal-laws/6654-proclamation-no-1237-2021-arbitration-and-conciliation-working-procedure-proclamation",
     nuovo: "https://justice.gov.et/en/law/arbitration-and-conciliation-working-procedure-proclamation/" },
   { old: "https://www.lawsociety.org.zw/wp-content/uploads/2021/09/High-Court-Commercial-Division-Rules-2020.pdf",
@@ -63,6 +65,17 @@ var SOSTITUZIONI = [
 
 // Frammenti vecchi che non devono comparire in nessuna forma.
 var FRAMMENTI_VIETATI = ["H12300292"];
+
+/* Destinazioni introdotte dalla PR #5 ma risultate tecnicamente inutilizzabili
+   in browser reale (QA), poi sostituite: non devono restare nel repository.
+   - India: il deep-link "bitstream" restituisce "Invalid URL or Argument(s)".
+   - Fiji: il deep-link ufficiale laws.gov.fj restituisce 404 in browser.
+   - Sri Lanka: LawNet ha certificato SSL non valido, non accessibile. */
+var SUPERATI = [
+  "https://www.indiacode.nic.in/bitstream/123456789/19637/1/A2023-32.pdf",
+  "https://www.laws.gov.fj/Acts/DisplayAct/919",
+  "https://www.lawnet.gov.lk/wp-content/uploads/cons_stat_up2_2006/1988Y0V0C72A.html"
+];
 
 var ESTENSIONI = [".html", ".txt", ".js", ".json", ".xml"];
 
@@ -91,6 +104,11 @@ SOSTITUZIONI.forEach(function (s) {
 FRAMMENTI_VIETATI.forEach(function (fr) {
   contenuti.forEach(function (c) {
     if (c.t.indexOf(fr) !== -1) errori.push("Frammento vietato in " + c.f + " -> " + fr);
+  });
+});
+SUPERATI.forEach(function (u) {
+  contenuti.forEach(function (c) {
+    if (c.t.indexOf(u) !== -1) errori.push("URL superato (PR #5) ancora presente in " + c.f + " -> " + u);
   });
 });
 
